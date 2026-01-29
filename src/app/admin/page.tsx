@@ -1,0 +1,1051 @@
+'use client';
+
+import { useState, useEffect } from 'react';
+
+interface User {
+  id: number;
+  name: string;
+  email: string;
+  gamertag: string;
+  experience: string;
+  role: string;
+  is_driver: number;
+  created_at: string;
+}
+
+interface League {
+  id: number;
+  name: string;
+  description: string;
+  created_at: string;
+}
+
+interface PointsDriver {
+  id: number;
+  gamertag: string;
+  full_name: string;
+  points: number;
+  races_completed: number;
+  profile_picture?: string;
+}
+
+export default function Admin() {
+  const [users, setUsers] = useState<User[]>([]);
+  const [leagues, setLeagues] = useState<League[]>([]);
+  const [pointsDrivers, setPointsDrivers] = useState<PointsDriver[]>([]);
+  const [leaguePoints, setLeaguePoints] = useState<PointsDriver[]>([]);
+  const [leagueDrivers, setLeagueDrivers] = useState<number[]>([]);
+  const [selectedLeagueForDrivers, setSelectedLeagueForDrivers] = useState('');
+  const [loading, setLoading] = useState(true);
+  const [stats, setStats] = useState({ totalUsers: 0, totalAdmins: 0, totalDrivers: 0 });
+  const [activeTab, setActiveTab] = useState('user-management');
+  const [selectedLeague, setSelectedLeague] = useState('');
+  
+  // Form states
+  const [leagueName, setLeagueName] = useState('');
+  const [leagueDescription, setLeagueDescription] = useState('');
+  const [selectedDriver, setSelectedDriver] = useState('');
+  const [pointsToAdd, setPointsToAdd] = useState('25');
+  const [racesToAdd, setRacesToAdd] = useState('1');
+
+  useEffect(() => {
+    fetchUsers();
+    fetchLeagues();
+  }, []);
+
+  const fetchUsers = async () => {
+    try {
+      const response = await fetch('/api/admin/users');
+      const data = await response.json();
+      if (data.users) {
+        setUsers(data.users);
+        calculateStats(data.users);
+      }
+    } catch (error) {
+      console.error('Failed to fetch users:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const fetchLeagues = async () => {
+    try {
+      const response = await fetch('/api/leagues');
+      const data = await response.json();
+      if (data.success && data.leagues) {
+        setLeagues(data.leagues);
+      }
+    } catch (error) {
+      console.error('Failed to fetch leagues:', error);
+    }
+  };
+
+  const fetchLeaguePoints = async (leagueId: string) => {
+    if (!leagueId) return;
+    try {
+      const response = await fetch(`/api/leagues/${leagueId}/points`);
+      const data = await response.json();
+      if (data.success) {
+        setPointsDrivers(data.points);
+        setLeaguePoints(data.points);
+      }
+    } catch (error) {
+      console.error('Failed to fetch league points:', error);
+    }
+  };
+
+  const calculateStats = (users: User[]) => {
+    setStats({
+      totalUsers: users.length,
+      totalAdmins: users.filter(user => user.role === 'admin').length,
+      totalDrivers: users.filter(user => user.is_driver === 1).length
+    });
+  };
+
+  const createLeague = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!leagueName.trim()) return;
+
+    try {
+      const response = await fetch('/api/leagues', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ name: leagueName, description: leagueDescription })
+      });
+
+      const data = await response.json();
+      if (data.success) {
+        alert(`League "${leagueName}" created successfully!`);
+        setLeagueName('');
+        setLeagueDescription('');
+        fetchLeagues();
+      } else {
+        alert('Error creating league: ' + data.error);
+      }
+    } catch (error) {
+      console.error('Error creating league:', error);
+      alert('Error creating league. Please try again.');
+    }
+  };
+
+  const deleteLeague = async (leagueId: number, leagueName: string) => {
+    if (!confirm(`Are you sure you want to delete the league "${leagueName}"?\n\nThis will permanently remove:\n- The league itself\n- All driver points for this league\n- All points history for this league\n\nThis action cannot be undone!`)) {
+      return;
+    }
+
+    try {
+      const response = await fetch(`/api/leagues/${leagueId}`, {
+        method: 'DELETE'
+      });
+
+      const data = await response.json();
+      if (data.success) {
+        alert(`League "${leagueName}" deleted successfully!`);
+        fetchLeagues();
+        if (selectedLeague === leagueId.toString()) {
+          setSelectedLeague('');
+          setPointsDrivers([]);
+        }
+      } else {
+        alert('Error deleting league: ' + data.error);
+      }
+    } catch (error) {
+      console.error('Error deleting league:', error);
+      alert('Error deleting league. Please try again.');
+    }
+  };
+
+  const addPoints = async () => {
+    if (!selectedLeague || !selectedDriver || !pointsToAdd || !racesToAdd) {
+      alert('Please select a league, driver, and enter both points and races.');
+      return;
+    }
+
+    if (parseInt(racesToAdd) < 0) {
+      alert('Races cannot be negative.');
+      return;
+    }
+
+    try {
+      const response = await fetch(`/api/leagues/${selectedLeague}/points/${selectedDriver}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ 
+          points: parseInt(pointsToAdd),
+          races: parseInt(racesToAdd)
+        })
+      });
+
+      const data = await response.json();
+      if (data.success) {
+        alert(`Successfully added ${pointsToAdd} points and ${racesToAdd} races!`);
+        setPointsToAdd('25');
+        setRacesToAdd('1');
+        fetchLeaguePoints(selectedLeague);
+      } else {
+        alert('Error adding points: ' + data.error);
+      }
+    } catch (error) {
+      console.error('Error adding points:', error);
+      alert('Error adding points. Please try again.');
+    }
+  };
+
+  const removePoints = async () => {
+    if (!selectedLeague || !selectedDriver || !pointsToAdd || !racesToAdd) {
+      alert('Please select a league, driver, and enter both points and races to remove.');
+      return;
+    }
+
+    const pointsValue = parseInt(pointsToAdd);
+    const racesValue = parseInt(racesToAdd);
+
+    if (pointsValue < 0 || racesValue < 0) {
+      alert('Points and races must be positive numbers when removing.');
+      return;
+    }
+
+    try {
+      const response = await fetch(`/api/leagues/${selectedLeague}/points/${selectedDriver}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ 
+          points: pointsValue,
+          races: racesValue
+        })
+      });
+
+      const data = await response.json();
+      if (data.success) {
+        alert(`Successfully removed ${pointsValue} points and ${racesValue} races!`);
+        setPointsToAdd('25');
+        setRacesToAdd('1');
+        fetchLeaguePoints(selectedLeague);
+      } else {
+        alert('Error removing points: ' + data.error);
+      }
+    } catch (error) {
+      console.error('Error removing points:', error);
+      alert('Error removing points. Please try again.');
+    }
+  };
+
+  const resetLeaguePoints = async () => {
+    if (!selectedLeague) {
+      alert('Please select a league first.');
+      return;
+    }
+
+    const leagueName = leagues.find(l => l.id.toString() === selectedLeague)?.name || '';
+    
+    if (!confirm(`Are you sure you want to reset ALL points for ${leagueName}? This action cannot be undone through the undo button.`)) {
+      return;
+    }
+
+    try {
+      const response = await fetch(`/api/leagues/${selectedLeague}/reset`, {
+        method: 'POST'
+      });
+
+      const data = await response.json();
+      if (data.success) {
+        alert('League points reset successfully!');
+        fetchLeaguePoints(selectedLeague);
+      } else {
+        alert('Error resetting points: ' + data.error);
+      }
+    } catch (error) {
+      console.error('Error resetting points:', error);
+      alert('Error resetting points. Please try again.');
+    }
+  };
+
+  const undoLastAction = async () => {
+    if (!selectedLeague) {
+      alert('Please select a league first.');
+      return;
+    }
+
+    try {
+      const response = await fetch(`/api/leagues/${selectedLeague}/undo`, {
+        method: 'POST'
+      });
+
+      const data = await response.json();
+      if (data.success) {
+        alert('Last action undone successfully!');
+        fetchLeaguePoints(selectedLeague);
+      } else {
+        alert('Error undoing action: ' + data.error);
+      }
+    } catch (error) {
+      console.error('Error undoing action:', error);
+      alert('Error undoing action. Please try again.');
+    }
+  };
+
+  const updateUserRole = async (userId: number, currentRole: string) => {
+    const newRole = currentRole === 'admin' ? 'member' : 'admin';
+    
+    if (!confirm(`Are you sure you want to change this user's role to ${newRole}?`)) {
+      return;
+    }
+
+    try {
+      const response = await fetch(`/api/admin/users/${userId}/role`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ role: newRole })
+      });
+
+      const data = await response.json();
+      if (data.success) {
+        alert(`User role updated to ${newRole} successfully!`);
+        fetchUsers(); // Refresh user list
+      } else {
+        alert('Error updating role: ' + data.error);
+      }
+    } catch (error) {
+      console.error('Error updating user role:', error);
+      alert('Error updating user role. Please try again.');
+    }
+  };
+
+  const updateDriverStatus = async (userId: number, currentIsDriver: number) => {
+    const newIsDriver = currentIsDriver === 1 ? 0 : 1;
+    const action = newIsDriver ? 'promote to driver' : 'remove driver status';
+    
+    if (!confirm(`Are you sure you want to ${action} for this user?`)) {
+      return;
+    }
+
+    try {
+      const response = await fetch(`/api/admin/users/${userId}/driver`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ isDriver: newIsDriver === 1 })
+      });
+
+      const data = await response.json();
+      if (data.success) {
+        alert(data.message);
+        fetchUsers(); // Refresh user list
+      } else {
+        alert('Error updating driver status: ' + data.error);
+      }
+    } catch (error) {
+      console.error('Error updating driver status:', error);
+      alert('Error updating driver status. Please try again.');
+    }
+  };
+
+  const deleteUser = async (userId: number, userName: string) => {
+    if (!confirm(`Are you sure you want to delete user "${userName}"? This action cannot be undone!`)) {
+      return;
+    }
+
+    try {
+      const response = await fetch(`/api/admin/users/${userId}`, {
+        method: 'DELETE'
+      });
+
+      const data = await response.json();
+      if (data.success) {
+        alert(data.message);
+        fetchUsers(); // Refresh user list
+      } else {
+        alert('Error deleting user: ' + data.error);
+      }
+    } catch (error) {
+      console.error('Error deleting user:', error);
+      alert('Error deleting user. Please try again.');
+    }
+  };
+
+  const handleLeagueChange = (leagueId: string) => {
+    setSelectedLeague(leagueId);
+    if (leagueId) {
+      fetchLeaguePoints(leagueId);
+    } else {
+      setPointsDrivers([]);
+    }
+  };
+
+  const fetchLeagueDrivers = async (leagueId: string) => {
+    try {
+      const response = await fetch(`/api/leagues/${leagueId}/drivers`);
+      if (response.ok) {
+        const data = await response.json();
+        setLeagueDrivers(data.drivers || []);
+      } else {
+        console.error('Failed to fetch league drivers');
+        setLeagueDrivers([]);
+      }
+    } catch (error) {
+      console.error('Error fetching league drivers:', error);
+      setLeagueDrivers([]);
+    }
+  };
+
+  const addDriverToLeague = async (driverId: number) => {
+    if (!selectedLeagueForDrivers) return;
+
+    try {
+      const response = await fetch(`/api/leagues/${selectedLeagueForDrivers}/drivers`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ driverId })
+      });
+
+      const data = await response.json();
+      if (data.success) {
+        alert('Driver added to league successfully!');
+        fetchLeagueDrivers(selectedLeagueForDrivers);
+      } else {
+        alert('Error adding driver: ' + data.error);
+      }
+    } catch (error) {
+      console.error('Error adding driver to league:', error);
+      alert('Error adding driver to league. Please try again.');
+    }
+  };
+
+  const removeDriverFromLeague = async (driverId: number) => {
+    if (!selectedLeagueForDrivers) return;
+
+    try {
+      const response = await fetch(`/api/leagues/${selectedLeagueForDrivers}/drivers/${driverId}`, {
+        method: 'DELETE'
+      });
+
+      const data = await response.json();
+      if (data.success) {
+        alert('Driver removed from league successfully!');
+        fetchLeagueDrivers(selectedLeagueForDrivers);
+      } else {
+        alert('Error removing driver: ' + data.error);
+      }
+    } catch (error) {
+      console.error('Error removing driver from league:', error);
+      alert('Error removing driver from league. Please try again.');
+    }
+  };
+
+  const handleLeagueDriversChange = (leagueId: string) => {
+    setSelectedLeagueForDrivers(leagueId);
+    if (leagueId) {
+      fetchLeagueDrivers(leagueId);
+    } else {
+      setLeagueDrivers([]);
+    }
+  };
+
+  return (
+    <div className="min-h-screen" style={{backgroundColor: '#0a0a0a', paddingTop: '100px'}}>
+      <main style={{padding: '25px'}}>
+        <div className="container">
+          <div className="admin-header" style={{textAlign: 'center', marginBottom: '30px'}}>
+            <h1 style={{color: '#3EA822', fontSize: '2.5rem', marginBottom: '1rem'}}>
+              ⚙️ Administration Panel
+            </h1>
+            <p style={{color: '#ccc', fontSize: '1.1rem'}}>Manage users, leagues, and points for Vessia Racing</p>
+          </div>
+
+          {/* Admin Tabs */}
+          <div className="admin-tabs" style={{display: 'flex', gap: '10px', marginBottom: '30px', justifyContent: 'center', flexWrap: 'wrap'}}>
+            <button 
+              className={`tab-button ${activeTab === 'user-management' ? 'active' : ''}`}
+              onClick={() => setActiveTab('user-management')}
+              style={{
+                padding: '12px 20px',
+                backgroundColor: activeTab === 'user-management' ? '#3EA822' : '#2a2a2a',
+                color: '#fff',
+                border: 'none',
+                borderRadius: '8px',
+                cursor: 'pointer',
+                fontSize: '1rem',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '8px'
+              }}
+            >
+              👥 User Management
+            </button>
+            <button 
+              className={`tab-button ${activeTab === 'league-management' ? 'active' : ''}`}
+              onClick={() => setActiveTab('league-management')}
+              style={{
+                padding: '12px 20px',
+                backgroundColor: activeTab === 'league-management' ? '#3EA822' : '#2a2a2a',
+                color: '#fff',
+                border: 'none',
+                borderRadius: '8px',
+                cursor: 'pointer',
+                fontSize: '1rem',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '8px'
+              }}
+            >
+              🏆 League Management
+            </button>
+            <button 
+              className={`tab-button ${activeTab === 'points-management' ? 'active' : ''}`}
+              onClick={() => setActiveTab('points-management')}
+              style={{
+                padding: '12px 20px',
+                backgroundColor: activeTab === 'points-management' ? '#3EA822' : '#2a2a2a',
+                color: '#fff',
+                border: 'none',
+                borderRadius: '8px',
+                cursor: 'pointer',
+                fontSize: '1rem',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '8px'
+              }}
+            >
+              🏅 Points Management
+            </button>
+          </div>
+
+          {/* User Management Tab */}
+          {activeTab === 'user-management' && (
+            <div className="tab-content">
+              {/* Admin Stats */}
+              <div className="admin-stats" style={{display: 'flex', gap: '20px', marginBottom: '30px', justifyContent: 'center', flexWrap: 'wrap'}}>
+                <div className="stat-card" style={{backgroundColor: '#1a1a1a', padding: '20px', borderRadius: '10px', minWidth: '150px', textAlign: 'center'}}>
+                  <div style={{fontSize: '2rem', marginBottom: '10px'}}>👥</div>
+                  <h3 style={{color: '#3EA822', fontSize: '2rem', margin: '0'}}>{stats.totalUsers}</h3>
+                  <p style={{color: '#ccc', margin: '5px 0 0'}}>Total Users</p>
+                </div>
+                <div className="stat-card" style={{backgroundColor: '#1a1a1a', padding: '20px', borderRadius: '10px', minWidth: '150px', textAlign: 'center'}}>
+                  <div style={{fontSize: '2rem', marginBottom: '10px'}}>👑</div>
+                  <h3 style={{color: '#3EA822', fontSize: '2rem', margin: '0'}}>{stats.totalAdmins}</h3>
+                  <p style={{color: '#ccc', margin: '5px 0 0'}}>Administrators</p>
+                </div>
+                <div className="stat-card" style={{backgroundColor: '#1a1a1a', padding: '20px', borderRadius: '10px', minWidth: '150px', textAlign: 'center'}}>
+                  <div style={{fontSize: '2rem', marginBottom: '10px'}}>🏎️</div>
+                  <h3 style={{color: '#3EA822', fontSize: '2rem', margin: '0'}}>{stats.totalDrivers}</h3>
+                  <p style={{color: '#ccc', margin: '5px 0 0'}}>Team Drivers</p>
+                </div>
+              </div>
+
+              {/* Users Management */}
+              <div className="admin-section" style={{backgroundColor: '#1a1a1a', padding: '25px', borderRadius: '15px'}}>
+                <h2 style={{color: '#3EA822', marginBottom: '20px', fontSize: '1.5rem', display: 'flex', alignItems: 'center', gap: '10px'}}>
+                  👥 User Management
+                </h2>
+                
+                {loading ? (
+                  <div style={{textAlign: 'center', padding: '40px', color: '#ccc'}}>
+                    Loading users...
+                  </div>
+                ) : (
+                  <div className="table-responsive" style={{overflowX: 'auto'}}>
+                    <table className="users-table" style={{width: '100%', borderCollapse: 'collapse'}}>
+                      <thead>
+                        <tr style={{borderBottom: '2px solid #3EA822'}}>
+                          <th style={{textAlign: 'left', padding: '12px', color: '#3EA822'}}>Name</th>
+                          <th style={{textAlign: 'left', padding: '12px', color: '#3EA822'}}>Email</th>
+                          <th style={{textAlign: 'left', padding: '12px', color: '#3EA822'}}>Gamertag</th>
+                          <th style={{textAlign: 'left', padding: '12px', color: '#3EA822'}}>Experience</th>
+                          <th style={{textAlign: 'left', padding: '12px', color: '#3EA822'}}>Role</th>
+                          <th style={{textAlign: 'left', padding: '12px', color: '#3EA822'}}>Driver Status</th>
+                          <th style={{textAlign: 'left', padding: '12px', color: '#3EA822'}}>Created</th>
+                          <th style={{textAlign: 'left', padding: '12px', color: '#3EA822'}}>Actions</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {users.map((user) => (
+                          <tr key={user.id} style={{borderBottom: '1px solid #444'}}>
+                            <td style={{padding: '12px', color: '#fff'}}>{user.name}</td>
+                            <td style={{padding: '12px', color: '#ccc'}}>{user.email}</td>
+                            <td style={{padding: '12px', color: '#3EA822', fontWeight: 'bold'}}>{user.gamertag}</td>
+                            <td style={{padding: '12px', color: '#ccc'}}>{user.experience}</td>
+                            <td style={{padding: '12px'}}>
+                              <span style={{
+                                padding: '4px 8px',
+                                borderRadius: '4px',
+                                fontSize: '0.8rem',
+                                backgroundColor: user.role === 'admin' ? '#dc3545' : '#6c757d',
+                                color: '#fff'
+                              }}>
+                                {user.role}
+                              </span>
+                            </td>
+                            <td style={{padding: '12px'}}>
+                              <span style={{
+                                padding: '4px 8px',
+                                borderRadius: '4px',
+                                fontSize: '0.8rem',
+                                backgroundColor: user.is_driver ? '#28a745' : '#6c757d',
+                                color: '#fff'
+                              }}>
+                                {user.is_driver ? 'Driver' : 'Regular'}
+                              </span>
+                            </td>
+                            <td style={{padding: '12px', color: '#ccc'}}>
+                              {new Date(user.created_at).toLocaleDateString()}
+                            </td>
+                            <td style={{padding: '12px'}}>
+                              <div style={{display: 'flex', gap: '5px', flexWrap: 'wrap'}}>
+                                <button
+                                  onClick={() => updateUserRole(user.id, user.role)}
+                                  style={{
+                                    padding: '4px 8px',
+                                    fontSize: '0.7rem',
+                                    backgroundColor: user.role === 'admin' ? '#6c757d' : '#17a2b8',
+                                    color: '#fff',
+                                    border: 'none',
+                                    borderRadius: '4px',
+                                    cursor: 'pointer'
+                                  }}
+                                  title={user.role === 'admin' ? 'Remove Admin' : 'Make Admin'}
+                                >
+                                  {user.role === 'admin' ? '👤 Remove Admin' : '👑 Make Admin'}
+                                </button>
+                                <button
+                                  onClick={() => updateDriverStatus(user.id, user.is_driver)}
+                                  style={{
+                                    padding: '4px 8px',
+                                    fontSize: '0.7rem',
+                                    backgroundColor: user.is_driver ? '#6c757d' : '#28a745',
+                                    color: '#fff',
+                                    border: 'none',
+                                    borderRadius: '4px',
+                                    cursor: 'pointer'
+                                  }}
+                                  title={user.is_driver ? 'Remove Driver' : 'Make Driver'}
+                                >
+                                  {user.is_driver ? '🏎️ Remove Driver' : '🏎️ Make Driver'}
+                                </button>
+                                <button
+                                  onClick={() => deleteUser(user.id, user.name)}
+                                  style={{
+                                    padding: '4px 8px',
+                                    fontSize: '0.7rem',
+                                    backgroundColor: '#dc3545',
+                                    color: '#fff',
+                                    border: 'none',
+                                    borderRadius: '4px',
+                                    cursor: 'pointer'
+                                  }}
+                                  title="Delete User"
+                                >
+                                  🗑️ Delete
+                                </button>
+                              </div>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+
+          {/* League Management Tab */}
+          {activeTab === 'league-management' && (
+            <div className="tab-content">
+              {/* Create New League */}
+              <div style={{backgroundColor: '#1a1a1a', borderRadius: '10px', padding: '20px', marginBottom: '30px'}}>
+                <h3 style={{color: '#3EA822', marginBottom: '20px', display: 'flex', alignItems: 'center', gap: '8px'}}>
+                  ➕ Create New League
+                </h3>
+                <form onSubmit={createLeague} style={{display: 'grid', gridTemplateColumns: '1fr 2fr 1fr', gap: '15px', alignItems: 'end'}}>
+                  <div>
+                    <label htmlFor="leagueName" style={{display: 'block', marginBottom: '5px', color: '#ccc'}}>League Name</label>
+                    <input 
+                      type="text" 
+                      id="leagueName" 
+                      value={leagueName}
+                      onChange={(e) => setLeagueName(e.target.value)}
+                      required 
+                      style={{width: '100%', padding: '10px', border: '1px solid #555', backgroundColor: '#2a2a2a', color: '#fff', borderRadius: '5px'}}
+                    />
+                  </div>
+                  <div>
+                    <label htmlFor="leagueDescription" style={{display: 'block', marginBottom: '5px', color: '#ccc'}}>Description</label>
+                    <input 
+                      type="text" 
+                      id="leagueDescription" 
+                      value={leagueDescription}
+                      onChange={(e) => setLeagueDescription(e.target.value)}
+                      style={{width: '100%', padding: '10px', border: '1px solid #555', backgroundColor: '#2a2a2a', color: '#fff', borderRadius: '5px'}}
+                    />
+                  </div>
+                  <div>
+                    <button type="submit" className="btn" style={{padding: '10px 20px', backgroundColor: '#28a745', color: '#fff', border: 'none', borderRadius: '5px', cursor: 'pointer'}}>
+                      ➕ Create League
+                    </button>
+                  </div>
+                </form>
+              </div>
+
+              {/* Existing Leagues */}
+              <div style={{backgroundColor: '#1a1a1a', borderRadius: '10px', padding: '20px'}}>
+                <h3 style={{color: '#17a2b8', marginBottom: '20px', display: 'flex', alignItems: 'center', gap: '8px'}}>
+                  📋 Existing Leagues
+                </h3>
+                <div>
+                  {leagues.length === 0 ? (
+                    <p style={{color: '#888', textAlign: 'center'}}>No leagues found.</p>
+                  ) : (
+                    leagues.map(league => (
+                      <div key={league.id} style={{backgroundColor: '#2a2a2a', borderRadius: '8px', padding: '15px', marginBottom: '10px', borderLeft: '4px solid #3EA822'}}>
+                        <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
+                          <div style={{flexGrow: 1}}>
+                            <h4 style={{margin: '0', color: '#3EA822'}}>{league.name}</h4>
+                            <p style={{margin: '5px 0 0 0', color: '#ccc', fontSize: '0.9em'}}>{league.description || 'No description'}</p>
+                            <small style={{color: '#888'}}>Created: {new Date(league.created_at).toLocaleDateString()}</small>
+                          </div>
+                          <div style={{marginLeft: '15px'}}>
+                            <button 
+                              onClick={() => deleteLeague(league.id, league.name)}
+                              style={{padding: '8px 12px', backgroundColor: '#dc3545', color: '#fff', border: 'none', borderRadius: '5px', cursor: 'pointer'}}
+                            >
+                              🗑️ Delete
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    ))
+                  )}
+                </div>
+              </div>
+
+              {/* Driver League Management */}
+              <div style={{backgroundColor: '#1a1a1a', borderRadius: '10px', padding: '20px', marginTop: '30px'}}>
+                <h3 style={{color: '#ffc107', marginBottom: '20px', display: 'flex', alignItems: 'center', gap: '8px'}}>
+                  🏎️ Driver League Management
+                </h3>
+                
+                {/* League Selection for Driver Management */}
+                <div style={{marginBottom: '20px'}}>
+                  <label htmlFor="selectedLeagueForDrivers" style={{display: 'block', marginBottom: '5px', color: '#ccc'}}>Select League to Manage</label>
+                  <select 
+                    id="selectedLeagueForDrivers" 
+                    value={selectedLeagueForDrivers}
+                    onChange={(e) => handleLeagueDriversChange(e.target.value)}
+                    style={{width: '100%', maxWidth: '300px', padding: '10px', border: '1px solid #555', backgroundColor: '#2a2a2a', color: '#fff', borderRadius: '5px'}}
+                  >
+                    <option value="">Select a league...</option>
+                    {leagues.map(league => (
+                      <option key={league.id} value={league.id}>{league.name}</option>
+                    ))}
+                  </select>
+                </div>
+
+                {selectedLeagueForDrivers && (
+                  <div>
+                    <h4 style={{color: '#17a2b8', marginBottom: '15px'}}>
+                      All Drivers - {leagues.find(l => l.id.toString() === selectedLeagueForDrivers)?.name}
+                    </h4>
+                    <div style={{display: 'grid', gap: '10px'}}>
+                      {users.filter(user => user.is_driver === 1).map(driver => {
+                        const isInLeague = leagueDrivers.includes(driver.id);
+                        return (
+                          <div key={driver.id} style={{
+                            backgroundColor: '#2a2a2a',
+                            borderRadius: '8px',
+                            padding: '15px',
+                            display: 'flex',
+                            justifyContent: 'space-between',
+                            alignItems: 'center',
+                            borderLeft: isInLeague ? '4px solid #3EA822' : '4px solid #6c757d'
+                          }}>
+                            <div style={{display: 'flex', alignItems: 'center', gap: '15px'}}>
+                              <div style={{
+                                width: '40px',
+                                height: '40px',
+                                borderRadius: '50%',
+                                backgroundColor: '#3EA822',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                color: 'white',
+                                fontWeight: 'bold'
+                              }}>
+                                {driver.name ? driver.name.charAt(0).toUpperCase() : 'U'}
+                              </div>
+                              <div>
+                                <h5 style={{margin: '0', color: '#fff', fontSize: '1.1rem'}}>{driver.gamertag}</h5>
+                                <p style={{margin: '2px 0 0 0', color: '#ccc', fontSize: '0.9rem'}}>{driver.name}</p>
+                                <small style={{color: isInLeague ? '#28a745' : '#888'}}>
+                                  {isInLeague ? '✅ In League' : '⚫ Not in League'}
+                                </small>
+                              </div>
+                            </div>
+                            <div>
+                              {isInLeague ? (
+                                <button
+                                  onClick={() => removeDriverFromLeague(driver.id)}
+                                  style={{
+                                    padding: '8px 16px',
+                                    backgroundColor: '#dc3545',
+                                    color: '#fff',
+                                    border: 'none',
+                                    borderRadius: '5px',
+                                    cursor: 'pointer',
+                                    fontSize: '0.9rem',
+                                    fontWeight: 'bold'
+                                  }}
+                                >
+                                  ❌ Remove from League
+                                </button>
+                              ) : (
+                                <button
+                                  onClick={() => addDriverToLeague(driver.id)}
+                                  style={{
+                                    padding: '8px 16px',
+                                    backgroundColor: '#28a745',
+                                    color: '#fff',
+                                    border: 'none',
+                                    borderRadius: '5px',
+                                    cursor: 'pointer',
+                                    fontSize: '0.9rem',
+                                    fontWeight: 'bold'
+                                  }}
+                                >
+                                  ➕ Add to League
+                                </button>
+                              )}
+                            </div>
+                          </div>
+                        );
+                      })}
+                      {users.filter(user => user.is_driver === 1).length === 0 && (
+                        <p style={{color: '#888', textAlign: 'center', padding: '20px'}}>
+                          No drivers found. Create some drivers first in the User Management tab.
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+
+          {/* Points Management Tab */}
+          {activeTab === 'points-management' && (
+            <div className="tab-content">
+              {/* League Selection */}
+              <div style={{backgroundColor: '#1a1a1a', borderRadius: '10px', padding: '20px', marginBottom: '30px'}}>
+                <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '15px', alignItems: 'end'}}>
+                  <div>
+                    <label htmlFor="selectedLeague" style={{display: 'block', marginBottom: '5px', color: '#ccc'}}>Select League</label>
+                    <select 
+                      id="selectedLeague" 
+                      value={selectedLeague}
+                      onChange={(e) => handleLeagueChange(e.target.value)}
+                      style={{width: '100%', padding: '10px', border: '1px solid #555', backgroundColor: '#2a2a2a', color: '#fff', borderRadius: '5px'}}
+                    >
+                      <option value="">Select a league...</option>
+                      {leagues.map(league => (
+                        <option key={league.id} value={league.id}>{league.name}</option>
+                      ))}
+                    </select>
+                  </div>
+                  <div>
+                    <button 
+                      onClick={resetLeaguePoints}
+                      disabled={!selectedLeague}
+                      style={{
+                        padding: '10px 20px', 
+                        backgroundColor: selectedLeague ? '#dc3545' : '#555', 
+                        color: '#fff', 
+                        border: 'none', 
+                        borderRadius: '5px', 
+                        cursor: selectedLeague ? 'pointer' : 'not-allowed'
+                      }}
+                    >
+                      🔄 Reset All Points
+                    </button>
+                  </div>
+                  <div>
+                    <button 
+                      onClick={undoLastAction}
+                      disabled={!selectedLeague}
+                      style={{
+                        padding: '10px 20px', 
+                        backgroundColor: selectedLeague ? '#ffc107' : '#555', 
+                        color: selectedLeague ? '#000' : '#fff', 
+                        border: 'none', 
+                        borderRadius: '5px', 
+                        cursor: selectedLeague ? 'pointer' : 'not-allowed'
+                      }}
+                    >
+                      ↶ Undo Last Action
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              {selectedLeague && (
+                <>
+                  {/* Quick Points Assignment */}
+                  <div style={{backgroundColor: '#1a1a1a', borderRadius: '10px', padding: '20px', marginBottom: '30px'}}>
+                    <h3 style={{color: '#ffc107', marginBottom: '20px', display: 'flex', alignItems: 'center', gap: '8px'}}>
+                      ➕ Quick Points Assignment
+                    </h3>
+                    <div style={{display: 'grid', gridTemplateColumns: '2fr 1fr 1fr 1fr', gap: '15px', alignItems: 'end'}}>
+                      <div>
+                        <label htmlFor="selectedDriver" style={{display: 'block', marginBottom: '5px', color: '#ccc'}}>Select Driver</label>
+                        <select 
+                          id="selectedDriver" 
+                          value={selectedDriver}
+                          onChange={(e) => setSelectedDriver(e.target.value)}
+                          style={{width: '100%', padding: '10px', border: '1px solid #555', backgroundColor: '#2a2a2a', color: '#fff', borderRadius: '5px'}}
+                        >
+                          <option value="">Select a driver...</option>
+                          {users.filter(user => user.is_driver === 1).map(driver => {
+                            const hasPoints = leaguePoints.some(lp => lp.id === driver.id);
+                            return (
+                              <option key={driver.id} value={driver.id}>
+                                {driver.gamertag} ({driver.name}) {hasPoints ? '✓' : ''}
+                              </option>
+                            );
+                          })}
+                        </select>
+                      </div>
+                      <div>
+                        <label htmlFor="pointsToAdd" style={{display: 'block', marginBottom: '5px', color: '#ccc'}}>Points</label>
+                        <input 
+                          type="number" 
+                          id="pointsToAdd" 
+                          value={pointsToAdd}
+                          onChange={(e) => setPointsToAdd(e.target.value)}
+                          style={{width: '100%', padding: '10px', border: '1px solid #555', backgroundColor: '#2a2a2a', color: '#fff', borderRadius: '5px'}}
+                        />
+                      </div>
+                      <div>
+                        <label htmlFor="racesToAdd" style={{display: 'block', marginBottom: '5px', color: '#ccc'}}>Races</label>
+                        <input 
+                          type="number" 
+                          id="racesToAdd" 
+                          min="0" 
+                          value={racesToAdd}
+                          onChange={(e) => setRacesToAdd(e.target.value)}
+                          style={{width: '100%', padding: '10px', border: '1px solid #555', backgroundColor: '#2a2a2a', color: '#fff', borderRadius: '5px'}}
+                        />
+                      </div>
+                      <div style={{display: 'flex', gap: '10px'}}>
+                        <button 
+                          onClick={addPoints}
+                          style={{padding: '10px 20px', backgroundColor: '#28a745', color: '#fff', border: 'none', borderRadius: '5px', cursor: 'pointer', flex: '1'}}
+                        >
+                          ➕ Add Points
+                        </button>
+                        <button 
+                          onClick={removePoints}
+                          style={{padding: '10px 20px', backgroundColor: '#dc3545', color: '#fff', border: 'none', borderRadius: '5px', cursor: 'pointer', flex: '1'}}
+                        >
+                          ➖ Remove Points
+                        </button>
+                      </div>
+                    </div>
+                    
+                    {/* Common Point Values */}
+                    <div style={{marginTop: '15px', display: 'flex', gap: '10px', flexWrap: 'wrap', alignItems: 'center'}}>
+                      <span style={{color: '#ccc', marginRight: '10px'}}>Quick Add:</span>
+                      {[25, 18, 15, 12, 10, 8, 6, 4, 2, 1].map(points => (
+                        <button 
+                          key={points}
+                          onClick={() => setPointsToAdd(points.toString())}
+                          style={{padding: '5px 10px', backgroundColor: '#6c757d', color: '#fff', border: 'none', borderRadius: '4px', cursor: 'pointer', fontSize: '0.8rem'}}
+                        >
+                          {points} pt{points !== 1 ? 's' : ''}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Points Standings */}
+                  <div style={{backgroundColor: '#1a1a1a', borderRadius: '10px', padding: '20px'}}>
+                    <h3 style={{color: '#28a745', marginBottom: '20px', display: 'flex', alignItems: 'center', gap: '8px'}}>
+                      🏆 Current Standings
+                    </h3>
+                    {pointsDrivers.length === 0 ? (
+                      <p style={{color: '#888', textAlign: 'center'}}>No drivers found in this league.</p>
+                    ) : (
+                      <table style={{width: '100%', borderCollapse: 'collapse'}}>
+                        <thead>
+                          <tr style={{borderBottom: '2px solid #3EA822'}}>
+                            <th style={{textAlign: 'left', padding: '10px', color: '#3EA822'}}>Position</th>
+                            <th style={{textAlign: 'left', padding: '10px', color: '#3EA822'}}>Driver</th>
+                            <th style={{textAlign: 'center', padding: '10px', color: '#3EA822'}}>Points</th>
+                            <th style={{textAlign: 'center', padding: '10px', color: '#3EA822'}}>Races</th>
+                            <th style={{textAlign: 'center', padding: '10px', color: '#3EA822'}}>Avg</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {pointsDrivers.map((driver, index) => (
+                            <tr key={driver.id} style={{borderBottom: '1px solid #555'}}>
+                              <td style={{
+                                padding: '10px', 
+                                fontWeight: 'bold', 
+                                color: index === 0 ? '#FFD700' : index === 1 ? '#C0C0C0' : index === 2 ? '#CD7F32' : '#ccc'
+                              }}>
+                                {index + 1}
+                              </td>
+                              <td style={{padding: '10px'}}>
+                                <div style={{display: 'flex', alignItems: 'center', gap: '10px'}}>
+                                  <div style={{
+                                    width: '30px', 
+                                    height: '30px', 
+                                    borderRadius: '50%', 
+                                    backgroundColor: '#3EA822', 
+                                    display: 'flex', 
+                                    alignItems: 'center', 
+                                    justifyContent: 'center', 
+                                    color: '#fff', 
+                                    fontWeight: 'bold',
+                                    fontSize: '12px'
+                                  }}>
+                                    {driver.gamertag.slice(0, 2).toUpperCase()}
+                                  </div>
+                                  <div>
+                                    <div style={{color: '#fff', fontWeight: 'bold'}}>{driver.gamertag}</div>
+                                    <div style={{color: '#888', fontSize: '0.8em'}}>{driver.full_name}</div>
+                                  </div>
+                                </div>
+                              </td>
+                              <td style={{padding: '10px', textAlign: 'center', fontWeight: 'bold', color: '#3EA822'}}>
+                                {driver.points}
+                              </td>
+                              <td style={{padding: '10px', textAlign: 'center', color: '#ccc'}}>
+                                {driver.races_completed}
+                              </td>
+                              <td style={{padding: '10px', textAlign: 'center', color: '#ccc'}}>
+                                {driver.races_completed > 0 ? (driver.points / driver.races_completed).toFixed(1) : '0.0'}
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    )}
+                  </div>
+                </>
+              )}
+            </div>
+          )}
+        </div>
+      </main>
+    </div>
+  );
+}

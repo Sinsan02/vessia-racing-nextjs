@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "functions": {
+    "src/app/api/**/*.ts": {
+      "maxDuration": 10
+    }
+  },
+  "env": {
+    "JWT_SECRET": "@jwt-secret"
+  }
+}
