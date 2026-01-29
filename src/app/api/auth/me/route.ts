@@ -4,7 +4,8 @@ import { dbGet, initializeTables } from '@/lib/database';
 
 export async function GET(request: NextRequest) {
   try {
-    await initializeTables(); // Ensure tables exist
+    // Skip heavy database initialization on each request
+    // await initializeTables(); // Ensure tables exist
 
     const userPayload = getUserFromRequest(request);
     
@@ -15,11 +16,16 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    // Get full user details from database
-    const user = await dbGet(
-      'SELECT id, full_name as name, email, gamertag, experience_level as experience, role, is_driver, bio, profile_picture, created_at FROM users WHERE id = $1',
-      [userPayload.userId]
-    );
+    // Get full user details from database with timeout
+    const user = await Promise.race([
+      dbGet(
+        'SELECT id, full_name as name, email, gamertag, experience_level as experience, role, is_driver, bio, profile_picture, created_at FROM users WHERE id = $1',
+        [userPayload.userId]
+      ),
+      new Promise((_, reject) => 
+        setTimeout(() => reject(new Error('Database timeout')), 8000)
+      )
+    ]) as any;
 
     if (!user) {
       return NextResponse.json(

@@ -5,6 +5,11 @@ import { dbGet } from './database';
 
 const JWT_SECRET = process.env.JWT_SECRET || 'vessia-racing-secret-key';
 
+// Ensure JWT_SECRET is available in production
+if (process.env.NODE_ENV === 'production' && !process.env.JWT_SECRET) {
+  throw new Error('JWT_SECRET environment variable is required in production');
+}
+
 export interface User {
   id: number;
   name: string;
@@ -48,7 +53,7 @@ export const getUserFromRequest = (request: NextRequest): JWTPayload | null => {
   return verifyToken(token);
 };
 
-export const requireAuth = async (request: NextRequest) => {
+export const requireAuth = (request: NextRequest) => {
   const user = getUserFromRequest(request);
   if (!user) {
     throw new Error('Authentication required');
@@ -57,7 +62,7 @@ export const requireAuth = async (request: NextRequest) => {
 };
 
 export const requireAdmin = async (request: NextRequest) => {
-  const user = await requireAuth(request);
+  const user = requireAuth(request);
   
   // Sjekk aktuell rolle fra database
   const dbUser = await dbGet('SELECT role FROM users WHERE id = $1', [user.userId]);

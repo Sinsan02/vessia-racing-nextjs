@@ -9,7 +9,9 @@
     "lint": "eslint",
     "db:init": "node scripts/init-db.mjs",
     "db:setup": "npm run db:init",
-    "migrate": "node scripts/migrate-complete.mjs"
+    "migrate": "node scripts/migrate-complete.mjs",
+    "vercel-build": "npm run build",
+    "postbuild": "echo 'Build complete! 🚀'"
   },
   "dependencies": {
     "@types/bcryptjs": "^2.4.6",

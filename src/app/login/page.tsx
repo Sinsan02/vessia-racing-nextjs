@@ -30,15 +30,11 @@ export default function Login() {
       if (response.ok) {
         const data = await response.json();
         
-        // Get user data to show name in popup
-        const userResponse = await fetch('/api/auth/me');
-        const userData = await userResponse.json();
+        // Show popup with user's name from login response
+        alert(`Velkommen ${data.user.name}! 🏁`);
         
-        // Show popup with user's name
-        alert(`Velkommen ${userData.name}! 🏁`);
-        
-        // Redirect to home page
-        window.location.href = '/';
+        // Use router.push instead of window.location for better Next.js routing
+        router.push('/');
       } else {
         const data = await response.json();
         setError(data.error || 'Login failed');

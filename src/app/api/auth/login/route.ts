@@ -14,11 +14,13 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Find user
-    const user = await dbGet(
-      'SELECT * FROM users WHERE email = $1',
-      [email]
-    );
+    // Find user with timeout
+    const user = await Promise.race([
+      dbGet('SELECT * FROM users WHERE email = $1', [email]),
+      new Promise((_, reject) => 
+        setTimeout(() => reject(new Error('Database timeout')), 10000)
+      )
+    ]) as any;
 
     if (!user) {
       return NextResponse.json(
@@ -60,8 +62,9 @@ export async function POST(request: NextRequest) {
     response.cookies.set('authToken', token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
-      sameSite: 'strict',
-      maxAge: 60 * 60 * 24 * 7 // 7 days
+      sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+      maxAge: 60 * 60 * 24 * 7, // 7 days
+      path: '/'
     });
 
     return response;
