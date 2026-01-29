@@ -5,7 +5,7 @@ import { requireAdmin } from '@/lib/auth';
 // Delete user (admin only)
 export async function DELETE(request: NextRequest, { params }: { params: Promise<{ userId: string }> }) {
   try {
-    const user = requireAdmin(request);
+    const user = await requireAdmin(request);
     const resolvedParams = await params;
     const userId = parseInt(resolvedParams.userId);
 
@@ -15,7 +15,7 @@ export async function DELETE(request: NextRequest, { params }: { params: Promise
     }
 
     // Get user info before deletion
-    const userToDelete = await dbQuery('SELECT gamertag, full_name FROM users WHERE id = ?', [userId]);
+    const userToDelete = await dbQuery('SELECT gamertag, full_name FROM users WHERE id = $1', [userId]);
     if (!userToDelete || userToDelete.length === 0) {
       return NextResponse.json({ success: false, error: 'User not found' }, { status: 404 });
     }
@@ -23,14 +23,14 @@ export async function DELETE(request: NextRequest, { params }: { params: Promise
     const targetUser = userToDelete[0];
 
     // Delete related records first (foreign key constraints)
-    await dbRun('DELETE FROM sessions WHERE user_id = ?', [userId]);
-    await dbRun('DELETE FROM racing_results WHERE user_id = ?', [userId]);
-    await dbRun('DELETE FROM driver_points WHERE driver_id = ?', [userId]);
-    await dbRun('DELETE FROM points_history WHERE driver_id = ?', [userId]);
-    await dbRun('DELETE FROM instagram_tokens WHERE user_id = ?', [userId]);
+    await dbRun('DELETE FROM sessions WHERE user_id = $1', [userId]);
+    await dbRun('DELETE FROM racing_results WHERE user_id = $1', [userId]);
+    await dbRun('DELETE FROM driver_points WHERE driver_id = $1', [userId]);
+    await dbRun('DELETE FROM points_history WHERE driver_id = $1', [userId]);
+    await dbRun('DELETE FROM instagram_tokens WHERE user_id = $1', [userId]);
     
     // Delete the user
-    const result = await dbRun('DELETE FROM users WHERE id = ?', [userId]);
+    const result = await dbRun('DELETE FROM users WHERE id = $1', [userId]);
     
     if (result.changes === 0) {
       return NextResponse.json({ success: false, error: 'Failed to delete user' }, { status: 500 });

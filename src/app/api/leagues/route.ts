@@ -1,23 +1,21 @@
 import { NextRequest, NextResponse } from 'next/server';
-import Database from 'better-sqlite3';
 import jwt from 'jsonwebtoken';
-import path from 'path';
+import { dbQuery, dbGet, dbRun, initializeTables } from '@/lib/database';
 
 const JWT_SECRET = process.env.JWT_SECRET || 'vessia-racing-secret-key';
-const dbPath = path.join(process.cwd(), 'vessia-racing.db');
 
 // Get all leagues
 export async function GET() {
   try {
-    const db = new Database(dbPath);
+    await initializeTables(); // Ensure tables exist
+
+    await initializeTables(); // Ensure tables exist
     
-    const leagues = db.prepare(`
+    const leagues = await dbQuery(`
       SELECT * FROM leagues 
       WHERE is_active = 1 
       ORDER BY name
-    `).all();
-    
-    db.close();
+    `);
     
     return NextResponse.json({ success: true, leagues });
   } catch (error) {
@@ -36,50 +34,44 @@ export async function POST(request: NextRequest) {
 
     // Verify token and admin role
     const decoded = jwt.verify(token, JWT_SECRET) as any;
-    const db = new Database(dbPath);
     
-    const user = db.prepare('SELECT role FROM users WHERE id = ?').get(decoded.userId) as any;
+    const user = await dbGet('SELECT role FROM users WHERE id = $1', [decoded.userId]);
     if (!user || user.role !== 'admin') {
-      db.close();
       return NextResponse.json({ success: false, error: 'Admin access required' }, { status: 403 });
     }
 
     const { name, description } = await request.json();
     
     if (!name || !name.trim()) {
-      db.close();
       return NextResponse.json({ success: false, error: 'League name is required' }, { status: 400 });
     }
 
     // Create league
-    const result = db.prepare(`
-      INSERT INTO leagues (name, description) VALUES (?, ?)
-    `).run(name.trim(), description || '');
+    const result = await dbRun(
+      'INSERT INTO leagues (name, description) VALUES ($1, $2) RETURNING id',
+      [name.trim(), description || '']
+    );
+
+    const leagueId = result.rows[0].id;
 
     // Initialize points for all drivers in the new league
-    const drivers = db.prepare('SELECT id FROM users WHERE is_driver = 1').all();
+    const drivers = await dbQuery('SELECT id FROM users WHERE is_driver = 1');
     
-    const insertPoints = db.prepare(`
-      INSERT INTO driver_points (driver_id, league_id, points, races_completed)
-      SELECT ?, ?, 0, 0
-      WHERE NOT EXISTS (
-        SELECT 1 FROM driver_points WHERE driver_id = ? AND league_id = ?
-      )
-    `);
-
     for (const driver of drivers) {
-      insertPoints.run((driver as any).id, result.lastInsertRowid, (driver as any).id, result.lastInsertRowid);
+      await dbRun(`
+        INSERT INTO driver_points (driver_id, league_id, points, races_completed)
+        VALUES ($1, $2, 0, 0)
+        ON CONFLICT (driver_id, league_id) DO NOTHING
+      `, [driver.id, leagueId]);
     }
-
-    db.close();
     
     return NextResponse.json({ 
       success: true, 
-      league: { id: result.lastInsertRowid, name, description } 
+      league: { id: leagueId, name, description } 
     });
   } catch (error) {
     console.error('Error creating league:', error);
-    if (error.code === 'SQLITE_CONSTRAINT_UNIQUE') {
+    if (error.code === '23505') { // PostgreSQL unique constraint violation
       return NextResponse.json({ success: false, error: 'League name already exists' }, { status: 400 });
     }
     return NextResponse.json({ success: false, error: 'Failed to create league' }, { status: 500 });

@@ -1,10 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { dbQuery } from '@/lib/database';
+import { dbQuery, initializeTables } from '@/lib/database';
 import { requireAdmin } from '@/lib/auth';
 
 export async function GET(request: NextRequest) {
   try {
-    requireAdmin(request);
+    await initializeTables(); // Ensure tables exist
+
+    await requireAdmin(request);
 
     const users = await dbQuery(`
       SELECT id, full_name as name, email, gamertag, experience_level as experience, role, is_driver, created_at

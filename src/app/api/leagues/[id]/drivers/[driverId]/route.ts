@@ -5,14 +5,14 @@ import { requireAdmin } from '@/lib/auth';
 // Remove driver from league
 export async function DELETE(request: NextRequest, { params }: { params: Promise<{ id: string, driverId: string }> }) {
   try {
-    const user = requireAdmin(request);
+    const user = await requireAdmin(request);
     const resolvedParams = await params;
     const leagueId = parseInt(resolvedParams.id);
     const driverId = parseInt(resolvedParams.driverId);
 
     // Check if driver exists in the league
     const existingDriver = await dbQuery(
-      'SELECT * FROM driver_points WHERE league_id = ? AND driver_id = ?',
+      'SELECT * FROM driver_points WHERE league_id = $1 AND driver_id = $2',
       [leagueId, driverId]
     );
 
@@ -25,13 +25,13 @@ export async function DELETE(request: NextRequest, { params }: { params: Promise
 
     // Remove driver from league (this will also remove their points)
     await dbRun(
-      'DELETE FROM driver_points WHERE league_id = ? AND driver_id = ?',
+      'DELETE FROM driver_points WHERE league_id = $1 AND driver_id = $2',
       [leagueId, driverId]
     );
 
     // Also remove from points history
     await dbRun(
-      'DELETE FROM points_history WHERE league_id = ? AND driver_id = ?',
+      'DELETE FROM points_history WHERE league_id = $1 AND driver_id = $2',
       [leagueId, driverId]
     );
 

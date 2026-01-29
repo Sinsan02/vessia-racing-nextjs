@@ -5,7 +5,7 @@ import { requireAdmin } from '@/lib/auth';
 // Update user role (admin only)
 export async function PUT(request: NextRequest, { params }: { params: Promise<{ userId: string }> }) {
   try {
-    const user = requireAdmin(request);
+    const user = await requireAdmin(request);
     const { role } = await request.json();
     const resolvedParams = await params;
     const userId = parseInt(resolvedParams.userId);
@@ -21,7 +21,7 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
     }
 
     // Update user role
-    const result = await dbRun('UPDATE users SET role = ? WHERE id = ?', [role, userId]);
+    const result = await dbRun('UPDATE users SET role = $1 WHERE id = $2', [role, userId]);
     
     if (result.changes === 0) {
       return NextResponse.json({ success: false, error: 'User not found' }, { status: 404 });

@@ -1,5 +1,17 @@
 # Vessia Racing - Deployment Guide
 
+## Database Setup (PostgreSQL)
+
+### 1. Opprett Neon Database (Anbefalt)
+1. Gå til [neon.tech](https://neon.tech) og opprett en gratis konto
+2. Opprett nytt prosjekt og database
+3. Kopier connection string fra dashboard
+
+### 2. Alternativ: Supabase
+1. Gå til [supabase.com](https://supabase.com)
+2. Opprett nytt prosjekt
+3. Hent connection string fra Settings → Database
+
 ## Deployment til Vercel
 
 ### 1. Installer Vercel CLI
@@ -22,6 +34,7 @@ vercel --prod
 2. Gå til Settings → Environment Variables
 3. Legg til:
    - `JWT_SECRET`: En sikker secret key (generer en sterk nøkkel)
+   - `DATABASE_URL`: Din PostgreSQL connection string
    - `NODE_ENV`: `production`
 
 ### 5. Redeploy for at environment variabler skal ta effekt
@@ -29,20 +42,16 @@ vercel --prod
 vercel --prod
 ```
 
-## Database
+## Database Initialization
 
-Applikasjonen bruker SQLite i utviklingsmodus og i produksjon. På serverless plattformer som Vercel vil databasen være midlertidig.
-
-### For persistent database i produksjon
-Anbefaler å bytte til en av disse:
-- **PlanetScale** (MySQL-kompatibel)
-- **Supabase** (PostgreSQL)
-- **Railway** (PostgreSQL/MySQL)
+Når du deployer første gang:
+1. Databasen initialiseres automatisk ved første API-kall
+2. Alternativt kan du kjøre: `npm run db:init` lokalt med production DATABASE_URL
 
 ## Første oppstart i produksjon
 
 1. Gå til `/register` og opprett første admin-bruker
-2. Bytt rolle til 'admin' i databasen manually første gang
+2. Første bruker som registrerer seg får automatisk admin-rolle
 3. Logg inn som admin og opprett ligaer
 
 ## Features
@@ -54,3 +63,4 @@ Anbefaler å bytte til en av disse:
 - ✅ Sjåfør management
 - ✅ Profilbilder
 - ✅ Responsive design
+- ✅ PostgreSQL database (produksjonsklart)

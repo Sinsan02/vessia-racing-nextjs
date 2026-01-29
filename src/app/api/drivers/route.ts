@@ -1,8 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { dbQuery } from '@/lib/database';
+import { dbQuery, initializeTables } from '@/lib/database';
 
 export async function GET(request: NextRequest) {
   try {
+    await initializeTables(); // Ensure tables exist
+
     const drivers = await dbQuery(`
       SELECT id, full_name as name, gamertag, experience_level as experience, created_at, bio, profile_picture
       FROM users 

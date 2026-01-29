@@ -1,6 +1,7 @@
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
 import { NextRequest } from 'next/server';
+import { dbGet } from './database';
 
 const JWT_SECRET = process.env.JWT_SECRET || 'vessia-racing-secret-key';
 
@@ -47,7 +48,7 @@ export const getUserFromRequest = (request: NextRequest): JWTPayload | null => {
   return verifyToken(token);
 };
 
-export const requireAuth = (request: NextRequest) => {
+export const requireAuth = async (request: NextRequest) => {
   const user = getUserFromRequest(request);
   if (!user) {
     throw new Error('Authentication required');
@@ -55,10 +56,15 @@ export const requireAuth = (request: NextRequest) => {
   return user;
 };
 
-export const requireAdmin = (request: NextRequest) => {
-  const user = requireAuth(request);
-  if (user.role !== 'admin') {
+export const requireAdmin = async (request: NextRequest) => {
+  const user = await requireAuth(request);
+  
+  // Sjekk aktuell rolle fra database
+  const dbUser = await dbGet('SELECT role FROM users WHERE id = $1', [user.userId]);
+  
+  if (!dbUser || dbUser.role !== 'admin') {
     throw new Error('Admin access required');
   }
-  return user;
+  
+  return { ...user, role: dbUser.role };
 };

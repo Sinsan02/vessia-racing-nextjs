@@ -250,22 +250,31 @@ export default function Profile() {
                         borderRadius: '50%'
                       }} />
                       <div style={{
-                        position: 'absolute',
-                        top: '50%',
-                        left: '50%',
-                        transform: 'translate(-50%, -50%)',
-                        fontSize: '2.5rem',
-                        opacity: '0.2',
-                        color: 'rgba(255,255,255,0.3)'
-                      }}>
-                        👤
-                      </div>
-                      <div style={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        textAlign: 'center',
                         position: 'relative',
-                        zIndex: 2,
-                        textShadow: '0 2px 4px rgba(0,0,0,0.3)'
+                        zIndex: 2
                       }}>
-                        {user.name ? user.name.charAt(0).toUpperCase() : 'U'}
+                        <div style={{
+                          fontSize: '3rem',
+                          lineHeight: '1',
+                          marginBottom: '4px',
+                          textShadow: '0 2px 4px rgba(0,0,0,0.5)'
+                        }}>
+                          {user.name ? user.name.charAt(0).toUpperCase() : 'U'}
+                        </div>
+                        <div style={{
+                          fontSize: '0.6rem',
+                          opacity: '0.9',
+                          fontWeight: '600',
+                          letterSpacing: '1.5px',
+                          textShadow: '0 1px 2px rgba(0,0,0,0.3)'
+                        }}>
+                          VESSIA
+                        </div>
                       </div>
                     </div>
                   )}

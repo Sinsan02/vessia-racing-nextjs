@@ -6,7 +6,6 @@ interface User {
   id: number;
   name: string;
   email: string;
-  gamertag: string;
   experience: string;
   role: string;
   is_driver: number;
@@ -22,7 +21,6 @@ interface League {
 
 interface PointsDriver {
   id: number;
-  gamertag: string;
   full_name: string;
   points: number;
   races_completed: number;
@@ -55,11 +53,15 @@ export default function Admin() {
 
   const fetchUsers = async () => {
     try {
-      const response = await fetch('/api/admin/users');
+      const response = await fetch('/api/admin/users', {
+        credentials: 'include'
+      });
       const data = await response.json();
       if (data.users) {
         setUsers(data.users);
         calculateStats(data.users);
+      } else {
+        console.error('No users in response:', data);
       }
     } catch (error) {
       console.error('Failed to fetch users:', error);
@@ -70,7 +72,9 @@ export default function Admin() {
 
   const fetchLeagues = async () => {
     try {
-      const response = await fetch('/api/leagues');
+      const response = await fetch('/api/leagues', {
+        credentials: 'include'
+      });
       const data = await response.json();
       if (data.success && data.leagues) {
         setLeagues(data.leagues);
@@ -83,7 +87,9 @@ export default function Admin() {
   const fetchLeaguePoints = async (leagueId: string) => {
     if (!leagueId) return;
     try {
-      const response = await fetch(`/api/leagues/${leagueId}/points`);
+      const response = await fetch(`/api/leagues/${leagueId}/points`, {
+        credentials: 'include'
+      });
       const data = await response.json();
       if (data.success) {
         setPointsDrivers(data.points);
@@ -109,6 +115,7 @@ export default function Admin() {
     try {
       const response = await fetch('/api/leagues', {
         method: 'POST',
+        credentials: 'include',
         headers: {
           'Content-Type': 'application/json',
         },
@@ -137,7 +144,8 @@ export default function Admin() {
 
     try {
       const response = await fetch(`/api/leagues/${leagueId}`, {
-        method: 'DELETE'
+        method: 'DELETE',
+        credentials: 'include'
       });
 
       const data = await response.json();
@@ -171,6 +179,7 @@ export default function Admin() {
     try {
       const response = await fetch(`/api/leagues/${selectedLeague}/points/${selectedDriver}`, {
         method: 'POST',
+        credentials: 'include',
         headers: {
           'Content-Type': 'application/json',
         },
@@ -212,6 +221,7 @@ export default function Admin() {
     try {
       const response = await fetch(`/api/leagues/${selectedLeague}/points/${selectedDriver}`, {
         method: 'DELETE',
+        credentials: 'include',
         headers: {
           'Content-Type': 'application/json',
         },
@@ -250,7 +260,8 @@ export default function Admin() {
 
     try {
       const response = await fetch(`/api/leagues/${selectedLeague}/reset`, {
-        method: 'POST'
+        method: 'POST',
+        credentials: 'include'
       });
 
       const data = await response.json();
@@ -274,7 +285,8 @@ export default function Admin() {
 
     try {
       const response = await fetch(`/api/leagues/${selectedLeague}/undo`, {
-        method: 'POST'
+        method: 'POST',
+        credentials: 'include'
       });
 
       const data = await response.json();
@@ -300,6 +312,7 @@ export default function Admin() {
     try {
       const response = await fetch(`/api/admin/users/${userId}/role`, {
         method: 'PUT',
+        credentials: 'include',
         headers: {
           'Content-Type': 'application/json',
         },
@@ -330,6 +343,7 @@ export default function Admin() {
     try {
       const response = await fetch(`/api/admin/users/${userId}/driver`, {
         method: 'PUT',
+        credentials: 'include',
         headers: {
           'Content-Type': 'application/json',
         },
@@ -356,7 +370,8 @@ export default function Admin() {
 
     try {
       const response = await fetch(`/api/admin/users/${userId}`, {
-        method: 'DELETE'
+        method: 'DELETE',
+        credentials: 'include'
       });
 
       const data = await response.json();
@@ -383,7 +398,9 @@ export default function Admin() {
 
   const fetchLeagueDrivers = async (leagueId: string) => {
     try {
-      const response = await fetch(`/api/leagues/${leagueId}/drivers`);
+      const response = await fetch(`/api/leagues/${leagueId}/drivers`, {
+        credentials: 'include'
+      });
       if (response.ok) {
         const data = await response.json();
         setLeagueDrivers(data.drivers || []);
@@ -403,6 +420,7 @@ export default function Admin() {
     try {
       const response = await fetch(`/api/leagues/${selectedLeagueForDrivers}/drivers`, {
         method: 'POST',
+        credentials: 'include',
         headers: {
           'Content-Type': 'application/json',
         },
@@ -427,7 +445,8 @@ export default function Admin() {
 
     try {
       const response = await fetch(`/api/leagues/${selectedLeagueForDrivers}/drivers/${driverId}`, {
-        method: 'DELETE'
+        method: 'DELETE',
+        credentials: 'include'
       });
 
       const data = await response.json();
@@ -560,7 +579,6 @@ export default function Admin() {
                         <tr style={{borderBottom: '2px solid #3EA822'}}>
                           <th style={{textAlign: 'left', padding: '12px', color: '#3EA822'}}>Name</th>
                           <th style={{textAlign: 'left', padding: '12px', color: '#3EA822'}}>Email</th>
-                          <th style={{textAlign: 'left', padding: '12px', color: '#3EA822'}}>Gamertag</th>
                           <th style={{textAlign: 'left', padding: '12px', color: '#3EA822'}}>Experience</th>
                           <th style={{textAlign: 'left', padding: '12px', color: '#3EA822'}}>Role</th>
                           <th style={{textAlign: 'left', padding: '12px', color: '#3EA822'}}>Driver Status</th>
@@ -573,7 +591,6 @@ export default function Admin() {
                           <tr key={user.id} style={{borderBottom: '1px solid #444'}}>
                             <td style={{padding: '12px', color: '#fff'}}>{user.name}</td>
                             <td style={{padding: '12px', color: '#ccc'}}>{user.email}</td>
-                            <td style={{padding: '12px', color: '#3EA822', fontWeight: 'bold'}}>{user.gamertag}</td>
                             <td style={{padding: '12px', color: '#ccc'}}>{user.experience}</td>
                             <td style={{padding: '12px'}}>
                               <span style={{
@@ -781,10 +798,10 @@ export default function Admin() {
                                 color: 'white',
                                 fontWeight: 'bold'
                               }}>
-                                {driver.name ? driver.name.charAt(0).toUpperCase() : 'U'}
+                                {driver.name ? driver.name.slice(0, 2).toUpperCase() : 'U'}
                               </div>
                               <div>
-                                <h5 style={{margin: '0', color: '#fff', fontSize: '1.1rem'}}>{driver.gamertag}</h5>
+                                <h5 style={{margin: '0', color: '#fff', fontSize: '1.1rem'}}>{driver.name}</h5>
                                 <p style={{margin: '2px 0 0 0', color: '#ccc', fontSize: '0.9rem'}}>{driver.name}</p>
                                 <small style={{color: isInLeague ? '#28a745' : '#888'}}>
                                   {isInLeague ? '✅ In League' : '⚫ Not in League'}
@@ -917,7 +934,7 @@ export default function Admin() {
                             const hasPoints = leaguePoints.some(lp => lp.id === driver.id);
                             return (
                               <option key={driver.id} value={driver.id}>
-                                {driver.gamertag} ({driver.name}) {hasPoints ? '✓' : ''}
+                                {driver.name} {hasPoints ? '✓' : ''}
                               </option>
                             );
                           })}
@@ -1017,11 +1034,10 @@ export default function Admin() {
                                     fontWeight: 'bold',
                                     fontSize: '12px'
                                   }}>
-                                    {driver.gamertag.slice(0, 2).toUpperCase()}
+                                    {(driver.full_name || 'U').slice(0, 2).toUpperCase()}
                                   </div>
                                   <div>
-                                    <div style={{color: '#fff', fontWeight: 'bold'}}>{driver.gamertag}</div>
-                                    <div style={{color: '#888', fontSize: '0.8em'}}>{driver.full_name}</div>
+                                    <div style={{color: '#fff', fontWeight: 'bold'}}>{driver.full_name}</div>
                                   </div>
                                 </div>
                               </td>

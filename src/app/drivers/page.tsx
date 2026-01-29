@@ -66,7 +66,7 @@ export default function Drivers() {
                     {driver.profile_picture ? (
                       <img
                         src={driver.profile_picture}
-                        alt={`${driver.gamertag} profile`}
+                        alt={`${driver.fullName || driver.name || 'Driver'} profile`}
                         style={{
                           width: '80px',
                           height: '80px',
@@ -94,16 +94,13 @@ export default function Drivers() {
                           boxShadow: '0 4px 20px rgba(62, 168, 34, 0.3)'
                         }}
                       >
-                        {driver.gamertag ? driver.gamertag.charAt(0).toUpperCase() : 'D'}
+                        {driver.fullName || driver.name ? (driver.fullName || driver.name).charAt(0).toUpperCase() : 'D'}
                       </div>
                     )}
                   </div>
                   <h3 style={{color: '#3EA822', marginBottom: '10px'}}>
-                    {driver.gamertag || 'Unknown Gamertag'}
+                    {driver.fullName || driver.name || 'Unknown Driver'}
                   </h3>
-                  <p style={{color: '#ccc', marginBottom: '8px'}}>
-                    {driver.fullName || driver.name || 'Unknown Name'}
-                  </p>
                   <p style={{color: '#888', fontSize: '0.9rem', marginBottom: '8px'}}>
                     Experience: {driver.experience || 'Not specified'}
                   </p>

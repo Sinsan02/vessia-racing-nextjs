@@ -1,9 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getUserFromRequest } from '@/lib/auth';
-import { dbGet } from '@/lib/database';
+import { dbGet, initializeTables } from '@/lib/database';
 
 export async function GET(request: NextRequest) {
   try {
+    await initializeTables(); // Ensure tables exist
+
     const userPayload = getUserFromRequest(request);
     
     if (!userPayload) {
@@ -15,7 +17,7 @@ export async function GET(request: NextRequest) {
 
     // Get full user details from database
     const user = await dbGet(
-      'SELECT id, full_name as name, email, gamertag, experience_level as experience, role, is_driver, bio, profile_picture, created_at FROM users WHERE id = ?',
+      'SELECT id, full_name as name, email, gamertag, experience_level as experience, role, is_driver, bio, profile_picture, created_at FROM users WHERE id = $1',
       [userPayload.userId]
     );
 

@@ -6,6 +6,9 @@
     }
   },
   "env": {
-    "JWT_SECRET": "@jwt-secret"
-  }
+    "JWT_SECRET": "@jwt-secret",
+    "DATABASE_URL": "@database-url"
+  },
+  "regions": ["cle1"],
+  "framework": "nextjs"
 }

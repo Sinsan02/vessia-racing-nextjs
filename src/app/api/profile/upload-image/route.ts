@@ -58,7 +58,7 @@ export async function POST(request: NextRequest) {
 
     // Update user profile picture in database
     await dbRun(
-      'UPDATE users SET profile_picture = ? WHERE id = ?',
+      'UPDATE users SET profile_picture = $1 WHERE id = $2',
       [imageUrl, user.userId]
     );
 

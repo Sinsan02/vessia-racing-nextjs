@@ -5,13 +5,13 @@ import { requireAdmin } from '@/lib/auth';
 // Get all drivers in a specific league
 export async function GET(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
-    const user = requireAdmin(request);
+    const user = await requireAdmin(request);
     const resolvedParams = await params;
     const leagueId = parseInt(resolvedParams.id);
 
     // Get all drivers in the league
     const drivers = await dbQuery(
-      'SELECT driver_id FROM driver_points WHERE league_id = ?',
+      'SELECT driver_id FROM driver_points WHERE league_id = $1',
       [leagueId]
     );
 
@@ -39,14 +39,14 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
 // Add driver to league
 export async function POST(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
-    const user = requireAdmin(request);
+    const user = await requireAdmin(request);
     const resolvedParams = await params;
     const leagueId = parseInt(resolvedParams.id);
     const { driverId } = await request.json();
 
     // Check if driver is already in the league
     const existingDriver = await dbQuery(
-      'SELECT * FROM driver_points WHERE league_id = ? AND driver_id = ?',
+      'SELECT * FROM driver_points WHERE league_id = $1 AND driver_id = $2',
       [leagueId, driverId]
     );
 
@@ -59,7 +59,7 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
 
     // Add driver to league with 0 points and 0 races
     await dbRun(
-      'INSERT INTO driver_points (league_id, driver_id, points, races_completed) VALUES (?, ?, 0, 0)',
+      'INSERT INTO driver_points (league_id, driver_id, points, races_completed) VALUES ($1, $2, 0, 0)',
       [leagueId, driverId]
     );
 

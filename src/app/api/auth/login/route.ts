@@ -16,7 +16,7 @@ export async function POST(request: NextRequest) {
 
     // Find user
     const user = await dbGet(
-      'SELECT * FROM users WHERE email = ?',
+      'SELECT * FROM users WHERE email = $1',
       [email]
     );
 
