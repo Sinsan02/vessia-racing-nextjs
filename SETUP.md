@@ -28,13 +28,35 @@ npm install
 4. This will create all necessary tables, indexes, and policies
 
 ### Storage Setup
-1. Go to Storage → Buckets
+1. Go to Storage → Buckets in your Supabase dashboard
 2. Create a new bucket named `profile-pictures`
-3. Make it public (for profile picture access)
-4. Set up the following policies for the bucket:
-   - Anyone can view files
-   - Authenticated users can upload files
-   - Users can update their own files
+3. Make it **Public** (toggle the public setting on)
+4. Go to Storage → Policies
+5. Create the following policies for the `profile-pictures` bucket:
+
+**Policy 1: Allow public read access**
+- Policy name: `Public read access`
+- Allowed operation: `SELECT`
+- Target roles: `public`
+- SQL: `true`
+
+**Policy 2: Allow authenticated users to upload**
+- Policy name: `Authenticated upload`
+- Allowed operation: `INSERT`
+- Target roles: `authenticated`
+- SQL: `true`
+
+**Policy 3: Allow users to update their own files**
+- Policy name: `User update own files`
+- Allowed operation: `UPDATE`
+- Target roles: `authenticated`
+- SQL: `true`
+
+**Policy 4: Allow users to delete their own files**
+- Policy name: `User delete own files`
+- Allowed operation: `DELETE`
+- Target roles: `authenticated`
+- SQL: `true`
 
 ### Get API Keys
 1. Go to Settings → API

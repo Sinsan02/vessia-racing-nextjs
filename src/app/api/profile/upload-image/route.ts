@@ -1,8 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { supabaseAdmin } from '@/lib/supabase';
 import { requireAuth } from '@/lib/auth';
-import { writeFile } from 'fs/promises';
-import { join } from 'path';
 
 // Upload profile image
 export async function POST(request: NextRequest) {
@@ -41,53 +39,82 @@ export async function POST(request: NextRequest) {
     const timestamp = Date.now();
     const extension = file.name.split('.').pop() || 'jpg';
     const filename = `profile_${user.userId}_${timestamp}.${extension}`;
-    const filepath = join(process.cwd(), 'public', 'uploads', filename);
-    const imageUrl = `/uploads/${filename}`;
 
-    // Ensure uploads directory exists
-    const { mkdir } = require('fs/promises');
-    const uploadsDir = join(process.cwd(), 'public', 'uploads');
-    try {
-      await mkdir(uploadsDir, { recursive: true });
-    } catch (error) {
-      // Directory already exists
+    // Delete old profile picture if exists
+    const { data: currentUser } = await supabaseAdmin
+      .from('users')
+      .select('profile_picture')
+      .eq('id', user.userId)
+      .single();
+
+    if (currentUser?.profile_picture) {
+      // Extract filename from URL to delete old file
+      const oldFilename = currentUser.profile_picture.split('/').pop();
+      if (oldFilename) {
+        await supabaseAdmin.storage
+          .from('profile-pictures')
+          .remove([oldFilename]);
+      }
     }
 
-    // Write file to disk
-    await writeFile(filepath, buffer);
+    // Upload to Supabase Storage
+    const { data, error: uploadError } = await supabaseAdmin.storage
+      .from('profile-pictures')
+      .upload(filename, buffer, {
+        contentType: file.type,
+        upsert: false
+      });
 
-    // Update user profile picture in Supabase database
+    if (uploadError) {
+      console.error('Upload error:', uploadError);
+      return NextResponse.json({ 
+        success: false, 
+        error: 'Failed to upload image' 
+      }, { status: 500 });
+    }
+
+    // Get public URL
+    const { data: { publicUrl } } = supabaseAdmin.storage
+      .from('profile-pictures')
+      .getPublicUrl(filename);
+
+    // Update user profile in database
     const { error: updateError } = await supabaseAdmin
       .from('users')
-      .update({ profile_picture: imageUrl })
+      .update({ profile_picture: publicUrl })
       .eq('id', user.userId);
 
     if (updateError) {
       console.error('Database update error:', updateError);
-      return NextResponse.json({
-        success: false,
-        error: 'Failed to update profile picture'
+      // Clean up uploaded file if database update fails
+      await supabaseAdmin.storage
+        .from('profile-pictures')
+        .remove([filename]);
+      
+      return NextResponse.json({ 
+        success: false, 
+        error: 'Failed to update profile' 
       }, { status: 500 });
     }
 
     return NextResponse.json({
       success: true,
-      imageUrl: imageUrl,
-      message: 'Profile image updated successfully'
+      imageUrl: publicUrl,
+      message: 'Profile picture updated successfully'
     });
   } catch (error: any) {
-    console.error('Error uploading image:', error);
+    console.error('Profile image upload error:', error);
     
     if (error.message === 'Authentication required') {
       return NextResponse.json(
-        { error: error.message },
+        { error: 'Authentication required' },
         { status: 401 }
       );
     }
     
     return NextResponse.json({ 
       success: false, 
-      error: 'Failed to upload image' 
+      error: 'Internal server error' 
     }, { status: 500 });
   }
 }
