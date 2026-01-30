@@ -5,19 +5,23 @@ import { requireAdmin } from '@/lib/auth';
 // Delete user (admin only)
 export async function DELETE(request: NextRequest, { params }: { params: Promise<{ userId: string }> }) {
   try {
-    const user = await requireAdmin(request);
+    const authResult = await requireAdmin(request);
+    if (!authResult.success || !authResult.user) {
+      return NextResponse.json({ success: false, error: authResult.error }, { status: authResult.status || 401 });
+    }
+
     const resolvedParams = await params;
     const userId = parseInt(resolvedParams.userId);
 
     // Prevent admin from deleting themselves
-    if (userId === user.userId) {
+    if (userId === authResult.user.userId) {
       return NextResponse.json({ success: false, error: 'You cannot delete your own account' }, { status: 400 });
     }
 
     // Get user info before deletion
     const { data: userToDelete, error: fetchError } = await supabaseAdmin
       .from('users')
-      .select('gamertag, full_name')
+      .select('full_name')
       .eq('id', userId)
       .single();
       
@@ -34,16 +38,12 @@ export async function DELETE(request: NextRequest, { params }: { params: Promise
 
     if (deleteError) {
       console.error('Delete error:', deleteError);
-      throw deleteError;
-    }
-    
-    if (result.changes === 0) {
       return NextResponse.json({ success: false, error: 'Failed to delete user' }, { status: 500 });
     }
     
     return NextResponse.json({
       success: true,
-      message: `User ${targetUser.gamertag} has been deleted successfully`
+      message: `User ${userToDelete.full_name} has been deleted successfully`
     });
   } catch (error: any) {
     console.error('Error deleting user:', error);

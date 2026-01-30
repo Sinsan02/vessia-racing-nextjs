@@ -31,7 +31,7 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
     }
 
     // Transform data to match expected format
-    const transformedPoints = points?.map(p => ({
+    const transformedPoints = points?.map((p: any) => ({
       id: p.driver_id,
       full_name: p.users.full_name,
       profile_picture: p.users.profile_picture,
