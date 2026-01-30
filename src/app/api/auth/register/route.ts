@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { dbRun } from '@/lib/database';
+import { supabaseAdmin } from '@/lib/supabase';
 import { hashPassword, generateToken } from '@/lib/auth';
 
 export async function POST(request: NextRequest) {
@@ -17,23 +17,41 @@ export async function POST(request: NextRequest) {
     // Hash password
     const hashedPassword = await hashPassword(password);
 
-    // Insert user into database
-    const result = await dbRun(
-      `INSERT INTO users (full_name, email, password_hash, experience_level, role, created_at)
-       VALUES ($1, $2, $3, $4, 'user', CURRENT_TIMESTAMP)`,
-      [name, email, hashedPassword, experience]
-    );
+    // Insert user into Supabase database
+    const { data: newUser, error } = await supabaseAdmin
+      .from('users')
+      .insert({
+        full_name: name,
+        email: email,
+        password_hash: hashedPassword,
+        experience_level: experience,
+        role: 'user',
+        created_at: new Date().toISOString()
+      })
+      .select()
+      .single();
+
+    if (error) {
+      console.error('Supabase insertion error:', error);
+      if (error.code === '23505') { // Unique constraint violation
+        return NextResponse.json(
+          { error: 'Email already exists' },
+          { status: 409 }
+        );
+      }
+      throw error;
+    }
 
     // Generate token
     const token = generateToken({
-      userId: result.lastID!,
+      userId: newUser.id,
       email: email,
       role: 'user'
     });
 
     // Set cookie and return response
     const response = NextResponse.json(
-      { message: 'Registration successful', userId: result.lastID },
+      { message: 'Registration successful', userId: newUser.id },
       { status: 201 }
     );
 
@@ -48,7 +66,7 @@ export async function POST(request: NextRequest) {
   } catch (error: any) {
     console.error('Registration error:', error);
     
-    if (error.message.includes('UNIQUE constraint failed')) {
+    if (error.code === '23505' || error.message.includes('duplicate key')) {
       return NextResponse.json(
         { error: 'Email already exists' },
         { status: 409 }

@@ -1,138 +1,34 @@
-import { Pool } from 'pg';
+import { supabase, supabaseAdmin } from './supabase';
 
-// PostgreSQL connection - optimized for Vercel serverless
-const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
-  ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false,
-  max: 5, // Limit connections for serverless
-  connectionTimeoutMillis: 10000, // 10 seconds
-  idleTimeoutMillis: 30000, // 30 seconds
-  allowExitOnIdle: true, // Important for serverless
-});
-
+// Use Supabase instead of direct PostgreSQL connection
 export async function getDatabase() {
-  return pool;
+  return supabaseAdmin;
 }
 
-// Initialize database tables
+// Initialize database tables using Supabase
 export async function initializeTables() {
-  console.log('🔧 Initializing database tables...');
-  const client = await pool.connect();
-  try {
-    await client.query('BEGIN');
-    await createTables(client);
-    await client.query('COMMIT');
-    console.log('✅ Database tables initialized successfully');
-  } catch (error) {
-    await client.query('ROLLBACK');
-    console.error('❌ Failed to initialize tables:', error);
-    throw error;
-  } finally {
-    client.release();
-  }
+  console.log('🔧 Database tables should be created in Supabase dashboard');
+  console.log('Run the SQL from supabase-schema.sql in your Supabase SQL Editor');
+  console.log('✅ Using Supabase - no local table initialization needed');
 }
 
-async function createTables(client: any) {
-  const tables = [
-    `CREATE TABLE IF NOT EXISTS users (
-      id SERIAL PRIMARY KEY,
-      full_name TEXT NOT NULL,
-      email TEXT UNIQUE NOT NULL,
-      password_hash TEXT NOT NULL,
-      gamertag TEXT UNIQUE,
-      experience_level TEXT DEFAULT 'beginner',
-      role TEXT DEFAULT 'user',
-      is_driver INTEGER DEFAULT 0,
-      bio TEXT,
-      profile_picture TEXT,
-      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-      updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-    )`,
-    `CREATE TABLE IF NOT EXISTS leagues (
-      id SERIAL PRIMARY KEY,
-      name TEXT NOT NULL,
-      description TEXT,
-      is_active INTEGER DEFAULT 1,
-      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-      updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-    )`,
-    `CREATE TABLE IF NOT EXISTS driver_points (
-      id SERIAL PRIMARY KEY,
-      league_id INTEGER NOT NULL,
-      driver_id INTEGER NOT NULL,
-      points INTEGER DEFAULT 0,
-      races_completed INTEGER DEFAULT 0,
-      race_position INTEGER,
-      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-      FOREIGN KEY (league_id) REFERENCES leagues(id),
-      FOREIGN KEY (driver_id) REFERENCES users(id),
-      UNIQUE(driver_id, league_id)
-    )`,
-    `CREATE TABLE IF NOT EXISTS league_drivers (
-      id SERIAL PRIMARY KEY,
-      league_id INTEGER NOT NULL,
-      driver_id INTEGER NOT NULL,
-      joined_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-      FOREIGN KEY (league_id) REFERENCES leagues(id),
-      FOREIGN KEY (driver_id) REFERENCES users(id),
-      UNIQUE(league_id, driver_id)
-    )`,
-    `CREATE TABLE IF NOT EXISTS points_history (
-      id SERIAL PRIMARY KEY,
-      driver_id INTEGER NOT NULL,
-      league_id INTEGER NOT NULL,
-      points_change INTEGER DEFAULT 0,
-      races_change INTEGER DEFAULT 0,
-      admin_id INTEGER,
-      reason TEXT,
-      old_points INTEGER DEFAULT 0,
-      new_points INTEGER DEFAULT 0,
-      old_races INTEGER DEFAULT 0,
-      new_races INTEGER DEFAULT 0,
-      action_type TEXT DEFAULT 'MANUAL',
-      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-      FOREIGN KEY (driver_id) REFERENCES users(id),
-      FOREIGN KEY (league_id) REFERENCES leagues(id),
-      FOREIGN KEY (admin_id) REFERENCES users(id)
-    )`
-  ];
-  
-  for (const tableSQL of tables) {
-    await client.query(tableSQL);
-  }
-}
-
-// Database query functions
+// Database query functions using Supabase
 export const dbQuery = async (sql: string, params: any[] = []): Promise<any> => {
-  const client = await pool.connect();
-  try {
-    const result = await client.query(sql, params);
-    return result.rows;
-  } finally {
-    client.release();
-  }
+  console.warn('dbQuery with raw SQL not supported with Supabase. Use supabase client methods instead.');
+  return [];
 };
 
 export const dbRun = async (sql: string, params: any[] = []): Promise<any> => {
-  const client = await pool.connect();
-  try {
-    const result = await client.query(sql, params);
-    return { 
-      lastID: result.rows.length > 0 ? result.rows[0].id : null,
-      changes: result.rowCount,
-      rows: result.rows
-    };
-  } finally {
-    client.release();
-  }
+  console.warn('dbRun with raw SQL not supported with Supabase. Use supabase client methods instead.');
+  return { lastID: null, changes: 0, rows: [] };
 };
 
 export const dbGet = async (sql: string, params: any[] = []): Promise<any> => {
-  const client = await pool.connect();
-  try {
-    const result = await client.query(sql, params);
-    return result.rows[0] || null;
-  } finally {
-    client.release();
-  }
+  console.warn('dbGet with raw SQL not supported with Supabase. Use supabase client methods instead.');
+  return null;
+
+  // For Supabase operations, use these instead:
+  // const { data, error } = await supabaseAdmin.from('table_name').select('*');
+  // const { data, error } = await supabaseAdmin.from('table_name').insert({...});
+  // const { data, error } = await supabaseAdmin.from('table_name').update({...}).eq('id', id);
 };

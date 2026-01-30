@@ -6,7 +6,6 @@ interface User {
   id: number;
   name: string;
   email: string;
-  gamertag: string;
   experience: string;
   role: string;
   createdAt: string;
@@ -25,8 +24,6 @@ export default function Profile() {
   // Form data
   const [formData, setFormData] = useState({
     name: '',
-    gamertag: '',
-    experience: '',
     bio: '',
     email: ''
   });
@@ -43,8 +40,6 @@ export default function Profile() {
         setUser(userData);
         setFormData({
           name: userData.name || '',
-          gamertag: userData.gamertag || '',
-          experience: userData.experience || '',
           bio: userData.bio || '',
           email: userData.email || ''
         });
@@ -142,8 +137,6 @@ export default function Profile() {
     if (user) {
       setFormData({
         name: user.name || '',
-        gamertag: user.gamertag || '',
-        experience: user.experience || '',
         bio: user.bio || '',
         email: user.email || ''
       });
@@ -207,10 +200,41 @@ export default function Profile() {
             <div style={{backgroundColor: '#1a1a1a', padding: '30px', borderRadius: '10px', marginBottom: '20px'}}>
               <div style={{textAlign: 'center', marginBottom: '30px'}}>
                 <div style={{position: 'relative', display: 'inline-block'}}>
-                  {user.profile_picture ? (
+                  {user.profile_picture && user.profile_picture.trim() && user.profile_picture !== '/uploads/default-avatar.png' ? (
                     <img
                       src={user.profile_picture}
                       alt="Profile"
+                      onError={(e) => {
+                        // Hvis bildet ikke laster, vis placeholder i stedet
+                        const target = e.target as HTMLImageElement;
+                        target.style.display = 'none';
+                        const parent = target.parentElement;
+                        if (parent) {
+                          parent.innerHTML = `
+                            <div style="
+                              width: 120px;
+                              height: 120px;
+                              border-radius: 50%;
+                              background: linear-gradient(135deg, #3EA822 0%, #2d7a1a 100%);
+                              display: flex;
+                              align-items: center;
+                              justify-content: center;
+                              margin-bottom: 20px;
+                              color: white;
+                              border: 3px solid #3EA822;
+                              position: relative;
+                              overflow: hidden;
+                              box-shadow: 0 8px 32px rgba(62, 168, 34, 0.4);
+                              cursor: pointer;
+                              font-size: 3rem;
+                              font-weight: bold;
+                            " onclick="document.getElementById('file-input').click();">
+                              ${user.name ? user.name.charAt(0).toUpperCase() : 
+                                user.email ? user.email.charAt(0).toUpperCase() : 'R'}
+                            </div>
+                          `;
+                        }
+                      }}
                       style={{
                         width: '120px',
                         height: '120px',
@@ -231,24 +255,45 @@ export default function Profile() {
                         alignItems: 'center',
                         justifyContent: 'center',
                         marginBottom: '20px',
-                        fontSize: '3rem',
-                        fontWeight: 'bold',
                         color: 'white',
                         border: '3px solid #3EA822',
                         position: 'relative',
                         overflow: 'hidden',
-                        boxShadow: '0 4px 20px rgba(62, 168, 34, 0.3)'
+                        boxShadow: '0 8px 32px rgba(62, 168, 34, 0.4)',
+                        cursor: 'pointer'
                       }}
+                      onClick={() => fileInputRef.current?.click()}
                     >
+                      {/* Gloss effect overlay */}
                       <div style={{
                         position: 'absolute',
                         top: '0',
                         left: '0',
                         right: '0',
                         bottom: '0',
-                        background: 'radial-gradient(circle at 30% 30%, rgba(255,255,255,0.2) 0%, transparent 50%)',
+                        background: 'radial-gradient(circle at 30% 30%, rgba(255,255,255,0.3) 0%, transparent 60%)',
                         borderRadius: '50%'
                       }} />
+                      
+                      {/* Racing stripes pattern */}
+                      <div style={{
+                        position: 'absolute',
+                        top: '0',
+                        left: '0',
+                        right: '0',
+                        bottom: '0',
+                        background: `repeating-linear-gradient(
+                          45deg,
+                          transparent,
+                          transparent 8px,
+                          rgba(255,255,255,0.1) 8px,
+                          rgba(255,255,255,0.1) 12px
+                        )`,
+                        borderRadius: '50%',
+                        opacity: '0.6'
+                      }} />
+                      
+                      {/* Main content */}
                       <div style={{
                         display: 'flex',
                         flexDirection: 'column',
@@ -256,24 +301,39 @@ export default function Profile() {
                         justifyContent: 'center',
                         textAlign: 'center',
                         position: 'relative',
-                        zIndex: 2
+                        zIndex: 3
                       }}>
+                        {/* User initial */}
                         <div style={{
-                          fontSize: '3rem',
+                          fontSize: '3.2rem',
                           lineHeight: '1',
-                          marginBottom: '4px',
-                          textShadow: '0 2px 4px rgba(0,0,0,0.5)'
+                          marginBottom: '2px',
+                          textShadow: '0 3px 6px rgba(0,0,0,0.6)',
+                          fontWeight: 'bold'
                         }}>
-                          {user.name ? user.name.charAt(0).toUpperCase() : 'U'}
+                          {user.name ? user.name.charAt(0).toUpperCase() : 
+                           user.email ? user.email.charAt(0).toUpperCase() : 'R'}
                         </div>
+                        
+                        {/* VESSIA RACING text */}
                         <div style={{
-                          fontSize: '0.6rem',
-                          opacity: '0.9',
-                          fontWeight: '600',
-                          letterSpacing: '1.5px',
-                          textShadow: '0 1px 2px rgba(0,0,0,0.3)'
+                          fontSize: '0.55rem',
+                          opacity: '0.95',
+                          fontWeight: '700',
+                          letterSpacing: '1.8px',
+                          textShadow: '0 2px 4px rgba(0,0,0,0.4)'
                         }}>
                           VESSIA
+                        </div>
+                        <div style={{
+                          fontSize: '0.45rem',
+                          opacity: '0.85',
+                          fontWeight: '600',
+                          letterSpacing: '1.2px',
+                          textShadow: '0 1px 2px rgba(0,0,0,0.3)',
+                          marginTop: '-2px'
+                        }}>
+                          RACING
                         </div>
                       </div>
                     </div>
@@ -305,6 +365,7 @@ export default function Profile() {
                 </div>
 
                 <input
+                  id="file-input"
                   type="file"
                   ref={fileInputRef}
                   onChange={handleImageUpload}
@@ -377,60 +438,11 @@ export default function Profile() {
 
                 <div>
                   <label style={{display: 'block', color: '#3EA822', fontWeight: 'bold', marginBottom: '8px'}}>
-                    Gamertag:
+                    Experience Level: <span style={{color: '#888', fontWeight: 'normal', fontSize: '0.9rem'}}>(Admin only)</span>
                   </label>
-                  {isEditing ? (
-                    <input
-                      type="text"
-                      value={formData.gamertag}
-                      onChange={(e) => handleInputChange('gamertag', e.target.value)}
-                      style={{
-                        width: '100%',
-                        color: '#fff',
-                        padding: '10px',
-                        backgroundColor: '#0a0a0a',
-                        border: '2px solid #3EA822',
-                        borderRadius: '5px',
-                        fontSize: '1rem'
-                      }}
-                      placeholder="Enter your gamertag"
-                    />
-                  ) : (
-                    <p style={{color: '#fff', padding: '10px', backgroundColor: '#0a0a0a', borderRadius: '5px'}}>
-                      {user.gamertag || 'Not specified'}
-                    </p>
-                  )}
-                </div>
-
-                <div>
-                  <label style={{display: 'block', color: '#3EA822', fontWeight: 'bold', marginBottom: '8px'}}>
-                    Experience Level:
-                  </label>
-                  {isEditing ? (
-                    <select
-                      value={formData.experience}
-                      onChange={(e) => handleInputChange('experience', e.target.value)}
-                      style={{
-                        width: '100%',
-                        color: '#fff',
-                        padding: '10px',
-                        backgroundColor: '#0a0a0a',
-                        border: '2px solid #3EA822',
-                        borderRadius: '5px',
-                        fontSize: '1rem'
-                      }}
-                    >
-                      <option value="">Select experience level</option>
-                      <option value="beginner">Beginner</option>
-                      <option value="intermediate">Intermediate</option>
-                      <option value="advanced">Advanced</option>
-                      <option value="professional">Professional</option>
-                    </select>
-                  ) : (
-                    <p style={{color: '#fff', padding: '10px', backgroundColor: '#0a0a0a', borderRadius: '5px'}}>
-                      {user.experience || 'Not specified'}
-                    </p>
-                  )}
+                  <p style={{color: '#fff', padding: '10px', backgroundColor: '#0a0a0a', borderRadius: '5px'}}>
+                    {user.experience || 'Not specified'}
+                  </p>
                 </div>
 
                 <div>
@@ -466,7 +478,11 @@ export default function Profile() {
                     Member Since:
                   </label>
                   <p style={{color: '#fff', padding: '10px', backgroundColor: '#0a0a0a', borderRadius: '5px'}}>
-                    {user.createdAt ? new Date(user.createdAt).toLocaleDateString() : 'Unknown'}
+                    {user.createdAt ? new Date(user.createdAt).toLocaleDateString('nb-NO', { 
+                      year: 'numeric', 
+                      month: 'long', 
+                      day: 'numeric' 
+                    }) : 'Unknown'}
                   </p>
                 </div>
               </div>

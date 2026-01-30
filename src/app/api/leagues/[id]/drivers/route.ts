@@ -1,34 +1,35 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { dbRun, dbQuery } from '@/lib/database';
+import { supabaseAdmin } from '@/lib/supabase';
 import { requireAdmin } from '@/lib/auth';
 
 // Get all drivers in a specific league
 export async function GET(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
-    const user = await requireAdmin(request);
+    const adminCheck = await requireAdmin(request);
+    if (!adminCheck.success) {
+      return NextResponse.json({ error: adminCheck.error }, { status: adminCheck.status });
+    }
+    
     const resolvedParams = await params;
     const leagueId = parseInt(resolvedParams.id);
 
     // Get all drivers in the league
-    const drivers = await dbQuery(
-      'SELECT driver_id FROM driver_points WHERE league_id = $1',
-      [leagueId]
-    );
+    const { data: drivers, error } = await supabaseAdmin
+      .from('driver_points')
+      .select('driver_id')
+      .eq('league_id', leagueId);
+
+    if (error) {
+      console.error('Error fetching league drivers:', error);
+      throw error;
+    }
 
     return NextResponse.json({
       success: true,
-      drivers: drivers.map((d: any) => d.driver_id)
+      drivers: drivers?.map((d: any) => d.driver_id) || []
     });
   } catch (error: any) {
     console.error('Error fetching league drivers:', error);
-    
-    if (error.message === 'Authentication required' || error.message === 'Admin access required') {
-      return NextResponse.json(
-        { error: error.message },
-        { status: 401 }
-      );
-    }
-    
     return NextResponse.json({ 
       success: false, 
       error: 'Failed to fetch league drivers' 
@@ -39,18 +40,24 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
 // Add driver to league
 export async function POST(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
-    const user = await requireAdmin(request);
+    const adminCheck = await requireAdmin(request);
+    if (!adminCheck.success) {
+      return NextResponse.json({ error: adminCheck.error }, { status: adminCheck.status });
+    }
+    
     const resolvedParams = await params;
     const leagueId = parseInt(resolvedParams.id);
     const { driverId } = await request.json();
 
     // Check if driver is already in the league
-    const existingDriver = await dbQuery(
-      'SELECT * FROM driver_points WHERE league_id = $1 AND driver_id = $2',
-      [leagueId, driverId]
-    );
+    const { data: existingDriver } = await supabaseAdmin
+      .from('driver_points')
+      .select('*')
+      .eq('league_id', leagueId)
+      .eq('driver_id', driverId)
+      .single();
 
-    if (existingDriver && existingDriver.length > 0) {
+    if (existingDriver) {
       return NextResponse.json({ 
         success: false, 
         error: 'Driver is already in this league' 
@@ -58,10 +65,19 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
     }
 
     // Add driver to league with 0 points and 0 races
-    await dbRun(
-      'INSERT INTO driver_points (league_id, driver_id, points, races_completed) VALUES ($1, $2, 0, 0)',
-      [leagueId, driverId]
-    );
+    const { error } = await supabaseAdmin
+      .from('driver_points')
+      .insert({
+        league_id: leagueId,
+        driver_id: driverId,
+        points: 0,
+        races_completed: 0
+      });
+
+    if (error) {
+      console.error('Error adding driver to league:', error);
+      throw error;
+    }
 
     return NextResponse.json({
       success: true,
@@ -69,14 +85,6 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
     });
   } catch (error: any) {
     console.error('Error adding driver to league:', error);
-    
-    if (error.message === 'Authentication required' || error.message === 'Admin access required') {
-      return NextResponse.json(
-        { error: error.message },
-        { status: 401 }
-      );
-    }
-    
     return NextResponse.json({ 
       success: false, 
       error: 'Failed to add driver to league' 

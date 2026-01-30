@@ -1,39 +1,52 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { dbRun, dbQuery } from '@/lib/database';
+import { supabaseAdmin } from '@/lib/supabase';
 import { requireAdmin } from '@/lib/auth';
 
 // Remove driver from league
 export async function DELETE(request: NextRequest, { params }: { params: Promise<{ id: string, driverId: string }> }) {
   try {
-    const user = await requireAdmin(request);
+    const adminCheck = await requireAdmin(request);
+    if (!adminCheck.success) {
+      return NextResponse.json({ error: adminCheck.error }, { status: adminCheck.status });
+    }
+    
     const resolvedParams = await params;
     const leagueId = parseInt(resolvedParams.id);
     const driverId = parseInt(resolvedParams.driverId);
 
     // Check if driver exists in the league
-    const existingDriver = await dbQuery(
-      'SELECT * FROM driver_points WHERE league_id = $1 AND driver_id = $2',
-      [leagueId, driverId]
-    );
+    const { data: existingDriver, error: checkError } = await supabaseAdmin
+      .from('driver_points')
+      .select('*')
+      .eq('league_id', leagueId)
+      .eq('driver_id', driverId)
+      .single();
 
-    if (!existingDriver || existingDriver.length === 0) {
+    if (checkError || !existingDriver) {
       return NextResponse.json({ 
         success: false, 
         error: 'Driver is not in this league' 
       }, { status: 404 });
     }
 
-    // Remove driver from league (this will also remove their points)
-    await dbRun(
-      'DELETE FROM driver_points WHERE league_id = $1 AND driver_id = $2',
-      [leagueId, driverId]
-    );
+    // Remove from points history first (foreign key constraint)
+    await supabaseAdmin
+      .from('points_history')
+      .delete()
+      .eq('league_id', leagueId)
+      .eq('driver_id', driverId);
 
-    // Also remove from points history
-    await dbRun(
-      'DELETE FROM points_history WHERE league_id = $1 AND driver_id = $2',
-      [leagueId, driverId]
-    );
+    // Remove driver from league (this will also remove their points)
+    const { error: deleteError } = await supabaseAdmin
+      .from('driver_points')
+      .delete()
+      .eq('league_id', leagueId)
+      .eq('driver_id', driverId);
+
+    if (deleteError) {
+      console.error('Error removing driver from league:', deleteError);
+      throw deleteError;
+    }
 
     return NextResponse.json({
       success: true,
@@ -41,14 +54,6 @@ export async function DELETE(request: NextRequest, { params }: { params: Promise
     });
   } catch (error: any) {
     console.error('Error removing driver from league:', error);
-    
-    if (error.message === 'Authentication required' || error.message === 'Admin access required') {
-      return NextResponse.json(
-        { error: error.message },
-        { status: 401 }
-      );
-    }
-    
     return NextResponse.json({ 
       success: false, 
       error: 'Failed to remove driver from league' 

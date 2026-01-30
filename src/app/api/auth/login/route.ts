@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { dbGet } from '@/lib/database';
+import { supabaseAdmin } from '@/lib/supabase';
 import { verifyPassword, generateToken } from '@/lib/auth';
 
 export async function POST(request: NextRequest) {
@@ -14,15 +14,14 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Find user with timeout
-    const user = await Promise.race([
-      dbGet('SELECT * FROM users WHERE email = $1', [email]),
-      new Promise((_, reject) => 
-        setTimeout(() => reject(new Error('Database timeout')), 10000)
-      )
-    ]) as any;
+    // Find user in Supabase
+    const { data: user, error } = await supabaseAdmin
+      .from('users')
+      .select('*')
+      .eq('email', email)
+      .single();
 
-    if (!user) {
+    if (error || !user) {
       return NextResponse.json(
         { error: 'Invalid credentials' },
         { status: 401 }

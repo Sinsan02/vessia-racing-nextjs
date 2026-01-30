@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { dbRun, dbQuery } from '@/lib/database';
+import { supabaseAdmin } from '@/lib/supabase';
 import { getUserFromRequest } from '@/lib/auth';
 
 // Update user profile
@@ -21,12 +21,14 @@ export async function PUT(request: NextRequest) {
 
     // Check if gamertag is unique (exclude current user) - only if gamertag is provided
     if (gamertag && gamertag.trim()) {
-      const existingUser = await dbQuery(
-        'SELECT id FROM users WHERE gamertag = $1 AND id != $2', 
-        [gamertag, user.userId]
-      );
+      const { data: existingUser } = await supabaseAdmin
+        .from('users')
+        .select('id')
+        .eq('gamertag', gamertag)
+        .neq('id', user.userId)
+        .single();
       
-      if (existingUser && existingUser.length > 0) {
+      if (existingUser) {
         return NextResponse.json({ 
           success: false, 
           error: 'Gamertag is already taken' 
@@ -35,12 +37,14 @@ export async function PUT(request: NextRequest) {
     }
 
     // Check if email is unique (exclude current user)
-    const existingEmail = await dbQuery(
-      'SELECT id FROM users WHERE email = $1 AND id != $2', 
-      [email, user.userId]
-    );
+    const { data: existingEmail } = await supabaseAdmin
+      .from('users')
+      .select('id')
+      .eq('email', email)
+      .neq('id', user.userId)
+      .single();
     
-    if (existingEmail && existingEmail.length > 0) {
+    if (existingEmail) {
       return NextResponse.json({ 
         success: false, 
         error: 'Email is already in use' 
@@ -48,25 +52,39 @@ export async function PUT(request: NextRequest) {
     }
 
     // Update user profile
-    await dbRun(
-      'UPDATE users SET full_name = $1, gamertag = $2, experience_level = $3, bio = $4, email = $5 WHERE id = $6',
-      [name, gamertag || null, experience, bio, email, user.userId]
-    );
+    const { data: updatedUser, error } = await supabaseAdmin
+      .from('users')
+      .update({
+        full_name: name,
+        gamertag: gamertag || null,
+        experience_level: experience,
+        bio: bio,
+        email: email,
+        updated_at: new Date().toISOString()
+      })
+      .eq('id', user.userId)
+      .select('id, full_name, email, gamertag, experience_level, bio, role, profile_picture, created_at')
+      .single();
 
-    // Fetch updated user data
-    const updatedUser = await dbQuery(
-      'SELECT id, full_name as name, email, gamertag, experience_level as experience, bio, role, profile_picture, created_at as createdAt FROM users WHERE id = $1',
-      [user.userId]
-    );
-
-    if (!updatedUser || updatedUser.length === 0) {
+    if (error || !updatedUser) {
+      console.error('Supabase update error:', error);
       return NextResponse.json({ 
         success: false, 
-        error: 'Failed to fetch updated user data' 
+        error: 'Failed to update profile' 
       }, { status: 500 });
     }
 
-    return NextResponse.json(updatedUser[0]);
+    return NextResponse.json({
+      id: updatedUser.id,
+      name: updatedUser.full_name,
+      email: updatedUser.email,
+      gamertag: updatedUser.gamertag,
+      experience: updatedUser.experience_level,
+      bio: updatedUser.bio,
+      role: updatedUser.role,
+      profile_picture: updatedUser.profile_picture,
+      createdAt: updatedUser.created_at
+    });
   } catch (error: any) {
     console.error('Error updating profile:', error);
     

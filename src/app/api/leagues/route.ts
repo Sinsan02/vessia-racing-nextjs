@@ -1,21 +1,20 @@
 import { NextRequest, NextResponse } from 'next/server';
-import jwt from 'jsonwebtoken';
-import { dbQuery, dbGet, dbRun, initializeTables } from '@/lib/database';
-
-const JWT_SECRET = process.env.JWT_SECRET || 'vessia-racing-secret-key';
+import { supabaseAdmin } from '@/lib/supabase';
+import { requireAdmin } from '@/lib/auth';
 
 // Get all leagues
 export async function GET() {
   try {
-    await initializeTables(); // Ensure tables exist
+    const { data: leagues, error } = await supabaseAdmin
+      .from('leagues')
+      .select('*')
+      .eq('is_active', 1)
+      .order('name');
 
-    await initializeTables(); // Ensure tables exist
-    
-    const leagues = await dbQuery(`
-      SELECT * FROM leagues 
-      WHERE is_active = 1 
-      ORDER BY name
-    `);
+    if (error) {
+      console.error('Supabase error fetching leagues:', error);
+      throw error;
+    }
     
     return NextResponse.json({ success: true, leagues });
   } catch (error) {
@@ -27,17 +26,9 @@ export async function GET() {
 // Create new league (admin only)
 export async function POST(request: NextRequest) {
   try {
-    const token = request.cookies.get('authToken')?.value;
-    if (!token) {
-      return NextResponse.json({ success: false, error: 'Not authenticated' }, { status: 401 });
-    }
-
-    // Verify token and admin role
-    const decoded = jwt.verify(token, JWT_SECRET) as any;
-    
-    const user = await dbGet('SELECT role FROM users WHERE id = $1', [decoded.userId]);
-    if (!user || user.role !== 'admin') {
-      return NextResponse.json({ success: false, error: 'Admin access required' }, { status: 403 });
+    const adminCheck = await requireAdmin(request);
+    if (!adminCheck.success) {
+      return NextResponse.json({ success: false, error: adminCheck.error }, { status: adminCheck.status });
     }
 
     const { name, description } = await request.json();
@@ -47,27 +38,47 @@ export async function POST(request: NextRequest) {
     }
 
     // Create league
-    const result = await dbRun(
-      'INSERT INTO leagues (name, description) VALUES ($1, $2) RETURNING id',
-      [name.trim(), description || '']
-    );
+    const { data: newLeague, error: createError } = await supabaseAdmin
+      .from('leagues')
+      .insert({
+        name: name.trim(),
+        description: description || ''
+      })
+      .select()
+      .single();
 
-    const leagueId = result.rows[0].id;
+    if (createError) {
+      console.error('League creation error:', createError);
+      if (createError.code === '23505') {
+        return NextResponse.json({ success: false, error: 'League name already exists' }, { status: 400 });
+      }
+      throw createError;
+    }
+
+    const leagueId = newLeague.id;
 
     // Initialize points for all drivers in the new league
-    const drivers = await dbQuery('SELECT id FROM users WHERE is_driver = 1');
-    
-    for (const driver of drivers) {
-      await dbRun(`
-        INSERT INTO driver_points (driver_id, league_id, points, races_completed)
-        VALUES ($1, $2, 0, 0)
-        ON CONFLICT (driver_id, league_id) DO NOTHING
-      `, [driver.id, leagueId]);
+    const { data: drivers, error: driversError } = await supabaseAdmin
+      .from('users')
+      .select('id')
+      .eq('is_driver', 1);
+      
+    if (!driversError && drivers) {
+      const driverPointsData = drivers.map(driver => ({
+        driver_id: driver.id,
+        league_id: leagueId,
+        points: 0,
+        races_completed: 0
+      }));
+      
+      await supabaseAdmin
+        .from('driver_points')
+        .upsert(driverPointsData, { onConflict: 'driver_id,league_id' });
     }
     
     return NextResponse.json({ 
       success: true, 
-      league: { id: leagueId, name, description } 
+      league: { id: leagueId, name: name.trim(), description: description || '' } 
     });
   } catch (error) {
     console.error('Error creating league:', error);

@@ -1,20 +1,34 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { dbQuery, initializeTables } from '@/lib/database';
+import { supabaseAdmin } from '@/lib/supabase';
 import { requireAdmin } from '@/lib/auth';
 
 export async function GET(request: NextRequest) {
   try {
-    await initializeTables(); // Ensure tables exist
-
     await requireAdmin(request);
 
-    const users = await dbQuery(`
-      SELECT id, full_name as name, email, gamertag, experience_level as experience, role, is_driver, created_at
-      FROM users
-      ORDER BY created_at DESC
-    `);
+    const { data: users, error } = await supabaseAdmin
+      .from('users')
+      .select('id, full_name, email, gamertag, experience_level, role, is_driver, created_at')
+      .order('created_at', { ascending: false });
 
-    return NextResponse.json({ users });
+    if (error) {
+      console.error('Supabase error fetching users:', error);
+      throw error;
+    }
+
+    // Transform data to match expected format
+    const transformedUsers = users.map(user => ({
+      id: user.id,
+      name: user.full_name,
+      email: user.email,
+      gamertag: user.gamertag,
+      experience: user.experience_level,
+      role: user.role,
+      is_driver: user.is_driver,
+      created_at: user.created_at
+    }));
+
+    return NextResponse.json({ users: transformedUsers });
   } catch (error: any) {
     console.error('Users fetch error:', error);
     

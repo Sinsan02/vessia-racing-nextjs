@@ -1,31 +1,45 @@
 import { NextRequest, NextResponse } from 'next/server';
-
-import jwt from 'jsonwebtoken';
-import { dbQuery, dbGet, dbRun, initializeTables } from '@/lib/database';
-
-
-
-const JWT_SECRET = process.env.JWT_SECRET || 'vessia-racing-secret-key';
-
+import { supabaseAdmin } from '@/lib/supabase';
 
 // Get league points standings
 export async function GET(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     const { id } = await params;
-    const points = await dbQuery(`
-      SELECT 
-        dp.driver_id as id,
-        u.full_name,
-        u.profile_picture,
-        dp.points,
-        dp.races_completed
-      FROM driver_points dp
-      JOIN users u ON dp.driver_id = u.id
-      WHERE dp.league_id = $1 AND u.is_driver = 1
-      ORDER BY dp.points DESC, dp.races_completed ASC, u.full_name ASC
-    `, [id]);
     
-    return NextResponse.json({ success: true, points });
+    const { data: points, error } = await supabaseAdmin
+      .from('driver_points')
+      .select(`
+        driver_id,
+        points,
+        races_completed,
+        users!inner(
+          id,
+          full_name,
+          profile_picture,
+          is_driver
+        )
+      `)
+      .eq('league_id', id)
+      .eq('users.is_driver', 1)
+      .order('points', { ascending: false })
+      .order('races_completed', { ascending: true })
+      .order('users(full_name)', { ascending: true });
+
+    if (error) {
+      console.error('Error fetching league points:', error);
+      throw error;
+    }
+
+    // Transform data to match expected format
+    const transformedPoints = points?.map(p => ({
+      id: p.driver_id,
+      full_name: p.users.full_name,
+      profile_picture: p.users.profile_picture,
+      points: p.points,
+      races_completed: p.races_completed
+    })) || [];
+    
+    return NextResponse.json({ success: true, points: transformedPoints });
   } catch (error) {
     console.error('Error fetching league points:', error);
     return NextResponse.json({ success: false, error: 'Failed to fetch points' }, { status: 500 });

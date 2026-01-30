@@ -1,7 +1,7 @@
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
 import { NextRequest } from 'next/server';
-import { dbGet } from './database';
+import { supabaseAdmin } from './supabase';
 
 const JWT_SECRET = process.env.JWT_SECRET || 'vessia-racing-secret-key';
 
@@ -62,14 +62,22 @@ export const requireAuth = (request: NextRequest) => {
 };
 
 export const requireAdmin = async (request: NextRequest) => {
-  const user = requireAuth(request);
-  
-  // Sjekk aktuell rolle fra database
-  const dbUser = await dbGet('SELECT role FROM users WHERE id = $1', [user.userId]);
-  
-  if (!dbUser || dbUser.role !== 'admin') {
-    throw new Error('Admin access required');
+  try {
+    const user = requireAuth(request);
+    
+    // Check current role from Supabase database
+    const { data: dbUser, error } = await supabaseAdmin
+      .from('users')
+      .select('role')
+      .eq('id', user.userId)
+      .single();
+    
+    if (error || !dbUser || dbUser.role !== 'admin') {
+      return { success: false, error: 'Admin access required', status: 403 };
+    }
+    
+    return { success: true, user: { ...user, role: dbUser.role } };
+  } catch (error) {
+    return { success: false, error: 'Authentication required', status: 401 };
   }
-  
-  return { ...user, role: dbUser.role };
 };

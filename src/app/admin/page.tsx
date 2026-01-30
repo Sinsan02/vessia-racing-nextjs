@@ -684,9 +684,9 @@ export default function Admin() {
                 <h3 style={{color: '#3EA822', marginBottom: '20px', display: 'flex', alignItems: 'center', gap: '8px'}}>
                   ➕ Create New League
                 </h3>
-                <form onSubmit={createLeague} style={{display: 'grid', gridTemplateColumns: '1fr 2fr 1fr', gap: '15px', alignItems: 'end'}}>
-                  <div>
-                    <label htmlFor="leagueName" style={{display: 'block', marginBottom: '5px', color: '#ccc'}}>League Name</label>
+                <form onSubmit={createLeague} style={{display: 'flex', alignItems: 'flex-end', gap: '30px'}}>
+                  <div style={{flex: '1', maxWidth: '200px'}}>
+                    <label htmlFor="leagueName" style={{display: 'block', marginBottom: '8px', color: '#ccc'}}>League Name</label>
                     <input 
                       type="text" 
                       id="leagueName" 
@@ -696,8 +696,8 @@ export default function Admin() {
                       style={{width: '100%', padding: '10px', border: '1px solid #555', backgroundColor: '#2a2a2a', color: '#fff', borderRadius: '5px'}}
                     />
                   </div>
-                  <div>
-                    <label htmlFor="leagueDescription" style={{display: 'block', marginBottom: '5px', color: '#ccc'}}>Description</label>
+                  <div style={{flex: '2', maxWidth: '300px'}}>
+                    <label htmlFor="leagueDescription" style={{display: 'block', marginBottom: '8px', color: '#ccc'}}>Description</label>
                     <input 
                       type="text" 
                       id="leagueDescription" 
@@ -706,8 +706,8 @@ export default function Admin() {
                       style={{width: '100%', padding: '10px', border: '1px solid #555', backgroundColor: '#2a2a2a', color: '#fff', borderRadius: '5px'}}
                     />
                   </div>
-                  <div>
-                    <button type="submit" className="btn" style={{padding: '10px 20px', backgroundColor: '#28a745', color: '#fff', border: 'none', borderRadius: '5px', cursor: 'pointer'}}>
+                  <div style={{flex: '0 0 auto'}}>
+                    <button type="submit" className="btn" style={{padding: '10px 20px', backgroundColor: '#28a745', color: '#fff', border: 'none', borderRadius: '5px', cursor: 'pointer', whiteSpace: 'nowrap'}}>
                       ➕ Create League
                     </button>
                   </div>
@@ -920,9 +920,9 @@ export default function Admin() {
                     <h3 style={{color: '#ffc107', marginBottom: '20px', display: 'flex', alignItems: 'center', gap: '8px'}}>
                       ➕ Quick Points Assignment
                     </h3>
-                    <div style={{display: 'grid', gridTemplateColumns: '2fr 1fr 1fr 1fr', gap: '15px', alignItems: 'end'}}>
-                      <div>
-                        <label htmlFor="selectedDriver" style={{display: 'block', marginBottom: '5px', color: '#ccc'}}>Select Driver</label>
+                    <div style={{display: 'flex', alignItems: 'flex-end', gap: '15px', flexWrap: 'wrap'}}>
+                      <div style={{flex: '2', maxWidth: '250px'}}>
+                        <label htmlFor="selectedDriver" style={{display: 'block', marginBottom: '8px', color: '#ccc'}}>Select Driver</label>
                         <select 
                           id="selectedDriver" 
                           value={selectedDriver}
@@ -940,8 +940,8 @@ export default function Admin() {
                           })}
                         </select>
                       </div>
-                      <div>
-                        <label htmlFor="pointsToAdd" style={{display: 'block', marginBottom: '5px', color: '#ccc'}}>Points</label>
+                      <div style={{flex: '0 0 80px', marginRight: '15px'}}>
+                        <label htmlFor="pointsToAdd" style={{display: 'block', marginBottom: '8px', color: '#ccc'}}>Points</label>
                         <input 
                           type="number" 
                           id="pointsToAdd" 
@@ -950,8 +950,8 @@ export default function Admin() {
                           style={{width: '100%', padding: '10px', border: '1px solid #555', backgroundColor: '#2a2a2a', color: '#fff', borderRadius: '5px'}}
                         />
                       </div>
-                      <div>
-                        <label htmlFor="racesToAdd" style={{display: 'block', marginBottom: '5px', color: '#ccc'}}>Races</label>
+                      <div style={{flex: '0 0 80px', marginRight: '15px'}}>
+                        <label htmlFor="racesToAdd" style={{display: 'block', marginBottom: '8px', color: '#ccc'}}>Races</label>
                         <input 
                           type="number" 
                           id="racesToAdd" 
@@ -964,15 +964,15 @@ export default function Admin() {
                       <div style={{display: 'flex', gap: '10px'}}>
                         <button 
                           onClick={addPoints}
-                          style={{padding: '10px 20px', backgroundColor: '#28a745', color: '#fff', border: 'none', borderRadius: '5px', cursor: 'pointer', flex: '1'}}
+                          style={{padding: '10px 15px', backgroundColor: '#28a745', color: '#fff', border: 'none', borderRadius: '5px', cursor: 'pointer', fontSize: '0.9rem', whiteSpace: 'nowrap'}}
                         >
-                          ➕ Add Points
+                          + Add
                         </button>
                         <button 
                           onClick={removePoints}
-                          style={{padding: '10px 20px', backgroundColor: '#dc3545', color: '#fff', border: 'none', borderRadius: '5px', cursor: 'pointer', flex: '1'}}
+                          style={{padding: '10px 15px', backgroundColor: '#dc3545', color: '#fff', border: 'none', borderRadius: '5px', cursor: 'pointer', fontSize: '0.9rem', whiteSpace: 'nowrap'}}
                         >
-                          ➖ Remove Points
+                          - Remove
                         </button>
                       </div>
                     </div>

@@ -1,12 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getUserFromRequest } from '@/lib/auth';
-import { dbGet, initializeTables } from '@/lib/database';
+import { supabaseAdmin } from '@/lib/supabase';
 
 export async function GET(request: NextRequest) {
   try {
-    // Skip heavy database initialization on each request
-    // await initializeTables(); // Ensure tables exist
-
     const userPayload = getUserFromRequest(request);
     
     if (!userPayload) {
@@ -16,25 +13,31 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    // Get full user details from database with timeout
-    const user = await Promise.race([
-      dbGet(
-        'SELECT id, full_name as name, email, gamertag, experience_level as experience, role, is_driver, bio, profile_picture, created_at FROM users WHERE id = $1',
-        [userPayload.userId]
-      ),
-      new Promise((_, reject) => 
-        setTimeout(() => reject(new Error('Database timeout')), 8000)
-      )
-    ]) as any;
+    // Get full user details from Supabase
+    const { data: user, error } = await supabaseAdmin
+      .from('users')
+      .select('id, full_name, email, experience_level, role, is_driver, bio, profile_picture, created_at')
+      .eq('id', userPayload.userId)
+      .single();
 
-    if (!user) {
+    if (error || !user) {
       return NextResponse.json(
         { error: 'User not found' },
         { status: 404 }
       );
     }
 
-    return NextResponse.json(user);
+    return NextResponse.json({
+      id: user.id,
+      name: user.full_name,
+      email: user.email,
+      experience: user.experience_level,
+      role: user.role,
+      is_driver: user.is_driver,
+      bio: user.bio,
+      profile_picture: user.profile_picture,
+      createdAt: user.created_at
+    });
   } catch (error) {
     console.error('Get current user error:', error);
     return NextResponse.json(

@@ -1,26 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server';
-
-import jwt from 'jsonwebtoken';
-import { dbQuery, dbGet, dbRun, initializeTables } from '@/lib/database';
-
-
-
-const JWT_SECRET = process.env.JWT_SECRET || 'vessia-racing-secret-key';
-
+import { requireAdmin } from '@/lib/auth';
+import { supabaseAdmin } from '@/lib/supabase';
 
 // Add points to driver (admin only)
 export async function POST(request: NextRequest, { params }: { params: Promise<{ id: string, driverId: string }> }) {
   try {
-    const token = request.cookies.get('authToken')?.value;
-    if (!token) {
-      return NextResponse.json({ success: false, error: 'Not authenticated' }, { status: 401 });
-    }
-
-    // Verify token and admin role
-    const decoded = jwt.verify(token, JWT_SECRET) as any;
-    const user = await dbGet(`SELECT role FROM users WHERE id = $1`, [decoded.userId]) as any;
-    if (!user || user.role !== 'admin') {
-      return NextResponse.json({ success: false, error: 'Admin access required' }, { status: 403 });
+    const adminCheck = await requireAdmin(request);
+    if (!adminCheck.success) {
+      return NextResponse.json({ success: false, error: adminCheck.error }, { status: adminCheck.status });
     }
 
     const { points, races } = await request.json();
@@ -32,44 +19,74 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
     }
 
     // Check if driver exists and is a driver
-    const driver = await dbGet(`SELECT * FROM users WHERE id = $1 AND is_driver = 1`, [driverId]);
-    if (!driver) {
+    const { data: driver, error: driverError } = await supabaseAdmin
+      .from('users')
+      .select('*')
+      .eq('id', driverId)
+      .eq('is_driver', 1)
+      .single();
+
+    if (driverError || !driver) {
       return NextResponse.json({ success: false, error: 'Driver not found' }, { status: 404 });
     }
 
     // Get current points for history
-    const currentPoints = await dbGet(`
-      SELECT points, races_completed FROM driver_points 
-      WHERE driver_id = $1 AND league_id = $2
-    `, [driverId, leagueId]);
+    const { data: currentPoints } = await supabaseAdmin
+      .from('driver_points')
+      .select('points, races_completed')
+      .eq('driver_id', driverId)
+      .eq('league_id', leagueId)
+      .single();
 
     if (!currentPoints) {
       // Initialize driver in league if not exists
-      await dbRun(`
-        INSERT INTO driver_points (driver_id, league_id, points, races_completed)
-        VALUES ($1, $2, 0, 0)
-      `, [driverId, leagueId]);
+      await supabaseAdmin
+        .from('driver_points')
+        .insert({
+          driver_id: driverId,
+          league_id: leagueId,
+          points: 0,
+          races_completed: 0
+        });
     }
 
-    // Get current points before update
-    const currentData = await dbGet(`
-      SELECT points, races_completed 
-      FROM driver_points 
-      WHERE driver_id = $1 AND league_id = $2
-    `, [driverId, leagueId]) || { points: 0, races_completed: 0 };
+    // Get current data after potential initialization
+    const { data: currentData } = await supabaseAdmin
+      .from('driver_points')
+      .select('points, races_completed')
+      .eq('driver_id', driverId)
+      .eq('league_id', leagueId)
+      .single();
+
+    const oldPoints = currentData?.points || 0;
+    const oldRaces = currentData?.races_completed || 0;
 
     // Record in points history
-    await dbRun(`
-      INSERT INTO points_history (driver_id, league_id, points_change, races_change, admin_id, reason, old_points, new_points, old_races, new_races, action_type)
-      VALUES ($1, $2, $3, $4, $5, 'Manual points addition', $6, $7, $8, $9, 'MANUAL_ADD')
-    `, [driverId, leagueId, points, races, decoded.userId, currentData.points, currentData.points + points, currentData.races_completed, currentData.races_completed + races]);
+    await supabaseAdmin
+      .from('points_history')
+      .insert({
+        driver_id: driverId,
+        league_id: leagueId,
+        points_change: points,
+        races_change: races,
+        admin_id: adminCheck.user?.userId,
+        reason: 'Manual points addition',
+        old_points: oldPoints,
+        new_points: oldPoints + points,
+        old_races: oldRaces,
+        new_races: oldRaces + races,
+        action_type: 'MANUAL_ADD'
+      });
 
     // Update current points
-    await dbRun(`
-      UPDATE driver_points 
-      SET points = points + $1, races_completed = races_completed + $2
-      WHERE driver_id = $3 AND league_id = $4
-    `, [points, races, driverId, leagueId]);
+    await supabaseAdmin
+      .from('driver_points')
+      .update({
+        points: oldPoints + points,
+        races_completed: oldRaces + races
+      })
+      .eq('driver_id', driverId)
+      .eq('league_id', leagueId);
 
     return NextResponse.json({ success: true });
   } catch (error) {
@@ -81,16 +98,9 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
 // Remove/reduce points from driver (admin only)
 export async function DELETE(request: NextRequest, { params }: { params: Promise<{ id: string, driverId: string }> }) {
   try {
-    const token = request.cookies.get('authToken')?.value;
-    if (!token) {
-      return NextResponse.json({ success: false, error: 'Not authenticated' }, { status: 401 });
-    }
-
-    // Verify token and admin role
-    const decoded = jwt.verify(token, JWT_SECRET) as any;
-    const user = await dbGet(`SELECT role FROM users WHERE id = $1`, [decoded.userId]) as any;
-    if (!user || user.role !== 'admin') {
-      return NextResponse.json({ success: false, error: 'Admin access required' }, { status: 403 });
+    const adminCheck = await requireAdmin(request);
+    if (!adminCheck.success) {
+      return NextResponse.json({ success: false, error: adminCheck.error }, { status: adminCheck.status });
     }
 
     const { points, races } = await request.json();
@@ -102,19 +112,25 @@ export async function DELETE(request: NextRequest, { params }: { params: Promise
     }
 
     // Check if driver exists
-    const driver = await dbGet(`SELECT * FROM users WHERE id = $1`, [driverId]);
-    if (!driver) {
+    const { data: driver, error: driverError } = await supabaseAdmin
+      .from('users')
+      .select('*')
+      .eq('id', driverId)
+      .single();
+
+    if (driverError || !driver) {
       return NextResponse.json({ success: false, error: 'Driver not found' }, { status: 404 });
     }
 
     // Get current points before update
-    const currentData = await dbGet(`
-      SELECT points, races_completed 
-      FROM driver_points 
-      WHERE driver_id = $1 AND league_id = $2
-    `, [driverId, leagueId]);
+    const { data: currentData, error: currentError } = await supabaseAdmin
+      .from('driver_points')
+      .select('points, races_completed')
+      .eq('driver_id', driverId)
+      .eq('league_id', leagueId)
+      .single();
 
-    if (!currentData) {
+    if (currentError || !currentData) {
       return NextResponse.json({ success: false, error: 'Driver not found in this league' }, { status: 404 });
     }
 
@@ -123,17 +139,31 @@ export async function DELETE(request: NextRequest, { params }: { params: Promise
     const newRaces = Math.max(0, currentData.races_completed - races);
 
     // Record in points history
-    await dbRun(`
-      INSERT INTO points_history (driver_id, league_id, points_change, races_change, admin_id, reason, old_points, new_points, old_races, new_races, action_type)
-      VALUES ($1, $2, $3, $4, $5, 'Manual points removal', $6, $7, $8, $9, 'MANUAL_REMOVE')
-    `, [driverId, leagueId, -points, -races, decoded.userId, currentData.points, newPoints, currentData.races_completed, newRaces]);
+    await supabaseAdmin
+      .from('points_history')
+      .insert({
+        driver_id: driverId,
+        league_id: leagueId,
+        points_change: -points,
+        races_change: -races,
+        admin_id: adminCheck.user?.userId,
+        reason: 'Manual points removal',
+        old_points: currentData.points,
+        new_points: newPoints,
+        old_races: currentData.races_completed,
+        new_races: newRaces,
+        action_type: 'MANUAL_REMOVE'
+      });
 
     // Update current points
-    await dbRun(`
-      UPDATE driver_points 
-      SET points = $1, races_completed = $2
-      WHERE driver_id = $3 AND league_id = $4
-    `, [newPoints, newRaces, driverId, leagueId]);
+    await supabaseAdmin
+      .from('driver_points')
+      .update({
+        points: newPoints,
+        races_completed: newRaces
+      })
+      .eq('driver_id', driverId)
+      .eq('league_id', leagueId);
 
     return NextResponse.json({ success: true });
   } catch (error) {

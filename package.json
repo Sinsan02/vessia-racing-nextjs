@@ -7,21 +7,17 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "db:init": "node scripts/init-db.mjs",
-    "db:setup": "npm run db:init",
-    "migrate": "node scripts/migrate-complete.mjs",
     "vercel-build": "npm run build",
     "postbuild": "echo 'Build complete! 🚀'"
   },
   "dependencies": {
+    "@supabase/supabase-js": "^2.93.3",
     "@types/bcryptjs": "^2.4.6",
     "@types/jsonwebtoken": "^9.0.10",
-    "@types/pg": "^8.16.0",
     "bcryptjs": "^3.0.3",
     "jsonwebtoken": "^9.0.3",
     "next": "16.1.6",
     "node-fetch": "^3.3.2",
-    "pg": "^8.17.2",
     "react": "19.2.3",
     "react-dom": "19.2.3"
   },

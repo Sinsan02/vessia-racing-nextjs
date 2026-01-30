@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { dbRun } from '@/lib/database';
+import { supabaseAdmin } from '@/lib/supabase';
 import { requireAuth } from '@/lib/auth';
 import { writeFile } from 'fs/promises';
 import { join } from 'path';
@@ -56,11 +56,19 @@ export async function POST(request: NextRequest) {
     // Write file to disk
     await writeFile(filepath, buffer);
 
-    // Update user profile picture in database
-    await dbRun(
-      'UPDATE users SET profile_picture = $1 WHERE id = $2',
-      [imageUrl, user.userId]
-    );
+    // Update user profile picture in Supabase database
+    const { error: updateError } = await supabaseAdmin
+      .from('users')
+      .update({ profile_picture: imageUrl })
+      .eq('id', user.userId);
+
+    if (updateError) {
+      console.error('Database update error:', updateError);
+      return NextResponse.json({
+        success: false,
+        error: 'Failed to update profile picture'
+      }, { status: 500 });
+    }
 
     return NextResponse.json({
       success: true,

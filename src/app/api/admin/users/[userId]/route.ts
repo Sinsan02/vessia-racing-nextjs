@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { dbRun, dbQuery } from '@/lib/database';
+import { supabaseAdmin } from '@/lib/supabase';
 import { requireAdmin } from '@/lib/auth';
 
 // Delete user (admin only)
@@ -15,22 +15,27 @@ export async function DELETE(request: NextRequest, { params }: { params: Promise
     }
 
     // Get user info before deletion
-    const userToDelete = await dbQuery('SELECT gamertag, full_name FROM users WHERE id = $1', [userId]);
-    if (!userToDelete || userToDelete.length === 0) {
+    const { data: userToDelete, error: fetchError } = await supabaseAdmin
+      .from('users')
+      .select('gamertag, full_name')
+      .eq('id', userId)
+      .single();
+      
+    if (fetchError || !userToDelete) {
       return NextResponse.json({ success: false, error: 'User not found' }, { status: 404 });
     }
 
-    const targetUser = userToDelete[0];
-
     // Delete related records first (foreign key constraints)
-    await dbRun('DELETE FROM sessions WHERE user_id = $1', [userId]);
-    await dbRun('DELETE FROM racing_results WHERE user_id = $1', [userId]);
-    await dbRun('DELETE FROM driver_points WHERE driver_id = $1', [userId]);
-    await dbRun('DELETE FROM points_history WHERE driver_id = $1', [userId]);
-    await dbRun('DELETE FROM instagram_tokens WHERE user_id = $1', [userId]);
-    
-    // Delete the user
-    const result = await dbRun('DELETE FROM users WHERE id = $1', [userId]);
+    // Note: Supabase CASCADE will handle this automatically if configured
+    const { error: deleteError } = await supabaseAdmin
+      .from('users')
+      .delete()
+      .eq('id', userId);
+
+    if (deleteError) {
+      console.error('Delete error:', deleteError);
+      throw deleteError;
+    }
     
     if (result.changes === 0) {
       return NextResponse.json({ success: false, error: 'Failed to delete user' }, { status: 500 });

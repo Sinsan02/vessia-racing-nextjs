@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { dbRun, dbQuery } from '@/lib/database';
+import { supabaseAdmin } from '@/lib/supabase';
 import { requireAdmin } from '@/lib/auth';
 
 // Update driver status (admin only)
@@ -11,33 +11,40 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
     const userId = parseInt(resolvedParams.userId);
 
     // Get user info
-    const targetUser = await dbQuery('SELECT full_name, gamertag, bio, profile_picture FROM users WHERE id = $1', [userId]);
-    if (!targetUser || targetUser.length === 0) {
+    const { data: userInfo, error: fetchError } = await supabaseAdmin
+      .from('users')
+      .select('full_name, gamertag, bio, profile_picture')
+      .eq('id', userId)
+      .single();
+      
+    if (fetchError || !userInfo) {
       return NextResponse.json({ success: false, error: 'User not found' }, { status: 404 });
     }
 
-    const userInfo = targetUser[0];
     const displayName = userInfo.gamertag || userInfo.full_name;
 
     // Update driver status
-    const result = await dbRun('UPDATE users SET is_driver = $1 WHERE id = $2', [isDriver ? 1 : 0, userId]);
+    const updateData: any = { is_driver: isDriver ? 1 : 0 };
     
-    if (result.changes === 0) {
-      return NextResponse.json({ success: false, error: 'Failed to update driver status' }, { status: 500 });
-    }
-
     // If making user a driver, set default bio if empty
     if (isDriver) {
       if (!userInfo.bio) {
-        const defaultBio = `Professional racing driver for Vessia Racing Team. Competing at the highest level with passion and determination.`;
-        await dbRun('UPDATE users SET bio = $1 WHERE id = $2', [defaultBio, userId]);
+        updateData.bio = `Professional racing driver for Vessia Racing Team. Competing at the highest level with passion and determination.`;
       }
       
       if (!userInfo.profile_picture) {
-        // Set a default driver avatar
-        const defaultAvatar = '/uploads/default-avatar.png';
-        await dbRun('UPDATE users SET profile_picture = $1 WHERE id = $2', [defaultAvatar, userId]);
+        updateData.profile_picture = '/uploads/default-avatar.png';
       }
+    }
+
+    const { error: updateError } = await supabaseAdmin
+      .from('users')
+      .update(updateData)
+      .eq('id', userId);
+      
+    if (updateError) {
+      console.error('Update error:', updateError);
+      return NextResponse.json({ success: false, error: 'Failed to update driver status' }, { status: 500 });
     }
     
     return NextResponse.json({

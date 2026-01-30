@@ -1,20 +1,32 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { dbQuery, initializeTables } from '@/lib/database';
+import { supabaseAdmin } from '@/lib/supabase';
 
 export async function GET(request: NextRequest) {
   try {
-    await initializeTables(); // Ensure tables exist
+    const { data: drivers, error } = await supabaseAdmin
+      .from('users')
+      .select('id, full_name, experience_level, created_at, bio, profile_picture')
+      .eq('is_driver', 1)
+      .order('created_at', { ascending: false });
 
-    const drivers = await dbQuery(`
-      SELECT id, full_name as name, gamertag, experience_level as experience, created_at, bio, profile_picture
-      FROM users 
-      WHERE is_driver = 1 
-      ORDER BY created_at DESC
-    `);
+    if (error) {
+      console.error('Supabase error fetching drivers:', error);
+      throw error;
+    }
+
+    // Transform data to match expected format
+    const transformedDrivers = drivers.map(driver => ({
+      id: driver.id,
+      name: driver.full_name,
+      experience: driver.experience_level,
+      created_at: driver.created_at,
+      bio: driver.bio,
+      profile_picture: driver.profile_picture
+    }));
 
     return NextResponse.json({
       success: true,
-      drivers: drivers || []
+      drivers: transformedDrivers || []
     });
   } catch (error) {
     console.error('Drivers fetch error:', error);
