@@ -4,9 +4,12 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { useState, useEffect } from 'react';
 
+export const dynamic = "force-dynamic";
+
 export default function Home() {
   const [welcomeMessage, setWelcomeMessage] = useState('');
 
+  
   useEffect(() => {
     // Check for welcome message from URL params
     const params = new URLSearchParams(window.location.search);
