@@ -82,6 +82,7 @@ export default function Navbar() {
       await fetch('/api/auth/logout', { method: 'POST' });
       setUser(null);
       router.push('/');
+      router.refresh();
     } catch (error) {
       console.error('Logout failed:', error);
     }

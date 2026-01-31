@@ -29,12 +29,11 @@ export default function Login() {
 
       if (response.ok) {
         const data = await response.json();
-        
         // Show popup with user's name from login response
         alert(`Velkommen ${data.user.name}! 🏁`);
-        
-        // Use router.push instead of window.location for better Next.js routing
+        // Redirect to home and refresh to update Navbar
         router.push('/');
+        router.refresh();
       } else {
         const data = await response.json();
         setError(data.error || 'Login failed');
