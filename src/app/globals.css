@@ -50,7 +50,7 @@ html {
 /* Large desktop monitors (27" and larger) - 1920px and above */
 @media (min-width: 1920px) {
   [style*="background-attachment: fixed"] {
-    background-size: cover !important;
+    background-size: 120% auto !important;
     background-position: center center !important;
   }
 }
@@ -58,7 +58,7 @@ html {
 /* Ultra-wide and very large monitors (34" and larger) - 2560px and above */
 @media (min-width: 2560px) {
   [style*="background-attachment: fixed"] {
-    background-size: cover !important;
+    background-size: 150% auto !important;
     background-position: center center !important;
     background-repeat: no-repeat !important;
   }
