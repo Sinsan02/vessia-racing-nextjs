@@ -33,13 +33,10 @@ export default function Drivers() {
   };
 
   return (
-    <div className="min-h-screen" style={{
+    <div className="min-h-screen bg-responsive" style={{
       backgroundColor: '#0a0a0a', 
       paddingTop: '100px',
-      backgroundImage: `linear-gradient(rgba(10,10,10,0.9), rgba(10,10,10,0.9)), url('/images/decorative/Screenshot_2026-01-23_201045.png')`,
-      backgroundSize: 'cover',
-      backgroundPosition: 'center',
-      backgroundAttachment: 'fixed'
+      backgroundImage: `linear-gradient(rgba(10,10,10,0.9), rgba(10,10,10,0.9)), url('/images/decorative/Screenshot_2026-01-23_201045.png')`
     }}>
       <main style={{padding: '20px'}}>
         <div className="container">

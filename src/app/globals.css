@@ -24,6 +24,49 @@ html {
   scroll-behavior: smooth;
 }
 
+/* Responsive background image classes */
+.bg-responsive {
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+@media (max-width: 768px) {
+  .bg-responsive {
+    background-size: contain;
+    background-position: center top;
+  }
+}
+
+@media (max-width: 480px) {
+  .bg-responsive {
+    background-size: cover;
+    background-position: center;
+    background-attachment: scroll !important;
+  }
+}
+
+.bg-section-responsive {
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+}
+
+@media (max-width: 768px) {
+  .bg-section-responsive {
+    background-attachment: scroll;
+    background-size: cover;
+  }
+}
+
+@media (max-width: 480px) {
+  .bg-section-responsive {
+    background-attachment: scroll;
+    background-size: cover;
+    background-position: center;
+  }
+}
+
 .container {
   max-width: 1200px;
   margin: 0 auto;

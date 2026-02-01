@@ -65,11 +65,8 @@ export default function Home() {
   return (
     <div style={{
       backgroundImage: `url('/images/decorative/Screenshot_2025-11-23_180245.png')`,
-      backgroundSize: 'cover',
-      backgroundPosition: 'center',
-      backgroundAttachment: 'fixed',
       minHeight: '100vh'
-    }}>
+    }} className="bg-responsive">
       {/* Welcome Message */}
       {welcomeMessage && (
         <div style={{
@@ -106,11 +103,8 @@ export default function Home() {
       </section>
 
       {/* Achievements Section */}
-      <section id="achievements" className="section" style={{
-        backgroundImage: `linear-gradient(rgba(10,10,10,0.7), rgba(10,10,10,0.8)), url('/images/decorative/Screenshot_2025-10-11_170801.png')`,
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        backgroundAttachment: 'fixed'
+      <section id="achievements" className="section bg-section-responsive" style={{
+        backgroundImage: `linear-gradient(rgba(10,10,10,0.7), rgba(10,10,10,0.8)), url('/images/decorative/Screenshot_2025-10-11_170801.png')`
       }}>
         <div className="container">
           <h2 className="section-title">🏆 Our Achievements</h2>
@@ -279,11 +273,8 @@ export default function Home() {
       </section>
 
       {/* Latest Event Section */}
-      <section id="results" className="section section-dark" style={{
-        backgroundImage: `linear-gradient(rgba(10,10,10,0.7), rgba(10,10,10,0.8)), url('/images/decorative/Screenshot_2025-11-15_150823.png')`,
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        backgroundAttachment: 'fixed'
+      <section id="results" className="section section-dark bg-section-responsive" style={{
+        backgroundImage: `linear-gradient(rgba(10,10,10,0.7), rgba(10,10,10,0.8)), url('/images/decorative/Screenshot_2025-11-15_150823.png')`
       }}>
         <div className="container">
           <h2 className="section-title">Latest Event</h2>
@@ -406,11 +397,8 @@ export default function Home() {
       </section>
 
       {/* Join Our Team Section */}
-      <section className="section" style={{
-        backgroundImage: `linear-gradient(rgba(10,10,10,0.7), rgba(10,10,10,0.8)), url('/images/decorative/Screenshot_2025-05-18_205724.png')`,
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        backgroundAttachment: 'fixed'
+      <section className="section bg-section-responsive" style={{
+        backgroundImage: `linear-gradient(rgba(10,10,10,0.7), rgba(10,10,10,0.8)), url('/images/decorative/Screenshot_2025-05-18_205724.png')`
       }}>
         <div className="container">
           <div style={{
