@@ -1,16 +1,16 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createClient } from '@/lib/supabase';
+import { supabaseAdmin } from '@/lib/supabase';
 
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const body = await request.json();
     const { title, description, race_name, track_name, achievement_date, position, category, icon } = body;
-    const achievementId = params.id;
+    const { id: achievementId } = await params;
 
-    const supabase = createClient();
+    const supabase = supabaseAdmin;
 
     const { data: achievement, error } = await supabase
       .from('achievements')
@@ -53,11 +53,11 @@ export async function PUT(
 
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const achievementId = params.id;
-    const supabase = createClient();
+    const { id: achievementId } = await params;
+    const supabase = supabaseAdmin;
 
     const { error } = await supabase
       .from('achievements')

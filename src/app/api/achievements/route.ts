@@ -1,9 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createClient } from '@/lib/supabase';
+import { supabaseAdmin } from '@/lib/supabase';
 
 export async function GET() {
   try {
-    const supabase = createClient();
+    const supabase = supabaseAdmin;
     
     const { data: achievements, error } = await supabase
       .from('achievements')
@@ -44,7 +44,7 @@ export async function POST(request: NextRequest) {
       }, { status: 400 });
     }
 
-    const supabase = createClient();
+    const supabase = supabaseAdmin;
 
     const { data: achievement, error } = await supabase
       .from('achievements')
