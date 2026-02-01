@@ -9,6 +9,7 @@ export const dynamic = "force-dynamic";
 export default function Home() {
   const [welcomeMessage, setWelcomeMessage] = useState('');
   const [latestEvent, setLatestEvent] = useState<any>(null);
+  const [achievements, setAchievements] = useState<any[]>([]);
 
   
   useEffect(() => {
@@ -32,8 +33,9 @@ export default function Home() {
       }, 100);
     }
 
-    // Fetch latest event
+    // Fetch latest event and achievements
     fetchLatestEvent();
+    fetchAchievements();
   }, []);
 
   const fetchLatestEvent = async () => {
@@ -45,6 +47,18 @@ export default function Home() {
       }
     } catch (error) {
       console.error('Failed to fetch latest event:', error);
+    }
+  };
+
+  const fetchAchievements = async () => {
+    try {
+      const response = await fetch('/api/achievements');
+      const data = await response.json();
+      if (data.success) {
+        setAchievements(data.achievements.slice(0, 3)); // Show only top 3
+      }
+    } catch (error) {
+      console.error('Failed to fetch achievements:', error);
     }
   };
 
@@ -77,39 +91,177 @@ export default function Home() {
           <p className="hero-subtitle">Professional Sim Racing Team</p>
           <p className="hero-description">Competing at the highest level in sim racing with dedication, precision and teamwork</p>
           <div className="hero-buttons">
-            <Link href="#team" className="btn-primary">Meet the Team</Link>
+            <Link href="#achievements" className="btn-primary">Our Achievements</Link>
             <Link href="/register" className="btn-secondary">Join Team</Link>
           </div>
         </div>
       </section>
 
-      {/* Team Section */}
-      <section id="team" className="section">
+      {/* Achievements Section */}
+      <section id="achievements" className="section">
         <div className="container">
-          <h2 className="section-title">Our Team</h2>
-          <div className="team-grid">
-            <div className="team-card">
-              <div className="team-avatar">
-                <i className="fas fa-user"></i>
-              </div>
-              <h3>Team Leader</h3>
-              <p>Strategic leadership and coordination</p>
+          <h2 className="section-title">🏆 Our Achievements</h2>
+          <p className="section-subtitle">Celebrating our victories on the world's most challenging circuits</p>
+          
+          {achievements.length > 0 ? (
+            <div className="achievements-grid" style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
+              gap: '25px',
+              maxWidth: '1200px',
+              margin: '0 auto'
+            }}>
+              {achievements.map((achievement) => (
+                <div key={achievement.id} className="achievement-card" style={{
+                  backgroundColor: '#1a1a1a',
+                  borderRadius: '15px',
+                  padding: '25px',
+                  border: '2px solid #3EA822',
+                  textAlign: 'center',
+                  position: 'relative',
+                  overflow: 'hidden',
+                  transition: 'transform 0.3s ease, box-shadow 0.3s ease'
+                }}>
+                  {/* Achievement Icon/Badge */}
+                  <div style={{
+                    fontSize: '3rem',
+                    marginBottom: '15px',
+                    background: 'linear-gradient(135deg, #3EA822, #2d7a19)',
+                    width: '80px',
+                    height: '80px',
+                    borderRadius: '50%',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    margin: '0 auto 15px',
+                    boxShadow: '0 5px 15px rgba(62, 168, 34, 0.3)'
+                  }}>
+                    {achievement.icon}
+                  </div>
+
+                  {/* Position Badge */}
+                  {achievement.position <= 3 && (
+                    <div style={{
+                      position: 'absolute',
+                      top: '15px',
+                      right: '15px',
+                      backgroundColor: achievement.position === 1 ? '#FFD700' : achievement.position === 2 ? '#C0C0C0' : '#CD7F32',
+                      color: '#000',
+                      padding: '5px 10px',
+                      borderRadius: '15px',
+                      fontSize: '0.8rem',
+                      fontWeight: 'bold'
+                    }}>
+                      {achievement.position === 1 ? '1st' : achievement.position === 2 ? '2nd' : '3rd'} Place
+                    </div>
+                  )}
+
+                  <h3 style={{
+                    color: '#3EA822',
+                    fontSize: '1.4rem',
+                    marginBottom: '8px',
+                    fontWeight: 'bold'
+                  }}>
+                    {achievement.title}
+                  </h3>
+
+                  <p style={{
+                    color: '#ccc',
+                    fontSize: '1rem',
+                    marginBottom: '10px',
+                    fontWeight: '500'
+                  }}>
+                    🏁 {achievement.race_name}
+                  </p>
+
+                  {achievement.track_name && (
+                    <p style={{
+                      color: '#888',
+                      fontSize: '0.9rem',
+                      marginBottom: '10px'
+                    }}>
+                      📍 {achievement.track_name}
+                    </p>
+                  )}
+
+                  <p style={{
+                    color: '#888',
+                    fontSize: '0.9rem',
+                    marginBottom: '15px'
+                  }}>
+                    📅 {new Date(achievement.achievement_date).toLocaleDateString('en-US', {
+                      year: 'numeric',
+                      month: 'long',
+                      day: 'numeric'
+                    })}
+                  </p>
+
+                  {achievement.description && (
+                    <p style={{
+                      color: '#999',
+                      fontSize: '0.85rem',
+                      lineHeight: '1.4',
+                      marginTop: '15px'
+                    }}>
+                      {achievement.description}
+                    </p>
+                  )}
+
+                  {/* Category Badge */}
+                  <div style={{
+                    position: 'absolute',
+                    bottom: '15px',
+                    left: '15px',
+                    backgroundColor: 'rgba(62, 168, 34, 0.2)',
+                    color: '#3EA822',
+                    padding: '4px 8px',
+                    borderRadius: '10px',
+                    fontSize: '0.7rem',
+                    fontWeight: 'bold',
+                    border: '1px solid #3EA822'
+                  }}>
+                    {achievement.category}
+                  </div>
+                </div>
+              ))}
             </div>
-            <div className="team-card">
-              <div className="team-avatar">
-                <i className="fas fa-racing-car"></i>
-              </div>
-              <h3>Lead Driver</h3>
-              <p>Main driver and mentoring</p>
+          ) : (
+            <div style={{
+              textAlign: 'center',
+              color: '#888',
+              padding: '60px 20px'
+            }}>
+              <div style={{fontSize: '4rem', marginBottom: '20px'}}>🏆</div>
+              <h3 style={{color: '#ccc', marginBottom: '10px'}}>No achievements yet</h3>
+              <p>Our victories will be showcased here as we compete and win!</p>
             </div>
-            <div className="team-card">
-              <div className="team-avatar">
-                <i className="fas fa-tools"></i>
-              </div>
-              <h3>Setup Engineer</h3>
-              <p>Car setup and technical analysis</p>
+          )}
+
+          {/* View All Button */}
+          {achievements.length > 0 && (
+            <div style={{
+              textAlign: 'center',
+              marginTop: '40px'
+            }}>
+              <Link
+                href="/admin"
+                className="btn-primary"
+                style={{
+                  backgroundColor: '#3EA822',
+                  color: 'white',
+                  padding: '12px 30px',
+                  borderRadius: '8px',
+                  textDecoration: 'none',
+                  display: 'inline-block',
+                  transition: 'all 0.3s ease',
+                  fontSize: '1rem',
+                  fontWeight: 'bold'
+                }}
+              >
+                View All Achievements
+              </Link>
             </div>
-          </div>
+          )}
         </div>
       </section>
 

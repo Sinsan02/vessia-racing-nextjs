@@ -33,6 +33,7 @@ export default function Admin() {
   const [pointsDrivers, setPointsDrivers] = useState<PointsDriver[]>([]);
   const [leaguePoints, setLeaguePoints] = useState<PointsDriver[]>([]);
   const [leagueDrivers, setLeagueDrivers] = useState<number[]>([]);
+  const [achievements, setAchievements] = useState<any[]>([]);
   const [selectedLeagueForDrivers, setSelectedLeagueForDrivers] = useState('');
   const [loading, setLoading] = useState(true);
   const [stats, setStats] = useState({ totalUsers: 0, totalAdmins: 0, totalDrivers: 0 });
@@ -46,9 +47,20 @@ export default function Admin() {
   const [pointsToAdd, setPointsToAdd] = useState('25');
   const [racesToAdd, setRacesToAdd] = useState('1');
 
+  // Achievement form states
+  const [achievementTitle, setAchievementTitle] = useState('');
+  const [achievementDescription, setAchievementDescription] = useState('');
+  const [achievementRaceName, setAchievementRaceName] = useState('');
+  const [achievementTrackName, setAchievementTrackName] = useState('');
+  const [achievementDate, setAchievementDate] = useState('');
+  const [achievementPosition, setAchievementPosition] = useState('1');
+  const [achievementCategory, setAchievementCategory] = useState('Race Victory');
+  const [achievementIcon, setAchievementIcon] = useState('🏆');
+
   useEffect(() => {
     fetchUsers();
     fetchLeagues();
+    fetchAchievements();
   }, []);
 
   const fetchUsers = async () => {
@@ -162,6 +174,87 @@ export default function Admin() {
     } catch (error) {
       console.error('Error deleting league:', error);
       alert('Error deleting league. Please try again.');
+    }
+  };
+
+  // Achievement functions
+  const fetchAchievements = async () => {
+    try {
+      const response = await fetch('/api/achievements');
+      const data = await response.json();
+      if (data.success) {
+        setAchievements(data.achievements);
+      }
+    } catch (error) {
+      console.error('Failed to fetch achievements:', error);
+    }
+  };
+
+  const createAchievement = async () => {
+    if (!achievementTitle || !achievementRaceName || !achievementDate) {
+      alert('Please fill in title, race name, and date');
+      return;
+    }
+
+    try {
+      const response = await fetch('/api/achievements', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          title: achievementTitle,
+          description: achievementDescription,
+          race_name: achievementRaceName,
+          track_name: achievementTrackName,
+          achievement_date: achievementDate,
+          position: parseInt(achievementPosition),
+          category: achievementCategory,
+          icon: achievementIcon
+        })
+      });
+
+      const data = await response.json();
+      if (data.success) {
+        alert('Achievement created successfully!');
+        setAchievementTitle('');
+        setAchievementDescription('');
+        setAchievementRaceName('');
+        setAchievementTrackName('');
+        setAchievementDate('');
+        setAchievementPosition('1');
+        setAchievementCategory('Race Victory');
+        setAchievementIcon('🏆');
+        fetchAchievements();
+      } else {
+        alert('Error creating achievement: ' + data.error);
+      }
+    } catch (error) {
+      console.error('Error creating achievement:', error);
+      alert('Error creating achievement');
+    }
+  };
+
+  const deleteAchievement = async (id: number, title: string) => {
+    if (!confirm(`Are you sure you want to delete "${title}"?`)) {
+      return;
+    }
+
+    try {
+      const response = await fetch(`/api/achievements/${id}`, {
+        method: 'DELETE',
+      });
+
+      const data = await response.json();
+      if (data.success) {
+        alert('Achievement deleted successfully!');
+        fetchAchievements();
+      } else {
+        alert('Error deleting achievement: ' + data.error);
+      }
+    } catch (error) {
+      console.error('Error deleting achievement:', error);
+      alert('Error deleting achievement');
     }
   };
 
@@ -561,6 +654,24 @@ export default function Admin() {
               }}
             >
               🏅 Points Management
+            </button>
+            <button 
+              className={`tab-button ${activeTab === 'achievement-management' ? 'active' : ''}`}
+              onClick={() => setActiveTab('achievement-management')}
+              style={{
+                padding: '12px 20px',
+                backgroundColor: activeTab === 'achievement-management' ? '#3EA822' : '#2a2a2a',
+                color: '#fff',
+                border: 'none',
+                borderRadius: '8px',
+                cursor: 'pointer',
+                fontSize: '1rem',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '8px'
+              }}
+            >
+              🏆 Achievement Management
             </button>
           </div>
 
@@ -1102,6 +1213,360 @@ export default function Admin() {
                   </div>
                 </>
               )}
+            </div>
+          )}
+
+          {/* Achievement Management Tab */}
+          {activeTab === 'achievement-management' && (
+            <div className="tab-content">
+              <h2 style={{color: '#3EA822', textAlign: 'center', marginBottom: '30px'}}>🏆 Achievement Management</h2>
+              
+              {/* Create Achievement Form */}
+              <div className="form-container" style={{
+                backgroundColor: '#1a1a1a',
+                padding: '30px',
+                borderRadius: '10px',
+                marginBottom: '30px',
+                maxWidth: '800px',
+                margin: '0 auto 30px'
+              }}>
+                <h3 style={{color: '#3EA822', marginBottom: '20px'}}>Add New Achievement</h3>
+                
+                <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px', marginBottom: '20px'}}>
+                  <div className="form-group">
+                    <label style={{color: '#ccc', marginBottom: '5px', display: 'block'}}>Achievement Title *</label>
+                    <input
+                      type="text"
+                      value={achievementTitle}
+                      onChange={(e) => setAchievementTitle(e.target.value)}
+                      placeholder="e.g. 24h Daytona Victory"
+                      style={{
+                        width: '100%',
+                        padding: '12px',
+                        borderRadius: '8px',
+                        border: '1px solid #555',
+                        backgroundColor: '#2a2a2a',
+                        color: '#fff'
+                      }}
+                    />
+                  </div>
+                  
+                  <div className="form-group">
+                    <label style={{color: '#ccc', marginBottom: '5px', display: 'block'}}>Race Name *</label>
+                    <input
+                      type="text"
+                      value={achievementRaceName}
+                      onChange={(e) => setAchievementRaceName(e.target.value)}
+                      placeholder="e.g. 24 Hours of Daytona"
+                      style={{
+                        width: '100%',
+                        padding: '12px',
+                        borderRadius: '8px',
+                        border: '1px solid #555',
+                        backgroundColor: '#2a2a2a',
+                        color: '#fff'
+                      }}
+                    />
+                  </div>
+                </div>
+
+                <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px', marginBottom: '20px'}}>
+                  <div className="form-group">
+                    <label style={{color: '#ccc', marginBottom: '5px', display: 'block'}}>Track/Circuit</label>
+                    <input
+                      type="text"
+                      value={achievementTrackName}
+                      onChange={(e) => setAchievementTrackName(e.target.value)}
+                      placeholder="e.g. Daytona International Speedway"
+                      style={{
+                        width: '100%',
+                        padding: '12px',
+                        borderRadius: '8px',
+                        border: '1px solid #555',
+                        backgroundColor: '#2a2a2a',
+                        color: '#fff'
+                      }}
+                    />
+                  </div>
+                  
+                  <div className="form-group">
+                    <label style={{color: '#ccc', marginBottom: '5px', display: 'block'}}>Achievement Date *</label>
+                    <input
+                      type="date"
+                      value={achievementDate}
+                      onChange={(e) => setAchievementDate(e.target.value)}
+                      style={{
+                        width: '100%',
+                        padding: '12px',
+                        borderRadius: '8px',
+                        border: '1px solid #555',
+                        backgroundColor: '#2a2a2a',
+                        color: '#fff'
+                      }}
+                    />
+                  </div>
+                </div>
+
+                <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '20px', marginBottom: '20px'}}>
+                  <div className="form-group">
+                    <label style={{color: '#ccc', marginBottom: '5px', display: 'block'}}>Position</label>
+                    <select
+                      value={achievementPosition}
+                      onChange={(e) => setAchievementPosition(e.target.value)}
+                      style={{
+                        width: '100%',
+                        padding: '12px',
+                        borderRadius: '8px',
+                        border: '1px solid #555',
+                        backgroundColor: '#2a2a2a',
+                        color: '#fff'
+                      }}
+                    >
+                      <option value="1">1st Place</option>
+                      <option value="2">2nd Place</option>
+                      <option value="3">3rd Place</option>
+                      <option value="4">4th Place</option>
+                      <option value="5">5th Place</option>
+                    </select>
+                  </div>
+                  
+                  <div className="form-group">
+                    <label style={{color: '#ccc', marginBottom: '5px', display: 'block'}}>Category</label>
+                    <select
+                      value={achievementCategory}
+                      onChange={(e) => setAchievementCategory(e.target.value)}
+                      style={{
+                        width: '100%',
+                        padding: '12px',
+                        borderRadius: '8px',
+                        border: '1px solid #555',
+                        backgroundColor: '#2a2a2a',
+                        color: '#fff'
+                      }}
+                    >
+                      <option value="Race Victory">Race Victory</option>
+                      <option value="Endurance Victory">Endurance Victory</option>
+                      <option value="Championship">Championship</option>
+                      <option value="Pole Position">Pole Position</option>
+                      <option value="Fastest Lap">Fastest Lap</option>
+                      <option value="Special Achievement">Special Achievement</option>
+                    </select>
+                  </div>
+                  
+                  <div className="form-group">
+                    <label style={{color: '#ccc', marginBottom: '5px', display: 'block'}}>Icon</label>
+                    <select
+                      value={achievementIcon}
+                      onChange={(e) => setAchievementIcon(e.target.value)}
+                      style={{
+                        width: '100%',
+                        padding: '12px',
+                        borderRadius: '8px',
+                        border: '1px solid #555',
+                        backgroundColor: '#2a2a2a',
+                        color: '#fff'
+                      }}
+                    >
+                      <option value="🏆">🏆 Trophy</option>
+                      <option value="🥇">🥇 Gold Medal</option>
+                      <option value="🥈">🥈 Silver Medal</option>
+                      <option value="🥉">🥉 Bronze Medal</option>
+                      <option value="👑">👑 Crown</option>
+                      <option value="🏁">🏁 Checkered Flag</option>
+                      <option value="⚡">⚡ Lightning</option>
+                      <option value="🔥">🔥 Fire</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div className="form-group" style={{marginBottom: '20px'}}>
+                  <label style={{color: '#ccc', marginBottom: '5px', display: 'block'}}>Description</label>
+                  <textarea
+                    value={achievementDescription}
+                    onChange={(e) => setAchievementDescription(e.target.value)}
+                    placeholder="Describe this achievement..."
+                    rows={3}
+                    style={{
+                      width: '100%',
+                      padding: '12px',
+                      borderRadius: '8px',
+                      border: '1px solid #555',
+                      backgroundColor: '#2a2a2a',
+                      color: '#fff',
+                      resize: 'vertical'
+                    }}
+                  />
+                </div>
+
+                <button
+                  onClick={createAchievement}
+                  style={{
+                    backgroundColor: '#3EA822',
+                    color: 'white',
+                    padding: '12px 30px',
+                    border: 'none',
+                    borderRadius: '8px',
+                    fontSize: '1rem',
+                    fontWeight: 'bold',
+                    cursor: 'pointer',
+                    width: '100%',
+                    transition: 'background-color 0.3s ease'
+                  }}
+                >
+                  🏆 Create Achievement
+                </button>
+              </div>
+
+              {/* Achievements List */}
+              <div className="achievements-list">
+                <h3 style={{color: '#3EA822', textAlign: 'center', marginBottom: '20px'}}>
+                  Current Achievements ({achievements.length})
+                </h3>
+                
+                {achievements.length === 0 ? (
+                  <div style={{
+                    textAlign: 'center',
+                    color: '#888',
+                    padding: '60px 20px',
+                    backgroundColor: '#1a1a1a',
+                    borderRadius: '10px'
+                  }}>
+                    <div style={{fontSize: '4rem', marginBottom: '20px'}}>🏆</div>
+                    <h3 style={{color: '#ccc', marginBottom: '10px'}}>No achievements yet</h3>
+                    <p>Create your first achievement using the form above!</p>
+                  </div>
+                ) : (
+                  <div style={{
+                    display: 'grid',
+                    gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))',
+                    gap: '20px'
+                  }}>
+                    {achievements.map((achievement) => (
+                      <div key={achievement.id} style={{
+                        backgroundColor: '#1a1a1a',
+                        borderRadius: '15px',
+                        padding: '25px',
+                        border: '2px solid #3EA822',
+                        position: 'relative'
+                      }}>
+                        {/* Delete Button */}
+                        <button
+                          onClick={() => deleteAchievement(achievement.id, achievement.title)}
+                          style={{
+                            position: 'absolute',
+                            top: '10px',
+                            right: '10px',
+                            backgroundColor: '#ff4444',
+                            color: 'white',
+                            border: 'none',
+                            borderRadius: '50%',
+                            width: '30px',
+                            height: '30px',
+                            cursor: 'pointer',
+                            fontSize: '14px'
+                          }}
+                          title="Delete Achievement"
+                        >
+                          ×
+                        </button>
+
+                        {/* Achievement Icon */}
+                        <div style={{
+                          fontSize: '3rem',
+                          textAlign: 'center',
+                          marginBottom: '15px'
+                        }}>
+                          {achievement.icon}
+                        </div>
+
+                        {/* Position Badge */}
+                        {achievement.position <= 3 && (
+                          <div style={{
+                            position: 'absolute',
+                            top: '10px',
+                            left: '10px',
+                            backgroundColor: achievement.position === 1 ? '#FFD700' : achievement.position === 2 ? '#C0C0C0' : '#CD7F32',
+                            color: '#000',
+                            padding: '4px 8px',
+                            borderRadius: '12px',
+                            fontSize: '0.7rem',
+                            fontWeight: 'bold'
+                          }}>
+                            {achievement.position === 1 ? '1st' : achievement.position === 2 ? '2nd' : '3rd'}
+                          </div>
+                        )}
+
+                        <h4 style={{
+                          color: '#3EA822',
+                          fontSize: '1.2rem',
+                          textAlign: 'center',
+                          marginBottom: '10px'
+                        }}>
+                          {achievement.title}
+                        </h4>
+
+                        <p style={{
+                          color: '#ccc',
+                          textAlign: 'center',
+                          marginBottom: '8px',
+                          fontWeight: '500'
+                        }}>
+                          🏁 {achievement.race_name}
+                        </p>
+
+                        {achievement.track_name && (
+                          <p style={{
+                            color: '#888',
+                            textAlign: 'center',
+                            marginBottom: '8px',
+                            fontSize: '0.9rem'
+                          }}>
+                            📍 {achievement.track_name}
+                          </p>
+                        )}
+
+                        <p style={{
+                          color: '#888',
+                          textAlign: 'center',
+                          marginBottom: '10px',
+                          fontSize: '0.9rem'
+                        }}>
+                          📅 {new Date(achievement.achievement_date).toLocaleDateString()}
+                        </p>
+
+                        {achievement.description && (
+                          <p style={{
+                            color: '#999',
+                            fontSize: '0.85rem',
+                            textAlign: 'center',
+                            lineHeight: '1.4',
+                            marginTop: '10px'
+                          }}>
+                            {achievement.description}
+                          </p>
+                        )}
+
+                        {/* Category Badge */}
+                        <div style={{
+                          position: 'absolute',
+                          bottom: '10px',
+                          left: '50%',
+                          transform: 'translateX(-50%)',
+                          backgroundColor: 'rgba(62, 168, 34, 0.2)',
+                          color: '#3EA822',
+                          padding: '4px 8px',
+                          borderRadius: '10px',
+                          fontSize: '0.7rem',
+                          fontWeight: 'bold',
+                          border: '1px solid #3EA822'
+                        }}>
+                          {achievement.category}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
             </div>
           )}
         </div>
