@@ -1,16 +1,24 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Orbitron, Racing_Sans_One, Rajdhani } from "next/font/google";
 import "./globals.css";
 import Navbar from '@/components/Navbar';
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const orbitron = Orbitron({
+  variable: "--font-orbitron",
   subsets: ["latin"],
+  weight: ["400", "500", "600", "700", "800", "900"]
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const racingSansOne = Racing_Sans_One({
+  variable: "--font-racing-sans-one",
   subsets: ["latin"],
+  weight: ["400"]
+});
+
+const rajdhani = Rajdhani({
+  variable: "--font-rajdhani",
+  subsets: ["latin"],
+  weight: ["300", "400", "500", "600", "700"]
 });
 
 export const metadata: Metadata = {
@@ -35,7 +43,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} font-segoe bg-background-dark text-text-primary antialiased min-h-screen`}
+        className={`${orbitron.variable} ${racingSansOne.variable} ${rajdhani.variable} font-segoe bg-background-dark text-text-primary antialiased min-h-screen`}
         style={{
           display: 'flex',
           flexDirection: 'column'
