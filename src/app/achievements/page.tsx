@@ -41,17 +41,20 @@ export default function Achievements() {
   }
 
   return (
-    <div className="container" style={{
-      maxWidth: '1200px',
-      margin: '0 auto',
-      padding: '40px 20px',
-      paddingTop: '120px',
-      backgroundImage: `linear-gradient(rgba(10,10,10,0.85), rgba(10,10,10,0.85)), url('/images/decorative/Screenshot_2025-10-11_170713.png')`,
+    <div style={{
+      backgroundImage: `linear-gradient(rgba(10,10,10,0.75), rgba(10,10,10,0.75)), url('/images/decorative/Screenshot_2025-10-11_170713.png')`,
       backgroundSize: 'cover',
       backgroundPosition: 'center',
       backgroundAttachment: 'fixed',
-      minHeight: '100vh'
+      minHeight: '100vh',
+      width: '100%'
     }}>
+      <div className="container" style={{
+        maxWidth: '1200px',
+        margin: '0 auto',
+        padding: '40px 20px',
+        paddingTop: '120px'
+      }}>
       {/* Header */}
       <div style={{
         textAlign: 'center',
@@ -282,6 +285,7 @@ export default function Achievements() {
           </div>
         </>
       )}
+      </div>
     </div>
   );
 }

@@ -63,7 +63,13 @@ export default function Home() {
   };
 
   return (
-    <div>
+    <div style={{
+      backgroundImage: `url('/images/decorative/Screenshot_2025-11-23_180245.png')`,
+      backgroundSize: 'cover',
+      backgroundPosition: 'center',
+      backgroundAttachment: 'fixed',
+      minHeight: '100vh'
+    }}>
       {/* Welcome Message */}
       {welcomeMessage && (
         <div style={{
@@ -79,10 +85,7 @@ export default function Home() {
 
       {/* Hero Section */}
       <section className="hero" style={{
-        background: `linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.8)), url('/images/decorative/Screenshot_2025-11-23_180245.png')`,
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        backgroundAttachment: 'fixed'
+        background: 'linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.7))'
       }}>
         <div className="hero-content">
           <Image 
@@ -104,7 +107,7 @@ export default function Home() {
 
       {/* Achievements Section */}
       <section id="achievements" className="section" style={{
-        backgroundImage: `linear-gradient(rgba(10,10,10,0.9), rgba(10,10,10,0.9)), url('/images/decorative/Screenshot_2025-10-11_170801.png')`,
+        backgroundImage: `linear-gradient(rgba(10,10,10,0.7), rgba(10,10,10,0.8)), url('/images/decorative/Screenshot_2025-10-11_170801.png')`,
         backgroundSize: 'cover',
         backgroundPosition: 'center',
         backgroundAttachment: 'fixed'
@@ -277,9 +280,10 @@ export default function Home() {
 
       {/* Latest Event Section */}
       <section id="results" className="section section-dark" style={{
-        backgroundImage: `linear-gradient(rgba(26,26,26,0.95), rgba(26,26,26,0.95)), url('/images/decorative/Screenshot_2025-11-15_150823.png')`,
+        backgroundImage: `linear-gradient(rgba(10,10,10,0.7), rgba(10,10,10,0.8)), url('/images/decorative/Screenshot_2025-11-15_150823.png')`,
         backgroundSize: 'cover',
-        backgroundPosition: 'center'
+        backgroundPosition: 'center',
+        backgroundAttachment: 'fixed'
       }}>
         <div className="container">
           <h2 className="section-title">Latest Event</h2>
@@ -403,9 +407,10 @@ export default function Home() {
 
       {/* Join Our Team Section */}
       <section className="section" style={{
-        backgroundImage: `linear-gradient(rgba(10,10,10,0.9), rgba(10,10,10,0.9)), url('/images/decorative/Screenshot_2025-05-18_205724.png')`,
+        backgroundImage: `linear-gradient(rgba(10,10,10,0.7), rgba(10,10,10,0.8)), url('/images/decorative/Screenshot_2025-05-18_205724.png')`,
         backgroundSize: 'cover',
-        backgroundPosition: 'center'
+        backgroundPosition: 'center',
+        backgroundAttachment: 'fixed'
       }}>
         <div className="container">
           <div style={{
