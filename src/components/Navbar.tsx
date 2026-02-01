@@ -17,9 +17,22 @@ export default function Navbar() {
   const [user, setUser] = useState<User | null>(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
   const router = useRouter();
   const pathname = usePathname();
   const isHomePage = pathname === '/';
+
+  useEffect(() => {
+    // Check screen size
+    const checkScreenSize = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+    
+    checkScreenSize();
+    window.addEventListener('resize', checkScreenSize);
+    
+    return () => window.removeEventListener('resize', checkScreenSize);
+  }, []);
 
   useEffect(() => {
     // Check if user is logged in (you'll implement this later)
@@ -183,12 +196,12 @@ export default function Navbar() {
                         style={{
                           position: 'absolute',
                           top: '100%',
-                          right: window.innerWidth <= 768 ? '-60px' : '0',
+                          right: isMobile ? '-80px' : '0',
                           marginTop: '8px',
                           background: '#1a1a1a',
                           border: '1px solid #333',
                           borderRadius: '8px',
-                          minWidth: window.innerWidth <= 480 ? '150px' : '200px',
+                          minWidth: isMobile ? '160px' : '200px',
                           boxShadow: '0 4px 20px rgba(0, 0, 0, 0.5)',
                           zIndex: 1000
                         }}
