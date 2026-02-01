@@ -330,7 +330,10 @@ export default function Events() {
                     )}
                     {!selectedFile && editingEvent?.image_url && (
                       <p style={{color: '#888', fontSize: '0.9rem', margin: '0'}}>
-                        Current: {editingEvent.image_url.split('/').pop()}
+                        Current image: {editingEvent.image_url.includes('vercel-storage.com') ? 
+                          'Uploaded image' : 
+                          editingEvent.image_url.split('/').pop()
+                        }
                       </p>
                     )}
                   </div>
