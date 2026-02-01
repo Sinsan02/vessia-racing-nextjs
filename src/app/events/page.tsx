@@ -30,6 +30,8 @@ export default function Events() {
   const [loading, setLoading] = useState(true);
   const [showCreateForm, setShowCreateForm] = useState(false);
   const [editingEvent, setEditingEvent] = useState<Event | null>(null);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [uploading, setUploading] = useState(false);
   
   // Form state
   const [formData, setFormData] = useState({
@@ -76,8 +78,36 @@ export default function Events() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setUploading(true);
     
     try {
+      let imageUrl = formData.image_url;
+      
+      // Upload file if selected
+      if (selectedFile) {
+        const uploadFormData = new FormData();
+        uploadFormData.append('file', selectedFile);
+        
+        const uploadResponse = await fetch('/api/upload', {
+          method: 'POST',
+          body: uploadFormData
+        });
+        
+        const uploadData = await uploadResponse.json();
+        if (uploadData.success) {
+          imageUrl = uploadData.imageUrl;
+        } else {
+          alert('Error uploading image: ' + uploadData.error);
+          setUploading(false);
+          return;
+        }
+      }
+      
+      const eventData = {
+        ...formData,
+        image_url: imageUrl
+      };
+      
       const url = editingEvent ? `/api/events/${editingEvent.id}` : '/api/events';
       const method = editingEvent ? 'PUT' : 'POST';
       
@@ -87,21 +117,13 @@ export default function Events() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(eventData),
       });
 
       const data = await response.json();
       if (data.success) {
         alert(data.message);
-        setShowCreateForm(false);
-        setEditingEvent(null);
-        setFormData({
-          name: '',
-          description: '',
-          event_date: '',
-          image_url: '',
-          track_name: ''
-        });
+        handleCancel();
         fetchEvents();
       } else {
         alert('Error: ' + data.error);
@@ -109,6 +131,8 @@ export default function Events() {
     } catch (error) {
       console.error('Error submitting form:', error);
       alert('Error submitting form. Please try again.');
+    } finally {
+      setUploading(false);
     }
   };
 
@@ -151,6 +175,7 @@ export default function Events() {
   const handleCancel = () => {
     setShowCreateForm(false);
     setEditingEvent(null);
+    setSelectedFile(null);
     setFormData({
       name: '',
       description: '',
@@ -278,20 +303,36 @@ export default function Events() {
                   </div>
                   
                   <div>
-                    <label style={{display: 'block', marginBottom: '8px', color: '#ccc'}}>Image URL</label>
-                    <input
-                      type="url"
-                      value={formData.image_url}
-                      onChange={(e) => setFormData({...formData, image_url: e.target.value})}
-                      style={{
-                        width: '100%',
-                        padding: '10px',
-                        border: '1px solid #555',
-                        backgroundColor: '#2a2a2a',
-                        color: '#fff',
-                        borderRadius: '5px'
-                      }}
-                    />
+                    <label style={{display: 'block', marginBottom: '8px', color: '#ccc'}}>Event Image</label>
+                    <div style={{marginBottom: '8px'}}>
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={(e) => {
+                          const file = e.target.files?.[0] || null;
+                          setSelectedFile(file);
+                        }}
+                        style={{
+                          width: '100%',
+                          padding: '10px',
+                          border: '1px solid #555',
+                          backgroundColor: '#2a2a2a',
+                          color: '#fff',
+                          borderRadius: '5px',
+                          cursor: 'pointer'
+                        }}
+                      />
+                    </div>
+                    {selectedFile && (
+                      <p style={{color: '#3EA822', fontSize: '0.9rem', margin: '0'}}>
+                        Selected: {selectedFile.name}
+                      </p>
+                    )}
+                    {!selectedFile && editingEvent?.image_url && (
+                      <p style={{color: '#888', fontSize: '0.9rem', margin: '0'}}>
+                        Current: {editingEvent.image_url.split('/').pop()}
+                      </p>
+                    )}
                   </div>
                 </div>
                 
@@ -316,16 +357,21 @@ export default function Events() {
                 <div style={{display: 'flex', gap: '10px', marginTop: '20px'}}>
                   <button
                     type="submit"
+                    disabled={uploading}
                     style={{
-                      backgroundColor: '#3EA822',
+                      backgroundColor: uploading ? '#6c757d' : '#3EA822',
                       color: 'white',
                       border: 'none',
                       padding: '10px 20px',
                       borderRadius: '5px',
-                      cursor: 'pointer'
+                      cursor: uploading ? 'not-allowed' : 'pointer'
                     }}
                   >
-                    {editingEvent ? 'Update Event' : 'Create Event'}
+                    {uploading ? (
+                      editingEvent ? 'Updating...' : 'Creating...'
+                    ) : (
+                      editingEvent ? 'Update Event' : 'Create Event'
+                    )}
                   </button>
                   <button
                     type="button"
