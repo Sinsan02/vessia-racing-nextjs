@@ -363,6 +363,30 @@ export default function Admin() {
     }
   };
 
+  const updateUserExperience = async (userId: number, newExperience: string) => {
+    try {
+      const response = await fetch(`/api/admin/users/${userId}/experience`, {
+        method: 'PUT',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ experience: newExperience })
+      });
+
+      const data = await response.json();
+      if (data.success) {
+        alert(data.message);
+        fetchUsers(); // Refresh user list
+      } else {
+        alert('Error updating experience: ' + data.error);
+      }
+    } catch (error) {
+      console.error('Error updating experience:', error);
+      alert('Error updating experience. Please try again.');
+    }
+  };
+
   const deleteUser = async (userId: number, userName: string) => {
     if (!confirm(`Are you sure you want to delete user "${userName}"? This action cannot be undone!`)) {
       return;
@@ -591,7 +615,27 @@ export default function Admin() {
                           <tr key={user.id} style={{borderBottom: '1px solid #444'}}>
                             <td style={{padding: '12px', color: '#fff'}}>{user.name}</td>
                             <td style={{padding: '12px', color: '#ccc'}}>{user.email}</td>
-                            <td style={{padding: '12px', color: '#ccc'}}>{user.experience}</td>
+                            <td style={{padding: '12px'}}>
+                              <select
+                                value={user.experience}
+                                onChange={(e) => updateUserExperience(user.id, e.target.value)}
+                                style={{
+                                  backgroundColor: '#2a2a2a',
+                                  color: '#fff',
+                                  border: '1px solid #555',
+                                  borderRadius: '4px',
+                                  padding: '4px 8px',
+                                  fontSize: '0.9rem',
+                                  cursor: 'pointer'
+                                }}
+                              >
+                                <option value="Beginner">Beginner</option>
+                                <option value="Intermediate">Intermediate</option>
+                                <option value="Advanced">Advanced</option>
+                                <option value="Professional">Professional</option>
+                                <option value="Expert">Expert</option>
+                              </select>
+                            </td>
                             <td style={{padding: '12px'}}>
                               <span style={{
                                 padding: '4px 8px',
