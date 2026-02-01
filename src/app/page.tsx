@@ -128,7 +128,7 @@ export default function Home() {
               {latestEvent.image_url && (
                 <div style={{
                   position: 'relative',
-                  height: '200px',
+                  height: '250px',
                   width: '100%',
                   marginBottom: '20px',
                   borderRadius: '10px',
@@ -138,9 +138,13 @@ export default function Home() {
                     src={latestEvent.image_url}
                     alt={latestEvent.name}
                     fill
-                    style={{objectFit: 'cover'}}
+                    style={{objectFit: 'contain', backgroundColor: '#222'}}
                     onError={(e) => {
+                      console.error('Homepage image load failed for:', latestEvent.name, latestEvent.image_url);
                       (e.target as HTMLImageElement).style.display = 'none';
+                    }}
+                    onLoad={() => {
+                      console.log('Homepage image loaded successfully for:', latestEvent.name, latestEvent.image_url);
                     }}
                   />
                 </div>
