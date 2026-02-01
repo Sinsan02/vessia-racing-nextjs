@@ -74,8 +74,21 @@ export default function Events() {
     try {
       const response = await fetch('/api/events');
       const data = await response.json();
+      console.log('Events API response:', data);
+      
       if (data.success && data.events) {
         setEvents(data.events);
+        console.log('Events loaded:', data.events.length, 'events');
+        // Log which events have images
+        data.events.forEach((event: Event, index: number) => {
+          console.log(`Event ${index + 1} (${event.name}):`, {
+            hasImage: !!event.image_url,
+            imageUrl: event.image_url,
+            imageType: event.image_url ? (event.image_url.includes('vercel-storage.com') ? 'Vercel Blob' : 'Direct URL') : 'No image'
+          });
+        });
+      } else {
+        console.error('Failed to load events:', data.error);
       }
     } catch (error) {
       console.error('Failed to fetch events:', error);
@@ -485,7 +498,7 @@ export default function Events() {
                   }}
                 >
                   {/* Event Image */}
-                  {event.image_url && (
+                  {event.image_url ? (
                     <div style={{position: 'relative', height: '200px', width: '100%'}}>
                       <Image
                         src={event.image_url}
@@ -493,9 +506,28 @@ export default function Events() {
                         fill
                         style={{objectFit: 'cover'}}
                         onError={(e) => {
+                          console.error('Image load failed for:', event.name, event.image_url);
                           (e.target as HTMLImageElement).style.display = 'none';
                         }}
+                        onLoad={() => {
+                          console.log('Image loaded successfully for:', event.name, event.image_url);
+                        }}
                       />
+                    </div>
+                  ) : (
+                    <div style={{
+                      height: '200px', 
+                      width: '100%', 
+                      backgroundColor: '#333',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      color: '#666'
+                    }}>
+                      <div style={{textAlign: 'center'}}>
+                        <div style={{fontSize: '2rem', marginBottom: '8px'}}>🏁</div>
+                        <div>No image</div>
+                      </div>
                     </div>
                   )}
 
