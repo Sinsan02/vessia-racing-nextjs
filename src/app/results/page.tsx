@@ -187,7 +187,7 @@ export default function Results() {
                           </td>
                           <td style={{padding: '15px'}}>
                             <div style={{display: 'flex', alignItems: 'center'}}>
-                              {driver.profile_picture ? (
+                              {driver.profile_picture && driver.profile_picture.trim() !== '' ? (
                                 <img
                                   src={driver.profile_picture}
                                   alt={`${driver.full_name} profile`}
@@ -199,28 +199,36 @@ export default function Results() {
                                     marginRight: '12px',
                                     border: '2px solid #3EA822'
                                   }}
-                                />
-                              ) : (
-                                <div
-                                  style={{
-                                    width: '40px',
-                                    height: '40px',
-                                    borderRadius: '50%',
-                                    backgroundColor: getPlaceholderColor(driver.full_name),
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    justifyContent: 'center',
-                                    marginRight: '12px',
-                                    fontSize: '1.2rem',
-                                    fontWeight: 'bold',
-                                    color: 'white',
-                                    border: '2px solid #3EA822',
-                                    boxShadow: '0 2px 8px rgba(0,0,0,0.2)'
+                                  onError={(e) => {
+                                    // Replace with placeholder if image fails to load
+                                    const target = e.target as HTMLImageElement;
+                                    target.style.display = 'none';
+                                    const placeholder = target.nextElementSibling as HTMLElement;
+                                    if (placeholder) {
+                                      placeholder.style.display = 'flex';
+                                    }
                                   }}
-                                >
-                                  {driver.full_name.charAt(0).toUpperCase()}
-                                </div>
-                              )}
+                                />
+                              ) : null}
+                              <div
+                                style={{
+                                  width: '40px',
+                                  height: '40px',
+                                  borderRadius: '50%',
+                                  backgroundColor: getPlaceholderColor(driver.full_name),
+                                  display: (!driver.profile_picture || driver.profile_picture.trim() === '') ? 'flex' : 'none',
+                                  alignItems: 'center',
+                                  justifyContent: 'center',
+                                  marginRight: '12px',
+                                  fontSize: '1.2rem',
+                                  fontWeight: 'bold',
+                                  color: 'white',
+                                  border: '2px solid #3EA822',
+                                  boxShadow: '0 2px 8px rgba(0,0,0,0.2)'
+                                }}
+                              >
+                                {driver.full_name.charAt(0).toUpperCase()}
+                              </div>
                               <div>
                                 <div style={{color: '#fff', fontWeight: '500', fontSize: '1rem'}}>
                                   {driver.full_name}

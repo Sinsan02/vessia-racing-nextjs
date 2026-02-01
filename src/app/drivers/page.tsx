@@ -77,7 +77,7 @@ export default function Drivers() {
                   }}
                 >
                   <div style={{marginBottom: '15px'}}>
-                    {driver.profile_picture ? (
+                    {driver.profile_picture && driver.profile_picture.trim() !== '' ? (
                       <img
                         src={driver.profile_picture}
                         alt={`${driver.fullName || driver.name || 'Driver'} profile`}
@@ -90,28 +90,36 @@ export default function Drivers() {
                           display: 'block',
                           border: '3px solid #3EA822'
                         }}
-                      />
-                    ) : (
-                      <div
-                        style={{
-                          width: '80px',
-                          height: '80px',
-                          borderRadius: '50%',
-                          backgroundColor: getPlaceholderColor(driver.fullName || driver.name || 'Driver'),
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          margin: '0 auto',
-                          color: 'white',
-                          fontSize: '2rem',
-                          fontWeight: 'bold',
-                          border: '3px solid #3EA822',
-                          boxShadow: '0 4px 15px rgba(0,0,0,0.2)'
+                        onError={(e) => {
+                          // Replace with placeholder if image fails to load
+                          const target = e.target as HTMLImageElement;
+                          target.style.display = 'none';
+                          const placeholder = target.nextElementSibling as HTMLElement;
+                          if (placeholder) {
+                            placeholder.style.display = 'flex';
+                          }
                         }}
-                      >
-                        {(driver.fullName || driver.name || 'D').charAt(0).toUpperCase()}
-                      </div>
-                    )}
+                      />
+                    ) : null}
+                    <div
+                      style={{
+                        width: '80px',
+                        height: '80px',
+                        borderRadius: '50%',
+                        backgroundColor: getPlaceholderColor(driver.fullName || driver.name || 'Driver'),
+                        display: (!driver.profile_picture || driver.profile_picture.trim() === '') ? 'flex' : 'none',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        margin: '0 auto',
+                        color: 'white',
+                        fontSize: '2rem',
+                        fontWeight: 'bold',
+                        border: '3px solid #3EA822',
+                        boxShadow: '0 4px 15px rgba(0,0,0,0.2)'
+                      }}
+                    >
+                      {(driver.fullName || driver.name || 'D').charAt(0).toUpperCase()}
+                    </div>
                   </div>
                   <h3 style={{color: '#3EA822', marginBottom: '10px'}}>
                     {driver.fullName || driver.name || 'Unknown Driver'}
