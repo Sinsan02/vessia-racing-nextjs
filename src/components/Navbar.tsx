@@ -127,16 +127,16 @@ export default function Navbar() {
           </button>
           
           <div className={`nav-menu ${isMenuOpen ? 'active' : ''}`}>
-            <Link href="/" className="nav-link">Home</Link>
+            <Link href="/" className="nav-link" onClick={() => setIsMenuOpen(false)}>Home</Link>
             {isHomePage && (
               <>
-                <Link href="#team" className="nav-link">Team</Link>
-                <Link href="#results" className="nav-link">Results</Link>
+                <Link href="#team" className="nav-link" onClick={() => setIsMenuOpen(false)}>Team</Link>
+                <Link href="#results" className="nav-link" onClick={() => setIsMenuOpen(false)}>Results</Link>
               </>
             )}
-            <Link href="/drivers" className="nav-link">Drivers</Link>
-            <Link href="/results" className="nav-link">Championship</Link>
-            <Link href="/events" className="nav-link">Events</Link>
+            <Link href="/drivers" className="nav-link" onClick={() => setIsMenuOpen(false)}>Drivers</Link>
+            <Link href="/results" className="nav-link" onClick={() => setIsMenuOpen(false)}>Championship</Link>
+            <Link href="/events" className="nav-link" onClick={() => setIsMenuOpen(false)}>Events</Link>
             
             <div id="authNavigation">
               {user ? (
@@ -196,7 +196,7 @@ export default function Navbar() {
                         style={{
                           position: 'absolute',
                           top: '100%',
-                          right: isMobile ? '-80px' : '0',
+                          right: isMobile ? '-120px' : '0',
                           marginTop: '8px',
                           background: '#1a1a1a',
                           border: '1px solid #333',
@@ -217,7 +217,10 @@ export default function Navbar() {
                             borderBottom: '1px solid #333',
                             transition: 'background-color 0.3s ease'
                           }}
-                          onClick={() => setIsDropdownOpen(false)}
+                          onClick={() => {
+                            setIsDropdownOpen(false);
+                            setIsMenuOpen(false);
+                          }}
                           onMouseEnter={(e) => (e.target as any).style.backgroundColor = '#333'}
                           onMouseLeave={(e) => (e.target as any).style.backgroundColor = 'transparent'}
                         >
@@ -235,7 +238,10 @@ export default function Navbar() {
                               borderBottom: '1px solid #333',
                               transition: 'background-color 0.3s ease'
                             }}
-                            onClick={() => setIsDropdownOpen(false)}
+                            onClick={() => {
+                              setIsDropdownOpen(false);
+                              setIsMenuOpen(false);
+                            }}
                             onMouseEnter={(e) => (e.target as any).style.backgroundColor = '#333'}
                             onMouseLeave={(e) => (e.target as any).style.backgroundColor = 'transparent'}
                           >
@@ -245,6 +251,7 @@ export default function Navbar() {
                         <button 
                           onClick={() => {
                             setIsDropdownOpen(false);
+                            setIsMenuOpen(false);
                             handleLogout();
                           }}
                           style={{
@@ -269,7 +276,7 @@ export default function Navbar() {
                   </div>
                 </div>
               ) : (
-                <Link href="/login" className="nav-link login-btn">
+                <Link href="/login" className="nav-link login-btn" onClick={() => setIsMenuOpen(false)}>
                   Sign In
                 </Link>
               )}
