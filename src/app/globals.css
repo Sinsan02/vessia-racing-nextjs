@@ -73,9 +73,21 @@ html {
     font-size: 1.4rem !important;
   }
   
+  .nav-logo {
+    order: 1 !important;
+    margin-right: auto !important;
+  }
+  
+  .nav-menu {
+    order: 2 !important;
+    margin-left: auto !important;
+  }
+  
   .nav-logo img {
-    width: 70px !important;
+    width: 100px !important;
     height: auto !important;
+    image-rendering: -webkit-optimize-contrast !important;
+    image-rendering: crisp-edges !important;
   }
   
   .nav-link {
@@ -142,9 +154,21 @@ html {
     font-size: 1.6rem !important;
   }
   
+  .nav-logo {
+    order: 1 !important;
+    margin-right: auto !important;
+  }
+  
+  .nav-menu {
+    order: 2 !important;
+    margin-left: auto !important;
+  }
+  
   .nav-logo img {
-    width: 80px !important;
+    width: 120px !important;
     height: auto !important;
+    image-rendering: -webkit-optimize-contrast !important;
+    image-rendering: crisp-edges !important;
   }
   
   .nav-link {
