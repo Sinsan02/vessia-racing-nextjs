@@ -677,24 +677,45 @@ body {
   
   /* Championship/Results page mobile styles */
   .results-header h1 {
-    font-size: 1.8rem !important;
+    font-size: 1.5rem !important;
+    margin-bottom: 0.5rem !important;
   }
   
   .results-header p {
-    font-size: 0.9rem !important;
+    font-size: 0.8rem !important;
+    margin-top: 5px !important;
+  }
+  
+  .league-selector {
+    margin-bottom: 15px !important;
   }
   
   .league-selector label {
-    font-size: 1rem !important;
+    font-size: 0.9rem !important;
     display: block !important;
-    margin-bottom: 10px !important;
+    margin-bottom: 8px !important;
   }
   
   .league-selector select {
     width: 100% !important;
-    max-width: 300px !important;
-    padding: 8px 12px !important;
+    max-width: 280px !important;
+    padding: 6px 10px !important;
+    font-size: 0.8rem !important;
+  }
+  
+  /* Driver results cards mobile */
+  .driver-results-card {
+    padding: 8px !important;
+    margin-bottom: 8px !important;
+  }
+  
+  .driver-results-card h3 {
     font-size: 0.9rem !important;
+  }
+  
+  .driver-results-card p {
+    font-size: 0.7rem !important;
+    margin: 2px 0 !important;
   }
 }
 
@@ -768,81 +789,23 @@ body {
 }
 
 @media (max-width: 768px) {
-  .admin-container {
-    padding: 12px 8px !important;
+  .admin-container,
+  [style*="padding"] .admin-section {
+    padding: 8px !important;
   }
   
-  .stats-grid {
-    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)) !important;
-    gap: 12px !important;
-  }
-  
-  .stats-card {
+  .admin-section {
     padding: 12px !important;
+    margin: 0 5px !important;
   }
   
-  .stats-card h3 {
-    font-size: 1.8rem !important;
-  }
-  
-  .stats-card p {
-    font-size: 0.8rem !important;
-  }
-  
-  .admin-tabs {
-    flex-direction: column !important;
-    gap: 6px !important;
-  }
-  
-  .admin-tab {
-    width: 100% !important;
-    text-align: center !important;
-    padding: 8px 12px !important;
-    font-size: 0.85rem !important;
-  }
-  
-  .users-table {
-    overflow-x: auto !important;
-    font-size: 0.8rem !important;
-  }
-  
-  .users-table table {
-    min-width: 500px !important;
-  }
-  
-  .users-table th,
-  .users-table td {
-    padding: 6px 8px !important;
-    font-size: 0.75rem !important;
-  }
-  
-  .form-row {
-    flex-direction: column !important;
-    gap: 12px !important;
-  }
-  
-  .form-group {
-    width: 100% !important;
-  }
-  
-  .form-group label {
-    font-size: 0.85rem !important;
-  }
-  
-  .form-group input,
-  .form-group select {
-    padding: 8px 10px !important;
-    font-size: 0.8rem !important;
-  }
-}
-
-@media (max-width: 480px) {
-  .admin-container {
-    padding: 8px 5px !important;
+  .admin-section h2 {
+    font-size: 1.2rem !important;
+    margin-bottom: 15px !important;
   }
   
   .stats-grid {
-    grid-template-columns: 1fr !important;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)) !important;
     gap: 8px !important;
   }
   
@@ -854,26 +817,124 @@ body {
     font-size: 1.5rem !important;
   }
   
+  .stats-card p {
+    font-size: 0.75rem !important;
+  }
+  
+  .admin-tabs {
+    flex-direction: column !important;
+    gap: 6px !important;
+  }
+  
   .admin-tab {
+    width: 100% !important;
+    text-align: center !important;
     padding: 6px 10px !important;
     font-size: 0.8rem !important;
   }
   
-  .users-table th,
-  .users-table td {
-    padding: 4px 6px !important;
-    font-size: 0.7rem !important;
+  /* Force table responsiveness */
+  .table-responsive {
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch !important;
   }
   
-  .btn-small {
-    padding: 3px 6px !important;
+  .users-table,
+  table {
+    min-width: 100% !important;
+    width: 100% !important;
     font-size: 0.7rem !important;
+    display: table !important;
+  }
+  
+  .users-table th,
+  .users-table td,
+  table th,
+  table td {
+    padding: 4px 6px !important;
+    font-size: 0.7rem !important;
+    white-space: nowrap !important;
+  }
+  
+  .users-table th {
+    font-size: 0.65rem !important;
+    padding: 6px 4px !important;
+  }
+  
+  .form-row {
+    flex-direction: column !important;
+    gap: 10px !important;
+  }
+  
+  .form-group {
+    width: 100% !important;
+  }
+  
+  .form-group label {
+    font-size: 0.8rem !important;
+    margin-bottom: 4px !important;
   }
   
   .form-group input,
   .form-group select {
     padding: 6px 8px !important;
     font-size: 0.75rem !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .admin-section {
+    padding: 8px !important;
+    margin: 0 2px 15px 2px !important;
+  }
+  
+  .admin-section h2 {
+    font-size: 1.1rem !important;
+  }
+  
+  .stats-grid {
+    grid-template-columns: 1fr !important;
+    gap: 6px !important;
+  }
+  
+  .stats-card {
+    padding: 8px !important;
+  }
+  
+  .stats-card h3 {
+    font-size: 1.3rem !important;
+  }
+  
+  .admin-tab {
+    padding: 5px 8px !important;
+    font-size: 0.75rem !important;
+  }
+  
+  /* Even more aggressive mobile table styles */
+  .users-table th,
+  .users-table td,
+  table th,
+  table td {
+    padding: 2px 4px !important;
+    font-size: 0.65rem !important;
+  }
+  
+  .users-table select {
+    font-size: 0.65rem !important;
+    padding: 2px 4px !important;
+  }
+  
+  .btn-small,
+  button {
+    padding: 2px 4px !important;
+    font-size: 0.65rem !important;
+    margin: 1px !important;
+  }
+  
+  .form-group input,
+  .form-group select {
+    padding: 4px 6px !important;
+    font-size: 0.7rem !important;
   }
 }
 
@@ -936,18 +997,38 @@ body {
 
 /* Main page padding adjustments for mobile */
 @media (max-width: 768px) {
-  .min-h-screen main {
-    padding: 15px 0 !important;
+  .min-h-screen main,
+  main {
+    padding: 8px 0 !important;
+  }
+  
+  .min-h-screen {
+    padding-top: 60px !important;
+  }
+  
+  /* Force all page containers to be smaller */
+  [style*="padding: 20px"],
+  [style*="padding:20px"] {
+    padding: 8px !important;
   }
 }
 
 @media (max-width: 480px) {
-  .min-h-screen main {
-    padding: 10px 0 !important;
+  .min-h-screen main,
+  main {
+    padding: 5px 0 !important;
   }
   
   .min-h-screen {
-    padding-top: 70px !important;
+    padding-top: 65px !important;
+  }
+  
+  /* Force even smaller padding on very small screens */
+  [style*="padding: 20px"],
+  [style*="padding:20px"],
+  [style*="padding: 25px"],
+  [style*="padding:25px"] {
+    padding: 5px !important;
   }
 }
 
