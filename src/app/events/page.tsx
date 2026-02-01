@@ -266,7 +266,10 @@ export default function Events() {
               padding: '25px',
               borderRadius: '15px',
               marginBottom: '30px',
-              border: '1px solid #333'
+              border: '1px solid #333',
+              maxWidth: '600px',
+              margin: '0 auto 30px',
+              width: '100%'
             }}>
               <h2 style={{color: '#3EA822', marginBottom: '20px', fontSize: '1.5rem'}}>
                 {editingEvent ? '✏️ Edit Event' : '📅 Create New Event'}
@@ -476,8 +479,9 @@ export default function Events() {
               display: 'flex',
               flexDirection: 'column',
               gap: '25px',
-              maxWidth: '800px',
-              margin: '0 auto'
+              maxWidth: '900px',
+              margin: '0 auto',
+              padding: '0 15px'
             }}>
               {events.map((event) => (
                 <div
@@ -488,7 +492,8 @@ export default function Events() {
                     border: '1px solid #333',
                     borderRadius: '15px',
                     overflow: 'hidden',
-                    transition: 'transform 0.3s ease, box-shadow 0.3s ease'
+                    transition: 'transform 0.3s ease, box-shadow 0.3s ease',
+                    width: '100%'
                   }}
                   onMouseEnter={(e) => {
                     (e.currentTarget as HTMLElement).style.transform = 'translateY(-5px)';
@@ -501,7 +506,7 @@ export default function Events() {
                 >
                   {/* Event Image */}
                   {event.image_url ? (
-                    <div style={{position: 'relative', height: '250px', width: '100%'}}>
+                    <div style={{position: 'relative', height: '200px', width: '100%'}}>
                       <Image
                         src={event.image_url}
                         alt={event.name}

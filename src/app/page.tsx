@@ -123,12 +123,14 @@ export default function Home() {
               borderRadius: '15px',
               padding: '25px',
               border: '1px solid #333',
-              textAlign: 'center'
+              textAlign: 'center',
+              maxWidth: '800px',
+              margin: '0 auto'
             }}>
               {latestEvent.image_url && (
                 <div style={{
                   position: 'relative',
-                  height: '250px',
+                  height: '200px',
                   width: '100%',
                   marginBottom: '20px',
                   borderRadius: '10px',
