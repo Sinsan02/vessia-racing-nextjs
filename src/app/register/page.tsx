@@ -96,9 +96,12 @@ export default function Register() {
   };
 
   return (
-    <div className="min-h-screen bg-responsive" style={{
+    <div className="min-h-screen" style{{
       backgroundColor: '#0a0a0a',
-      backgroundImage: `linear-gradient(rgba(10,10,10,0.85), rgba(10,10,10,0.85)), url('/images/decorative/Image 30. jan. 2026, 22_05_23.png')`
+      backgroundImage: `linear-gradient(rgba(10,10,10,0.85), rgba(10,10,10,0.85)), url('/images/decorative/Image 30. jan. 2026, 22_05_23.png')`,
+      backgroundSize: 'cover',
+      backgroundPosition: 'center',
+      backgroundAttachment: 'fixed'
     }}>
       <div className="form-container">
         <h2 className="form-title">✓ Become a Member</h2>
