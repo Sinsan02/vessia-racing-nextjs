@@ -28,29 +28,34 @@ html {
 @media (max-width: 768px) {
   [style*="background-attachment: fixed"] {
     background-attachment: scroll !important;
-    background-size: cover !important;
-    background-position: center center !important;
+    background-size: 100% auto !important;
+    background-position: center top !important;
+    background-repeat: no-repeat !important;
   }
   
   .bg-responsive {
     background-attachment: scroll !important;
-    background-size: cover !important;
-    background-position: center center !important;
+    background-size: 100% auto !important;
+    background-position: center top !important;
+    background-repeat: no-repeat !important;
   }
   
   /* Mobile scaling for better fit */
   body {
     overflow-x: hidden;
+    width: 100vw !important;
   }
   
   .container {
     padding: 0 15px !important;
     max-width: 100% !important;
+    width: 100% !important;
   }
   
   .section {
     padding: 30px 0 !important;
     min-height: 70vh !important;
+    width: 100vw !important;
   }
   
   .hero-content h1 {
@@ -79,27 +84,48 @@ html {
   }
   
   .navbar {
-    height: 60px !important;
-    font-size: 0.9rem !important;
+    height: 70px !important;
+    font-size: 1rem !important;
+    width: 100vw !important;
+    padding: 0 15px !important;
+  }
+  
+  .nav-container {
+    width: 100% !important;
+    justify-content: space-between !important;
   }
   
   .nav-logo img {
-    width: 35px !important;
+    width: 50px !important;
     height: auto !important;
+  }
+  
+  .mobile-menu-toggle {
+    font-size: 1.8rem !important;
+    padding: 8px 12px !important;
+    color: #3EA822 !important;
+    background: transparent !important;
+    border: 2px solid #3EA822 !important;
+    border-radius: 5px !important;
+    position: relative !important;
+    right: 0 !important;
+    margin-right: 0 !important;
   }
 }
 
 @media (max-width: 480px) {
   [style*="background-attachment: fixed"] {
     background-attachment: scroll !important;
-    background-size: cover !important;
-    background-position: center center !important;
+    background-size: 100% auto !important;
+    background-position: center top !important;
+    background-repeat: no-repeat !important;
   }
   
   .bg-responsive {
     background-attachment: scroll !important;
-    background-size: cover !important;
-    background-position: center center !important;
+    background-size: 100% auto !important;
+    background-position: center top !important;
+    background-repeat: no-repeat !important;
   }
   
   /* Extra small screens */
@@ -114,6 +140,7 @@ html {
   .section {
     padding: 20px 0 !important;
     min-height: 60vh !important;
+    width: 100vw !important;
   }
   
   .section h2 {
@@ -122,6 +149,15 @@ html {
   
   .container {
     padding: 0 10px !important;
+    width: 100% !important;
+  }
+  
+  .navbar {
+    padding: 0 10px !important;
+  }
+  
+  .nav-logo img {
+    width: 45px !important;
   }
 }
 
