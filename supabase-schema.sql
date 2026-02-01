@@ -63,6 +63,20 @@ CREATE TABLE IF NOT EXISTS public.points_history (
   CONSTRAINT fk_points_history_admin FOREIGN KEY (admin_id) REFERENCES public.users(id) ON DELETE SET NULL
 );
 
+-- Create events table
+CREATE TABLE IF NOT EXISTS public.events (
+  id SERIAL PRIMARY KEY,
+  name TEXT NOT NULL,
+  description TEXT,
+  event_date DATE NOT NULL,
+  image_url TEXT,
+  track_name TEXT,
+  created_by INTEGER NOT NULL,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+  CONSTRAINT fk_events_user FOREIGN KEY (created_by) REFERENCES public.users(id) ON DELETE CASCADE
+);
+
 -- Create indexes for better performance
 CREATE INDEX IF NOT EXISTS idx_users_email ON public.users(email);
 CREATE INDEX IF NOT EXISTS idx_users_role ON public.users(role);
@@ -70,6 +84,8 @@ CREATE INDEX IF NOT EXISTS idx_driver_points_league ON public.driver_points(leag
 CREATE INDEX IF NOT EXISTS idx_driver_points_driver ON public.driver_points(driver_id);
 CREATE INDEX IF NOT EXISTS idx_points_history_driver ON public.points_history(driver_id);
 CREATE INDEX IF NOT EXISTS idx_points_history_league ON public.points_history(league_id);
+CREATE INDEX IF NOT EXISTS idx_events_date ON public.events(event_date);
+CREATE INDEX IF NOT EXISTS idx_events_created_by ON public.events(created_by);
 
 -- Create updated_at trigger function
 CREATE OR REPLACE FUNCTION update_updated_at_column()
@@ -113,6 +129,10 @@ CREATE POLICY "Everyone can view driver points" ON public.driver_points
 CREATE POLICY "Everyone can view points history" ON public.points_history
   FOR SELECT TO authenticated, anon USING (true);
 
+-- Everyone can read events
+CREATE POLICY "Everyone can view events" ON public.events
+  FOR SELECT TO authenticated, anon USING (true);
+
 -- Admins can do everything (you might want to adjust this based on your auth setup)
 CREATE POLICY "Service role can do anything" ON public.users
   TO service_role USING (true) WITH CHECK (true);
@@ -124,6 +144,9 @@ CREATE POLICY "Service role can do anything" ON public.driver_points
   TO service_role USING (true) WITH CHECK (true);
   
 CREATE POLICY "Service role can do anything" ON public.points_history
+  TO service_role USING (true) WITH CHECK (true);
+
+CREATE POLICY "Service role can do anything" ON public.events
   TO service_role USING (true) WITH CHECK (true);
 
 -- Insert some default data

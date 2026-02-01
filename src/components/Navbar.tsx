@@ -123,6 +123,7 @@ export default function Navbar() {
             )}
             <Link href="/drivers" className="nav-link">Drivers</Link>
             <Link href="/results" className="nav-link">Championship</Link>
+            <Link href="/events" className="nav-link">Events</Link>
             
             <div id="authNavigation">
               {user ? (
