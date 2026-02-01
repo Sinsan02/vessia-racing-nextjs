@@ -19,6 +19,13 @@ CREATE TABLE IF NOT EXISTS public.events (
 CREATE INDEX IF NOT EXISTS idx_events_date ON public.events(event_date);
 CREATE INDEX IF NOT EXISTS idx_events_created_by ON public.events(created_by);
 
+-- Enable RLS first
+ALTER TABLE public.events ENABLE ROW LEVEL SECURITY;
+
+-- Drop existing policies if they exist
+DROP POLICY IF EXISTS "Everyone can view events" ON public.events;
+DROP POLICY IF EXISTS "Service role can do anything" ON public.events;
+
 -- Create RLS policy so everyone can view events
 CREATE POLICY "Everyone can view events" ON public.events
   FOR SELECT TO authenticated, anon USING (true);
@@ -26,9 +33,6 @@ CREATE POLICY "Everyone can view events" ON public.events
 -- Service role can do everything
 CREATE POLICY "Service role can do anything" ON public.events
   TO service_role USING (true) WITH CHECK (true);
-
--- Enable RLS
-ALTER TABLE public.events ENABLE ROW LEVEL SECURITY;
 
 -- Insert test event med bilde for testing
 INSERT INTO public.events (name, description, event_date, image_url, track_name, created_by) 

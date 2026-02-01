@@ -472,10 +472,12 @@ export default function Events() {
               <p>No events have been created yet.</p>
             </div>
           ) : (
-            <div className="events-grid" style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(400px, 1fr))',
-              gap: '25px'
+            <div className="events-list" style={{
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '25px',
+              maxWidth: '800px',
+              margin: '0 auto'
             }}>
               {events.map((event) => (
                 <div
@@ -499,12 +501,12 @@ export default function Events() {
                 >
                   {/* Event Image */}
                   {event.image_url ? (
-                    <div style={{position: 'relative', height: '200px', width: '100%'}}>
+                    <div style={{position: 'relative', height: '250px', width: '100%'}}>
                       <Image
                         src={event.image_url}
                         alt={event.name}
                         fill
-                        style={{objectFit: 'cover'}}
+                        style={{objectFit: 'contain', backgroundColor: '#222'}}
                         onError={(e) => {
                           console.error('Image load failed for:', event.name, event.image_url);
                           (e.target as HTMLImageElement).style.display = 'none';
