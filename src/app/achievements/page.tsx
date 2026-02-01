@@ -45,7 +45,12 @@ export default function Achievements() {
       maxWidth: '1200px',
       margin: '0 auto',
       padding: '40px 20px',
-      paddingTop: '120px'
+      paddingTop: '120px',
+      backgroundImage: `linear-gradient(rgba(10,10,10,0.85), rgba(10,10,10,0.85)), url('/images/decorative/Screenshot_2025-10-11_170713.png')`,
+      backgroundSize: 'cover',
+      backgroundPosition: 'center',
+      backgroundAttachment: 'fixed',
+      minHeight: '100vh'
     }}>
       {/* Header */}
       <div style={{

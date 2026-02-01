@@ -78,7 +78,12 @@ export default function Home() {
       )}
 
       {/* Hero Section */}
-      <section className="hero">
+      <section className="hero" style={{
+        background: `linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.8)), url('/images/decorative/Screenshot_2025-11-23_180245.png')`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundAttachment: 'fixed'
+      }}>
         <div className="hero-content">
           <Image 
             src="/Vessia_Logo.png" 
@@ -98,7 +103,12 @@ export default function Home() {
       </section>
 
       {/* Achievements Section */}
-      <section id="achievements" className="section">
+      <section id="achievements" className="section" style={{
+        backgroundImage: `linear-gradient(rgba(10,10,10,0.9), rgba(10,10,10,0.9)), url('/images/decorative/Screenshot_2025-10-11_170801.png')`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundAttachment: 'fixed'
+      }}>
         <div className="container">
           <h2 className="section-title">🏆 Our Achievements</h2>
           <p className="section-subtitle">Celebrating our victories on the world's most challenging circuits</p>
@@ -266,7 +276,11 @@ export default function Home() {
       </section>
 
       {/* Latest Event Section */}
-      <section id="results" className="section section-dark">
+      <section id="results" className="section section-dark" style={{
+        backgroundImage: `linear-gradient(rgba(26,26,26,0.95), rgba(26,26,26,0.95)), url('/images/decorative/Screenshot_2025-11-15_150823.png')`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center'
+      }}>
         <div className="container">
           <h2 className="section-title">Latest Event</h2>
           {latestEvent ? (
@@ -388,7 +402,11 @@ export default function Home() {
       </section>
 
       {/* Join Our Team Section */}
-      <section className="section">
+      <section className="section" style={{
+        backgroundImage: `linear-gradient(rgba(10,10,10,0.9), rgba(10,10,10,0.9)), url('/images/decorative/Screenshot_2025-05-18_205724.png')`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center'
+      }}>
         <div className="container">
           <div style={{
             textAlign: 'center',
