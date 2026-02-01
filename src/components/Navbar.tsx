@@ -196,7 +196,8 @@ export default function Navbar() {
                         style={{
                           position: 'absolute',
                           top: '100%',
-                          right: isMobile ? '-120px' : '0',
+                          left: isMobile ? '-80px' : 'auto',
+                          right: isMobile ? 'auto' : '0',
                           marginTop: '8px',
                           background: '#1a1a1a',
                           border: '1px solid #333',
