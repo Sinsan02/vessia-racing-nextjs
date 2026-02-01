@@ -99,7 +99,7 @@ export default function Home() {
           <p className="hero-subtitle">Professional Sim Racing Team</p>
           <p className="hero-description">Competing at the highest level in sim racing with dedication, precision and teamwork</p>
           <div className="hero-buttons">
-            <Link href="#achievements" className="btn-primary">Our Achievements</Link>
+            <Link href="#achievements" className="btn-primary racing-pulse">Our Achievements</Link>
             <Link href="/register" className="btn-secondary">Join Team</Link>
           </div>
         </div>
@@ -147,8 +147,19 @@ export default function Home() {
                     alignItems: 'center',
                     justifyContent: 'center',
                     margin: '0 auto 15px',
-                    boxShadow: '0 5px 15px rgba(62, 168, 34, 0.3)'
-                  }}>
+                    boxShadow: '0 5px 15px rgba(62, 168, 34, 0.3)',
+                    transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
+                    cursor: 'pointer'
+                  }}
+                  className="achievement-icon"
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.transform = 'scale(1.2) rotateY(180deg)';
+                    e.currentTarget.style.boxShadow = '0 10px 30px rgba(62, 168, 34, 0.6)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.transform = 'scale(1) rotateY(0deg)';
+                    e.currentTarget.style.boxShadow = '0 5px 15px rgba(62, 168, 34, 0.3)';
+                  }}>>
                     {achievement.icon}
                   </div>
 
