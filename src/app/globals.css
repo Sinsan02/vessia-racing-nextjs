@@ -70,30 +70,48 @@ html {
   /* Scale up navbar and logo for large monitors */
   .navbar {
     height: 80px !important;
-    font-size: 1.2rem !important;
+    font-size: 1.4rem !important;
   }
   
   .nav-logo img {
-    width: 60px !important;
-    height: 60px !important;
+    width: 70px !important;
+    height: auto !important;
   }
   
   .nav-link {
-    font-size: 1.2rem !important;
-    padding: 12px 20px !important;
+    font-size: 1.4rem !important;
+    padding: 14px 24px !important;
   }
   
-  /* Scale content boxes to laptop size */
+  /* Scale content boxes bigger to match laptop experience */
   .container {
-    max-width: 1200px !important;
+    max-width: 1400px !important;
+    padding: 0 40px !important;
   }
   
   .hero-content h1 {
-    font-size: 3.5rem !important;
+    font-size: 4rem !important;
   }
   
   .hero-subtitle {
-    font-size: 1.8rem !important;
+    font-size: 2rem !important;
+  }
+  
+  .hero-description {
+    font-size: 1.4rem !important;
+  }
+  
+  .section h2 {
+    font-size: 2.8rem !important;
+  }
+  
+  .section p {
+    font-size: 1.3rem !important;
+  }
+  
+  .btn-primary {
+    font-size: 1.3rem !important;
+    padding: 16px 40px !important;
   }
 }
 
@@ -120,27 +138,49 @@ html {
   
   /* Even larger navbar and logo for ultra-wide */
   .navbar {
-    height: 90px !important;
-    font-size: 1.3rem !important;
+    height: 100px !important;
+    font-size: 1.6rem !important;
   }
   
   .nav-logo img {
-    width: 70px !important;
-    height: 70px !important;
+    width: 80px !important;
+    height: auto !important;
   }
   
   .nav-link {
-    font-size: 1.3rem !important;
-    padding: 14px 24px !important;
+    font-size: 1.6rem !important;
+    padding: 16px 28px !important;
   }
   
-  /* Keep content boxes reasonable size */
+  /* Much bigger content boxes */
   .container {
-    max-width: 1400px !important;
+    max-width: 1600px !important;
+    padding: 0 50px !important;
   }
   
   .hero-content h1 {
-    font-size: 4rem !important;
+    font-size: 5rem !important;
+  }
+  
+  .hero-subtitle {
+    font-size: 2.4rem !important;
+  }
+  
+  .hero-description {
+    font-size: 1.6rem !important;
+  }
+  
+  .section h2 {
+    font-size: 3.2rem !important;
+  }
+  
+  .section p {
+    font-size: 1.5rem !important;
+  }
+  
+  .btn-primary {
+    font-size: 1.5rem !important;
+    padding: 18px 45px !important;
   }
 }
 
