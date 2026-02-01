@@ -159,7 +159,7 @@ export default function Home() {
                   onMouseLeave={(e) => {
                     e.currentTarget.style.transform = 'scale(1) rotateY(0deg)';
                     e.currentTarget.style.boxShadow = '0 5px 15px rgba(62, 168, 34, 0.3)';
-                  }}>>
+                  }}>
                     {achievement.icon}
                   </div>
 
