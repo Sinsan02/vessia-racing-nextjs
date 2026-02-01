@@ -28,10 +28,64 @@ html {
 @media (max-width: 768px) {
   [style*="background-attachment: fixed"] {
     background-attachment: scroll !important;
+    background-size: cover !important;
+    background-position: center center !important;
   }
   
   .bg-responsive {
     background-attachment: scroll !important;
+    background-size: cover !important;
+    background-position: center center !important;
+  }
+  
+  /* Mobile scaling for better fit */
+  body {
+    overflow-x: hidden;
+  }
+  
+  .container {
+    padding: 0 15px !important;
+    max-width: 100% !important;
+  }
+  
+  .section {
+    padding: 30px 0 !important;
+    min-height: 70vh !important;
+  }
+  
+  .hero-content h1 {
+    font-size: 2rem !important;
+  }
+  
+  .hero-subtitle {
+    font-size: 1.2rem !important;
+  }
+  
+  .hero-description {
+    font-size: 1rem !important;
+  }
+  
+  .section h2 {
+    font-size: 1.8rem !important;
+  }
+  
+  .section p {
+    font-size: 0.9rem !important;
+  }
+  
+  .btn-primary {
+    font-size: 0.9rem !important;
+    padding: 10px 20px !important;
+  }
+  
+  .navbar {
+    height: 60px !important;
+    font-size: 0.9rem !important;
+  }
+  
+  .nav-logo img {
+    width: 35px !important;
+    height: auto !important;
   }
 }
 
@@ -39,11 +93,35 @@ html {
   [style*="background-attachment: fixed"] {
     background-attachment: scroll !important;
     background-size: cover !important;
+    background-position: center center !important;
   }
   
   .bg-responsive {
     background-attachment: scroll !important;
     background-size: cover !important;
+    background-position: center center !important;
+  }
+  
+  /* Extra small screens */
+  .hero-content h1 {
+    font-size: 1.6rem !important;
+  }
+  
+  .hero-subtitle {
+    font-size: 1rem !important;
+  }
+  
+  .section {
+    padding: 20px 0 !important;
+    min-height: 60vh !important;
+  }
+  
+  .section h2 {
+    font-size: 1.5rem !important;
+  }
+  
+  .container {
+    padding: 0 10px !important;
   }
 }
 
