@@ -16,21 +16,12 @@ interface DriverPoint {
   races_completed: number;
 }
 
-const getPlaceholderImage = (name: string) => {
+const getPlaceholderColor = (name: string) => {
   const colors = [
     '#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4', '#FFEAA7',
     '#DDA0DD', '#98D8C8', '#F7DC6F', '#BB8FCE', '#85C1E9'
   ];
-  const colorIndex = name.charCodeAt(0) % colors.length;
-  return `data:image/svg+xml;base64,${btoa(
-    `<svg width="200" height="200" xmlns="http://www.w3.org/2000/svg">
-      <rect width="200" height="200" fill="${colors[colorIndex]}"/>
-      <text x="100" y="120" font-family="Arial, sans-serif" font-size="80" font-weight="bold" 
-            text-anchor="middle" fill="white">
-        ${name.charAt(0).toUpperCase()}
-      </text>
-    </svg>`
-  )}`;
+  return colors[name.charCodeAt(0) % colors.length];
 };
 
 export default function Results() {
@@ -210,17 +201,25 @@ export default function Results() {
                                   }}
                                 />
                               ) : (
-                                <img
-                                  src={getPlaceholderImage(driver.full_name)}
-                                  alt={`${driver.full_name} placeholder`}
+                                <div
                                   style={{
                                     width: '40px',
                                     height: '40px',
                                     borderRadius: '50%',
+                                    backgroundColor: getPlaceholderColor(driver.full_name),
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
                                     marginRight: '12px',
-                                    border: '2px solid #3EA822'
+                                    fontSize: '1.2rem',
+                                    fontWeight: 'bold',
+                                    color: 'white',
+                                    border: '2px solid #3EA822',
+                                    boxShadow: '0 2px 8px rgba(0,0,0,0.2)'
                                   }}
-                                />
+                                >
+                                  {driver.full_name.charAt(0).toUpperCase()}
+                                </div>
                               )}
                               <div>
                                 <div style={{color: '#fff', fontWeight: '500', fontSize: '1rem'}}>

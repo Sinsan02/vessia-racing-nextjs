@@ -2,21 +2,12 @@
 
 import { useState, useEffect } from 'react';
 
-const getPlaceholderImage = (name: string) => {
+const getPlaceholderColor = (name: string) => {
   const colors = [
     '#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4', '#FFEAA7',
     '#DDA0DD', '#98D8C8', '#F7DC6F', '#BB8FCE', '#85C1E9'
   ];
-  const colorIndex = name.charCodeAt(0) % colors.length;
-  return `data:image/svg+xml;base64,${btoa(
-    `<svg width="200" height="200" xmlns="http://www.w3.org/2000/svg">
-      <rect width="200" height="200" fill="${colors[colorIndex]}"/>
-      <text x="100" y="120" font-family="Arial, sans-serif" font-size="80" font-weight="bold" 
-            text-anchor="middle" fill="white">
-        ${name.charAt(0).toUpperCase()}
-      </text>
-    </svg>`
-  )}`;
+  return colors[name.charCodeAt(0) % colors.length];
 };
 
 export default function Drivers() {
@@ -101,18 +92,25 @@ export default function Drivers() {
                         }}
                       />
                     ) : (
-                      <img
-                        src={getPlaceholderImage(driver.fullName || driver.name || 'Driver')}
-                        alt={`${driver.fullName || driver.name || 'Driver'} placeholder`}
+                      <div
                         style={{
                           width: '80px',
                           height: '80px',
                           borderRadius: '50%',
+                          backgroundColor: getPlaceholderColor(driver.fullName || driver.name || 'Driver'),
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
                           margin: '0 auto',
-                          display: 'block',
-                          border: '3px solid #3EA822'
+                          color: 'white',
+                          fontSize: '2rem',
+                          fontWeight: 'bold',
+                          border: '3px solid #3EA822',
+                          boxShadow: '0 4px 15px rgba(0,0,0,0.2)'
                         }}
-                      />
+                      >
+                        {(driver.fullName || driver.name || 'D').charAt(0).toUpperCase()}
+                      </div>
                     )}
                   </div>
                   <h3 style={{color: '#3EA822', marginBottom: '10px'}}>
