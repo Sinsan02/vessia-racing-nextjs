@@ -55,6 +55,12 @@ html {
     background-size: 110% auto !important;
     background-position: center center !important;
   }
+  
+  /* Increase height of achievement sections on large monitors */
+  .section {
+    min-height: 100vh !important;
+    height: 100vh !important;
+  }
 }
 
 /* Ultra-wide and very large monitors (34" and larger) - 2560px and above */
@@ -65,6 +71,12 @@ html {
     background-size: 130% auto !important;
     background-position: center center !important;
     background-repeat: no-repeat !important;
+  }
+  
+  /* Full height for ultra-wide monitors */
+  .section {
+    min-height: 100vh !important;
+    height: 100vh !important;
   }
 }
 
