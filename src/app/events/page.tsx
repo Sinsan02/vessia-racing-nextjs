@@ -96,7 +96,9 @@ export default function Events() {
         const uploadData = await uploadResponse.json();
         if (uploadData.success) {
           imageUrl = uploadData.imageUrl;
+          console.log('Image uploaded successfully:', imageUrl);
         } else {
+          console.error('Upload failed:', uploadData.error);
           alert('Error uploading image: ' + uploadData.error);
           setUploading(false);
           return;
