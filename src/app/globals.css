@@ -656,11 +656,14 @@ body {
     position: static;
     margin-left: auto;
     margin-right: 0;
-    padding: 8px;
+    padding: 12px;
     background: none;
     border: none;
     color: #3EA822;
-    font-size: 1.2rem;
+    font-size: 1.8rem;
+    cursor: pointer;
+    min-width: 44px;
+    min-height: 44px;
   }
   
   .nav-menu {
