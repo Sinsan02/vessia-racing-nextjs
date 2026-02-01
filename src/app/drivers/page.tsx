@@ -2,6 +2,23 @@
 
 import { useState, useEffect } from 'react';
 
+const getPlaceholderImage = (name: string) => {
+  const colors = [
+    '#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4', '#FFEAA7',
+    '#DDA0DD', '#98D8C8', '#F7DC6F', '#BB8FCE', '#85C1E9'
+  ];
+  const colorIndex = name.charCodeAt(0) % colors.length;
+  return `data:image/svg+xml;base64,${btoa(
+    `<svg width="200" height="200" xmlns="http://www.w3.org/2000/svg">
+      <rect width="200" height="200" fill="${colors[colorIndex]}"/>
+      <text x="100" y="120" font-family="Arial, sans-serif" font-size="80" font-weight="bold" 
+            text-anchor="middle" fill="white">
+        ${name.charAt(0).toUpperCase()}
+      </text>
+    </svg>`
+  )}`;
+};
+
 export default function Drivers() {
   const [drivers, setDrivers] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -38,8 +55,14 @@ export default function Drivers() {
             </p>
           </div>
 
-          {/* Drivers Grid */}
-          <div className="drivers-grid" style={{display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '20px'}}>
+          {/* Drivers List */}
+          <div className="drivers-list" style={{
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '20px',
+            maxWidth: '800px',
+            margin: '0 auto'
+          }}>
             {loading ? (
               <div style={{textAlign: 'center', color: '#888', padding: '40px', gridColumn: '1 / -1'}}>
                 <div style={{fontSize: '2rem', marginBottom: '15px'}}>⚡</div>
@@ -78,24 +101,18 @@ export default function Drivers() {
                         }}
                       />
                     ) : (
-                      <div 
+                      <img
+                        src={getPlaceholderImage(driver.fullName || driver.name || 'Driver')}
+                        alt={`${driver.fullName || driver.name || 'Driver'} placeholder`}
                         style={{
                           width: '80px',
                           height: '80px',
                           borderRadius: '50%',
-                          background: 'linear-gradient(135deg, #3EA822 0%, #2d7a1a 100%)',
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
                           margin: '0 auto',
-                          fontSize: '2rem',
-                          fontWeight: 'bold',
-                          color: 'white',
-                          boxShadow: '0 4px 20px rgba(62, 168, 34, 0.3)'
+                          display: 'block',
+                          border: '3px solid #3EA822'
                         }}
-                      >
-                        {driver.fullName || driver.name ? (driver.fullName || driver.name).charAt(0).toUpperCase() : 'D'}
-                      </div>
+                      />
                     )}
                   </div>
                   <h3 style={{color: '#3EA822', marginBottom: '10px'}}>

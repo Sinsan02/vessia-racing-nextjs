@@ -510,8 +510,7 @@ body {
     font-size: 2.2rem !important;
   }
   
-  .achievements-page .achievements-grid {
-    grid-template-columns: 1fr !important;
+  .achievements-page .achievements-list {
     gap: 20px !important;
   }
   

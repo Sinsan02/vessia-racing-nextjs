@@ -128,12 +128,6 @@ export default function Navbar() {
           
           <div className={`nav-menu ${isMenuOpen ? 'active' : ''}`}>
             <Link href="/" className="nav-link" onClick={() => setIsMenuOpen(false)}>Home</Link>
-            {isHomePage && (
-              <>
-                <Link href="#achievements" className="nav-link" onClick={() => setIsMenuOpen(false)}>Achievements</Link>
-                <Link href="#results" className="nav-link" onClick={() => setIsMenuOpen(false)}>Results</Link>
-              </>
-            )}
             <Link href="/achievements" className="nav-link" onClick={() => setIsMenuOpen(false)}>Achievements</Link>
             <Link href="/drivers" className="nav-link" onClick={() => setIsMenuOpen(false)}>Drivers</Link>
             <Link href="/results" className="nav-link" onClick={() => setIsMenuOpen(false)}>Championship</Link>

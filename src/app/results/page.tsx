@@ -16,6 +16,23 @@ interface DriverPoint {
   races_completed: number;
 }
 
+const getPlaceholderImage = (name: string) => {
+  const colors = [
+    '#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4', '#FFEAA7',
+    '#DDA0DD', '#98D8C8', '#F7DC6F', '#BB8FCE', '#85C1E9'
+  ];
+  const colorIndex = name.charCodeAt(0) % colors.length;
+  return `data:image/svg+xml;base64,${btoa(
+    `<svg width="200" height="200" xmlns="http://www.w3.org/2000/svg">
+      <rect width="200" height="200" fill="${colors[colorIndex]}"/>
+      <text x="100" y="120" font-family="Arial, sans-serif" font-size="80" font-weight="bold" 
+            text-anchor="middle" fill="white">
+        ${name.charAt(0).toUpperCase()}
+      </text>
+    </svg>`
+  )}`;
+};
+
 export default function Results() {
   const [leagues, setLeagues] = useState<League[]>([]);
   const [selectedLeague, setSelectedLeague] = useState<number | null>(null);
@@ -193,23 +210,17 @@ export default function Results() {
                                   }}
                                 />
                               ) : (
-                                <div 
+                                <img
+                                  src={getPlaceholderImage(driver.full_name)}
+                                  alt={`${driver.full_name} placeholder`}
                                   style={{
                                     width: '40px',
                                     height: '40px',
                                     borderRadius: '50%',
-                                    background: 'linear-gradient(135deg, #3EA822 0%, #2d7a1a 100%)',
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    justifyContent: 'center',
                                     marginRight: '12px',
-                                    fontSize: '1.2rem',
-                                    fontWeight: 'bold',
-                                    color: 'white'
+                                    border: '2px solid #3EA822'
                                   }}
-                                >
-                                  {driver.full_name.charAt(0).toUpperCase()}
-                                </div>
+                                />
                               )}
                               <div>
                                 <div style={{color: '#fff', fontWeight: '500', fontSize: '1rem'}}>

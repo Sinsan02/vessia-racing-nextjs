@@ -143,9 +143,11 @@ export default function Achievements() {
 
           {/* Achievements Grid */}
           <div style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))',
-            gap: '30px',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '25px',
+            maxWidth: '800px',
+            margin: '0 auto',
             marginBottom: '50px'
           }}>
             {achievements.map((achievement, index) => (
