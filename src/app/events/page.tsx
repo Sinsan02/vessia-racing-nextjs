@@ -32,6 +32,7 @@ export default function Events() {
   const [editingEvent, setEditingEvent] = useState<Event | null>(null);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [uploading, setUploading] = useState(false);
+  const [previewUrl, setPreviewUrl] = useState<string>('');
   
   // Form state
   const [formData, setFormData] = useState({
@@ -45,7 +46,14 @@ export default function Events() {
   useEffect(() => {
     checkAuthStatus();
     fetchEvents();
-  }, []);
+    
+    // Cleanup function for object URLs
+    return () => {
+      if (previewUrl && previewUrl.startsWith('blob:')) {
+        URL.revokeObjectURL(previewUrl);
+      }
+    };
+  }, [previewUrl]);
 
   const checkAuthStatus = async () => {
     try {
@@ -147,6 +155,7 @@ export default function Events() {
       image_url: event.image_url || '',
       track_name: event.track_name || ''
     });
+    setPreviewUrl(event.image_url || '');
     setShowCreateForm(true);
   };
 
@@ -178,6 +187,7 @@ export default function Events() {
     setShowCreateForm(false);
     setEditingEvent(null);
     setSelectedFile(null);
+    setPreviewUrl('');
     setFormData({
       name: '',
       description: '',
@@ -313,6 +323,14 @@ export default function Events() {
                         onChange={(e) => {
                           const file = e.target.files?.[0] || null;
                           setSelectedFile(file);
+                          
+                          // Create preview URL
+                          if (file) {
+                            const url = URL.createObjectURL(file);
+                            setPreviewUrl(url);
+                          } else {
+                            setPreviewUrl(editingEvent?.image_url || '');
+                          }
                         }}
                         style={{
                           width: '100%',
@@ -325,13 +343,46 @@ export default function Events() {
                         }}
                       />
                     </div>
+                    
+                    {/* Image Preview */}
+                    {previewUrl && (
+                      <div style={{
+                        marginTop: '10px',
+                        padding: '10px',
+                        border: '1px solid #555',
+                        borderRadius: '5px',
+                        backgroundColor: '#222'
+                      }}>
+                        <p style={{color: '#3EA822', fontSize: '0.9rem', margin: '0 0 8px 0'}}>
+                          Preview:
+                        </p>
+                        <img
+                          src={previewUrl}
+                          alt="Preview"
+                          style={{
+                            width: '100%',
+                            maxWidth: '300px',
+                            height: 'auto',
+                            borderRadius: '5px',
+                            border: '2px solid #3EA822'
+                          }}
+                          onLoad={() => {
+                            // Cleanup old object URL if it's a blob URL
+                            if (previewUrl.startsWith('blob:') && previewUrl !== (editingEvent?.image_url || '')) {
+                              // This is a newly created blob URL, keep it
+                            }
+                          }}
+                        />
+                      </div>
+                    )}
+                    
                     {selectedFile && (
-                      <p style={{color: '#3EA822', fontSize: '0.9rem', margin: '0'}}>
+                      <p style={{color: '#3EA822', fontSize: '0.9rem', margin: '8px 0 0 0'}}>
                         Selected: {selectedFile.name}
                       </p>
                     )}
                     {!selectedFile && editingEvent?.image_url && (
-                      <p style={{color: '#888', fontSize: '0.9rem', margin: '0'}}>
+                      <p style={{color: '#888', fontSize: '0.9rem', margin: '8px 0 0 0'}}>
                         Current image: {editingEvent.image_url.includes('vercel-storage.com') ? 
                           'Uploaded image' : 
                           editingEvent.image_url.split('/').pop()
