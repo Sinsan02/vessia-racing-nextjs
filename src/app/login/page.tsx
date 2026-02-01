@@ -31,9 +31,12 @@ export default function Login() {
         const data = await response.json();
         // Show popup with user's name from login response
         alert(`Velkommen ${data.user.name}! 🏁`);
-        // Redirect to home and refresh to update Navbar
+        // Redirect to home and force a full page reload to ensure auth status updates
         router.push('/');
-        router.refresh();
+        // Force reload after a brief delay to ensure navigation completes
+        setTimeout(() => {
+          window.location.reload();
+        }, 100);
       } else {
         const data = await response.json();
         setError(data.error || 'Login failed');

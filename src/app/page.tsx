@@ -19,6 +19,17 @@ export default function Home() {
       // Clear the URL parameter
       window.history.replaceState({}, document.title, window.location.pathname);
     }
+    
+    // Check if we just logged in (from login redirect) and force refresh if needed
+    const justLoggedIn = params.get('login');
+    if (justLoggedIn === 'success') {
+      // Clear the URL parameter
+      window.history.replaceState({}, document.title, window.location.pathname);
+      // Force a reload to ensure auth state is updated
+      setTimeout(() => {
+        window.location.reload();
+      }, 100);
+    }
   }, []);
 
   return (

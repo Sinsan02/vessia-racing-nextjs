@@ -82,7 +82,10 @@ export default function Navbar() {
       await fetch('/api/auth/logout', { method: 'POST' });
       setUser(null);
       router.push('/');
-      router.refresh();
+      // Force a full page reload to ensure auth status is cleared
+      setTimeout(() => {
+        window.location.reload();
+      }, 100);
     } catch (error) {
       console.error('Logout failed:', error);
     }
