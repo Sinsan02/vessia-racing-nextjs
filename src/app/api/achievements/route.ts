@@ -58,6 +58,7 @@ export async function POST(request: NextRequest) {
           position: position || 1,
           category: category || 'Race Victory',
           icon: icon || '🏆',
+          show_on_homepage: false, // Default to false, can be set later
           created_by: 1 // For now, hardcode as admin
         }
       ])

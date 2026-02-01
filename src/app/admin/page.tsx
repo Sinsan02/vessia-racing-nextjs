@@ -258,6 +258,29 @@ export default function Admin() {
     }
   };
 
+  const toggleHomepageStatus = async (id: number, currentStatus: boolean) => {
+    try {
+      const response = await fetch(`/api/achievements/${id}/homepage`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ show_on_homepage: !currentStatus })
+      });
+
+      const data = await response.json();
+      if (data.success) {
+        alert(`Achievement ${!currentStatus ? 'added to' : 'removed from'} homepage successfully!`);
+        fetchAchievements();
+      } else {
+        alert('Error: ' + data.error);
+      }
+    } catch (error) {
+      console.error('Error toggling homepage status:', error);
+      alert('Error updating homepage status');
+    }
+  };
+
   const addPoints = async () => {
     if (!selectedLeague || !selectedDriver || !pointsToAdd || !racesToAdd) {
       alert('Please select a league, driver, and enter both points and races.');
@@ -1219,7 +1242,21 @@ export default function Admin() {
           {/* Achievement Management Tab */}
           {activeTab === 'achievement-management' && (
             <div className="tab-content">
-              <h2 style={{color: '#3EA822', textAlign: 'center', marginBottom: '30px'}}>🏆 Achievement Management</h2>
+              <h2 style={{color: '#3EA822', textAlign: 'center', marginBottom: '20px'}}>🏆 Achievement Management</h2>
+              
+              {/* Info Box */}
+              <div style={{
+                backgroundColor: 'rgba(62, 168, 34, 0.1)',
+                border: '1px solid #3EA822',
+                borderRadius: '10px',
+                padding: '15px',
+                marginBottom: '30px',
+                textAlign: 'center'
+              }}>
+                <p style={{color: '#3EA822', margin: '0', fontSize: '0.9rem', fontWeight: 'bold'}}>
+                  🏠 Homepage Control: Use the toggle buttons to select up to 3 achievements for homepage display
+                </p>
+              </div>
               
               {/* Create Achievement Form */}
               <div className="form-container" style={{
@@ -1470,6 +1507,27 @@ export default function Admin() {
                           ×
                         </button>
 
+                        {/* Homepage Toggle Button */}
+                        <button
+                          onClick={() => toggleHomepageStatus(achievement.id, achievement.show_on_homepage)}
+                          style={{
+                            position: 'absolute',
+                            top: '10px',
+                            right: '50px',
+                            backgroundColor: achievement.show_on_homepage ? '#3EA822' : '#666',
+                            color: 'white',
+                            border: 'none',
+                            borderRadius: '15px',
+                            padding: '5px 10px',
+                            cursor: 'pointer',
+                            fontSize: '11px',
+                            fontWeight: 'bold'
+                          }}
+                          title={achievement.show_on_homepage ? 'Remove from homepage' : 'Show on homepage'}
+                        >
+                          {achievement.show_on_homepage ? '🏠 ON' : '🏠 OFF'}
+                        </button>
+
                         {/* Achievement Icon */}
                         <div style={{
                           fontSize: '3rem',
@@ -1562,6 +1620,26 @@ export default function Admin() {
                         }}>
                           {achievement.category}
                         </div>
+
+                        {/* Homepage Indicator */}
+                        {achievement.show_on_homepage && (
+                          <div style={{
+                            position: 'absolute',
+                            bottom: '10px',
+                            right: '10px',
+                            backgroundColor: '#3EA822',
+                            color: 'white',
+                            padding: '4px 8px',
+                            borderRadius: '10px',
+                            fontSize: '0.6rem',
+                            fontWeight: 'bold',
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '3px'
+                          }}>
+                            🏠 HOMEPAGE
+                          </div>
+                        )}
                       </div>
                     ))}
                   </div>

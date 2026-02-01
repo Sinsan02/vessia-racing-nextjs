@@ -15,6 +15,7 @@ CREATE TABLE IF NOT EXISTS public.achievements (
   category TEXT DEFAULT 'Race Victory', -- Race Victory, Championship, Pole Position, etc.
   icon TEXT DEFAULT '🏆', -- emoji eller icon class
   image_url TEXT,
+  show_on_homepage BOOLEAN DEFAULT false, -- true if should be shown on homepage
   created_by INTEGER NOT NULL,
   created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
@@ -41,7 +42,7 @@ CREATE POLICY "Service role can do anything on achievements" ON public.achieveme
   TO service_role USING (true) WITH CHECK (true);
 
 -- Insert test achievements
-INSERT INTO public.achievements (title, description, race_name, track_name, achievement_date, position, category, icon, created_by) 
+INSERT INTO public.achievements (title, description, race_name, track_name, achievement_date, position, category, icon, show_on_homepage, created_by) 
 VALUES 
   (
     '24h Daytona Victory', 
@@ -52,6 +53,7 @@ VALUES
     1,
     'Endurance Victory',
     '🏆',
+    true,
     1
   ),
   (
@@ -63,6 +65,7 @@ VALUES
     1,
     'Endurance Victory', 
     '🥇',
+    true,
     1
   ),
   (
@@ -74,6 +77,7 @@ VALUES
     1,
     'Championship',
     '👑',
+    true,
     1
   )
 ON CONFLICT DO NOTHING;

@@ -52,10 +52,10 @@ export default function Home() {
 
   const fetchAchievements = async () => {
     try {
-      const response = await fetch('/api/achievements');
+      const response = await fetch('/api/achievements/homepage');
       const data = await response.json();
       if (data.success) {
-        setAchievements(data.achievements.slice(0, 3)); // Show only top 3
+        setAchievements(data.achievements);
       }
     } catch (error) {
       console.error('Failed to fetch achievements:', error);
@@ -387,6 +387,45 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Join Our Team Section */}
+      <section className="section">
+        <div className="container">
+          <div style={{
+            textAlign: 'center',
+            padding: '50px 20px',
+            backgroundColor: '#1a1a1a',
+            borderRadius: '15px',
+            border: '2px solid #3EA822',
+            maxWidth: '800px',
+            margin: '0 auto'
+          }}>
+            <div style={{fontSize: '2.5rem', marginBottom: '15px'}}>🚀</div>
+            <h3 style={{color: '#3EA822', marginBottom: '10px', fontSize: '2rem', fontWeight: 'bold'}}>
+              Want to join our winning team?
+            </h3>
+            <p style={{color: '#888', marginBottom: '25px', fontSize: '1.1rem', maxWidth: '600px', margin: '0 auto 25px'}}>
+              Be part of our racing success story and compete at the highest level in professional sim racing
+            </p>
+            <Link
+              href="/register"
+              className="btn-primary"
+              style={{
+                backgroundColor: '#3EA822',
+                color: 'white',
+                padding: '15px 35px',
+                borderRadius: '8px',
+                textDecoration: 'none',
+                display: 'inline-block',
+                fontSize: '1.1rem',
+                fontWeight: 'bold',
+                transition: 'all 0.3s ease'
+              }}
+            >
+              Join Team Vessia
+            </Link>
+          </div>
+        </div>
+      </section>
 
     </div>
   );
