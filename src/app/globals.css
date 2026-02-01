@@ -49,34 +49,22 @@ html {
 
 /* Large desktop monitors (27" and larger) - 1920px and above */
 @media (min-width: 1920px) {
-  body > div:first-child,
-  .min-h-screen,
-  div[style*="background"],
-  div[style*="minHeight: '100vh'"] {
-    background-size: 250% auto !important;
+  body > div:first-child[style*="minHeight: '100vh'"],
+  body > div:first-child[style*="min-height: 100vh"],
+  .min-h-screen[style*="backgroundImage"] {
+    background-size: 110% auto !important;
     background-position: center center !important;
   }
 }
 
 /* Ultra-wide and very large monitors (34" and larger) - 2560px and above */
 @media (min-width: 2560px) {
-  body > div:first-child,
-  .min-h-screen,
-  div[style*="background"],
-  div[style*="minHeight: '100vh'"] {
-    background-size: 350% auto !important;
+  body > div:first-child[style*="minHeight: '100vh'"],
+  body > div:first-child[style*="min-height: 100vh"],
+  .min-h-screen[style*="backgroundImage"] {
+    background-size: 130% auto !important;
     background-position: center center !important;
     background-repeat: no-repeat !important;
-  }
-}
-
-/* Test for alle breakpoints - fjern denne senere */
-@media (min-width: 1440px) {
-  body > div:first-child,
-  .min-h-screen,
-  div[style*="background"] {
-    background-size: 200% auto !important;
-    border: 3px solid red !important;
   }
 }
 
