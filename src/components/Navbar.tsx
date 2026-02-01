@@ -178,20 +178,7 @@ export default function Navbar() {
                     <span style={{color: '#3EA822', marginLeft: '8px', fontSize: '12px'}}>▼</span>
                     
                     {isDropdownOpen && (
-                      <div 
-                        style={{
-                          position: 'absolute',
-                          top: '100%',
-                          right: '0',
-                          marginTop: '8px',
-                          background: '#1a1a1a',
-                          border: '1px solid #333',
-                          borderRadius: '8px',
-                          minWidth: '200px',
-                          boxShadow: '0 4px 20px rgba(0, 0, 0, 0.5)',
-                          zIndex: 1000
-                        }}
-                      >
+                      <div className="user-dropdown">
                         <Link 
                           href="/profile" 
                           className="dropdown-item"

@@ -772,3 +772,31 @@ body {
     font-size: 0.8rem !important;
   }
 }
+
+/* User dropdown positioning fix for mobile */
+.user-dropdown {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  margin-top: 8px;
+  background: #1a1a1a;
+  border: 1px solid #333;
+  border-radius: 8px;
+  min-width: 200px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+}
+
+@media (max-width: 768px) {
+  .user-dropdown {
+    right: -30px !important;
+    min-width: 180px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .user-dropdown {
+    right: -50px !important;
+    min-width: 160px !important;
+  }
+}
