@@ -61,6 +61,11 @@ html {
     min-height: 100vh !important;
     height: 100vh !important;
   }
+  
+  /* Push join team section content lower on large screens */
+  .section:last-of-type .container {
+    padding-top: 200px !important;
+  }
 }
 
 /* Ultra-wide and very large monitors (34" and larger) - 2560px and above */
@@ -77,6 +82,19 @@ html {
   .section {
     min-height: 100vh !important;
     height: 100vh !important;
+  }
+  
+  /* Push join team section even lower on ultra-wide screens */
+  .section:last-of-type .container {
+    padding-top: 250px !important;
+  }
+}
+
+/* Laptop - increase height of last section */
+@media (min-width: 1200px) and (max-width: 1919px) {
+  .section:last-of-type {
+    min-height: 90vh !important;
+    height: 90vh !important;
   }
 }
 
