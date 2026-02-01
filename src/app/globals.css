@@ -500,6 +500,37 @@ body {
   }
 }
 
+/* Achievement page specific responsive styles */
+@media (max-width: 768px) {
+  .achievements-page .container {
+    padding: 20px 10px !important;
+  }
+  
+  .achievements-page h1 {
+    font-size: 2.2rem !important;
+  }
+  
+  .achievements-page .achievements-grid {
+    grid-template-columns: 1fr !important;
+    gap: 20px !important;
+  }
+  
+  .achievements-page .achievement-card {
+    padding: 20px !important;
+    margin: 0 5px;
+  }
+}
+
+@media (max-width: 480px) {
+  .achievements-page h1 {
+    font-size: 1.8rem !important;
+  }
+  
+  .achievements-page .achievement-card h3 {
+    font-size: 1.3rem !important;
+  }
+}
+
 /* Results styles */
 .results-grid {
   display: grid;

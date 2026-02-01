@@ -244,7 +244,7 @@ export default function Home() {
               marginTop: '40px'
             }}>
               <Link
-                href="/admin"
+                href="/achievements"
                 className="btn-primary"
                 style={{
                   backgroundColor: '#3EA822',

@@ -1,4 +1,9 @@
 -- Lag achievements tabell for å vise seiere og prestasjoner
+
+-- Drop the table if it exists first (clean slate)
+DROP TABLE IF EXISTS public.achievements;
+
+-- Create achievements table
 CREATE TABLE IF NOT EXISTS public.achievements (
   id SERIAL PRIMARY KEY,
   title TEXT NOT NULL,
