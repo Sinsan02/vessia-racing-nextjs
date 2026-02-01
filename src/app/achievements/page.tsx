@@ -111,7 +111,7 @@ export default function Achievements() {
               fontSize: '1.5rem',
               marginBottom: '10px'
             }}>
-              {achievements.length} {achievements.length === 1 ? 'Achievement' : 'Achievements'} Earned
+              
             </h2>
             <div style={{
               width: '100px',
