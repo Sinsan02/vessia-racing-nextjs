@@ -44,7 +44,8 @@ export default function Achievements() {
     <div className="container" style={{
       maxWidth: '1200px',
       margin: '0 auto',
-      padding: '40px 20px'
+      padding: '40px 20px',
+      paddingTop: '120px'
     }}>
       {/* Header */}
       <div style={{
@@ -67,26 +68,6 @@ export default function Achievements() {
         }}>
           A showcase of our victories and accomplishments on racing circuits around the world
         </p>
-      </div>
-
-      {/* Back Button */}
-      <div style={{
-        marginBottom: '30px'
-      }}>
-        <Link
-          href="/"
-          style={{
-            color: '#3EA822',
-            textDecoration: 'none',
-            fontSize: '1rem',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '8px',
-            width: 'fit-content'
-          }}
-        >
-          ← Back to Home
-        </Link>
       </div>
 
       {/* Achievements Grid */}

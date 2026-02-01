@@ -130,7 +130,7 @@ export default function Results() {
           </div>
 
           {/* Results Table */}
-          {selectedLeague && (
+          {selectedLeague ? (
             <div className="results-table-container">
               <h2 style={{color: '#3EA822', fontSize: '1.5rem', marginBottom: '20px', textAlign: 'center'}}>
                 Standings - {leagues.find(l => l.id === selectedLeague)?.name}
@@ -256,6 +256,18 @@ export default function Results() {
                   </table>
                 </div>
               )}
+            </div>
+          ) : (
+            <div style={{
+              textAlign: 'center',
+              color: '#888',
+              padding: '40px',
+              backgroundColor: '#1a1a1a',
+              borderRadius: '10px',
+              border: '1px solid #333'
+            }}>
+              <div style={{fontSize: '2rem', marginBottom: '15px'}}>🏁</div>
+              <p>Please select a league to view championship standings.</p>
             </div>
           )}
         </div>
