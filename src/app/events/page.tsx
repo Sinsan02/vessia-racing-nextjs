@@ -223,7 +223,7 @@ export default function Events() {
               </h2>
               
               <form onSubmit={handleSubmit}>
-                <div style={{display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '20px'}}>
+                <div style={{display: 'flex', flexDirection: 'column', gap: '25px'}}>
                   <div>
                     <label style={{display: 'block', marginBottom: '8px', color: '#ccc'}}>Event Name *</label>
                     <input
