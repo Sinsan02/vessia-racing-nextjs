@@ -6,7 +6,7 @@ import Link from 'next/link';
 export default function Achievements() {
   const [achievements, setAchievements] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
-  const [isMobile, setIsMobile] = useState(false);
+  const [isMobile, setIsMobile] = useState(typeof window !== 'undefined' ? window.innerWidth <= 768 : false);
 
   useEffect(() => {
     const checkScreenSize = () => {

@@ -30,7 +30,7 @@ export default function Results() {
   const [points, setPoints] = useState<DriverPoint[]>([]);
   const [loading, setLoading] = useState(true);
   const [pointsLoading, setPointsLoading] = useState(false);
-  const [isMobile, setIsMobile] = useState(false);
+  const [isMobile, setIsMobile] = useState(typeof window !== 'undefined' ? window.innerWidth <= 768 : false);
 
   useEffect(() => {
     const checkScreenSize = () => {

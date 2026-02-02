@@ -11,7 +11,7 @@ export default function Home() {
   const [latestEvent, setLatestEvent] = useState<any>(null);
   const [achievements, setAchievements] = useState<any[]>([]);
   const [achievementsLoading, setAchievementsLoading] = useState(true);
-  const [isMobile, setIsMobile] = useState(false);
+  const [isMobile, setIsMobile] = useState(typeof window !== 'undefined' ? window.innerWidth <= 768 : false);
 
   
   useEffect(() => {
