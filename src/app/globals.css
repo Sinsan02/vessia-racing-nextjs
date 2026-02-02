@@ -935,7 +935,7 @@ html {
   }
   
   .nav-logo {
-    margin-left: -10px !important;
+    margin-left: 0px !important;
     display: flex !important;
     align-items: center !important;
   }
@@ -981,7 +981,7 @@ html {
   }
   
   .nav-logo {
-    margin-left: -20px !important;
+    margin-left: -5px !important;
     display: flex !important;
     align-items: center !important;
   }
