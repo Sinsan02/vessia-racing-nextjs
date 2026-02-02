@@ -88,10 +88,10 @@ export default function Drivers() {
                   key={driver.id} 
                   className="driver-card"
                   style={{
-                    backgroundColor: '#1a1a1a',
+                    backgroundColor: isMobile ? 'transparent' : '#1a1a1a',
                     padding: '20px',
                     borderRadius: '10px',
-                    border: '1px solid #333',
+                    border: isMobile ? '1px solid rgba(62, 168, 34, 0.3)' : '1px solid #333',
                     textAlign: 'center'
                   }}
                 >

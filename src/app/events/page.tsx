@@ -280,11 +280,11 @@ export default function Events() {
           {/* Create/Edit Event Form */}
           {showCreateForm && user?.role === 'admin' && (
             <div className="create-event-form" style={{
-              backgroundColor: '#1a1a1a',
+              backgroundColor: isMobile ? 'transparent' : '#1a1a1a',
               padding: '25px',
               borderRadius: '15px',
               marginBottom: '30px',
-              border: '1px solid #333',
+              border: isMobile ? '1px solid rgba(62, 168, 34, 0.3)' : '1px solid #333',
               maxWidth: '600px',
               margin: '0 auto 30px',
               width: '100%'
@@ -506,8 +506,8 @@ export default function Events() {
                   key={event.id}
                   className="event-card"
                   style={{
-                    backgroundColor: '#1a1a1a',
-                    border: '1px solid #333',
+                    backgroundColor: isMobile ? 'transparent' : '#1a1a1a',
+                    border: isMobile ? '1px solid rgba(62, 168, 34, 0.3)' : '1px solid #333',
                     borderRadius: '15px',
                     overflow: 'hidden',
                     transition: 'transform 0.3s ease, box-shadow 0.3s ease',

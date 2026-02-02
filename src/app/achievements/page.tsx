@@ -97,8 +97,9 @@ export default function Achievements() {
           textAlign: 'center',
           color: '#888',
           padding: '80px 20px',
-          backgroundColor: '#1a1a1a',
-          borderRadius: '15px'
+          backgroundColor: isMobile ? 'transparent' : '#1a1a1a',
+          borderRadius: '15px',
+          border: isMobile ? '1px solid rgba(62, 168, 34, 0.3)' : 'none'
         }}>
           <div style={{fontSize: '5rem', marginBottom: '25px'}}>🏆</div>
           <h2 style={{color: '#ccc', marginBottom: '15px', fontSize: '1.8rem'}}>No achievements yet</h2>
@@ -154,7 +155,7 @@ export default function Achievements() {
           }}>
             {achievements.map((achievement, index) => (
               <div key={achievement.id} style={{
-                backgroundColor: '#1a1a1a',
+                backgroundColor: isMobile ? 'transparent' : '#1a1a1a',
                 borderRadius: '20px',
                 padding: '30px',
                 border: '2px solid #3EA822',
