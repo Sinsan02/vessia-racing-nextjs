@@ -11,9 +11,18 @@ export default function Home() {
   const [latestEvent, setLatestEvent] = useState<any>(null);
   const [achievements, setAchievements] = useState<any[]>([]);
   const [achievementsLoading, setAchievementsLoading] = useState(true);
+  const [isMobile, setIsMobile] = useState(false);
 
   
   useEffect(() => {
+    // Check screen size for mobile background
+    const checkScreenSize = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+    
+    checkScreenSize();
+    window.addEventListener('resize', checkScreenSize);
+    
     // Check for welcome message from URL params
     const params = new URLSearchParams(window.location.search);
     const message = params.get('message');
@@ -37,6 +46,8 @@ export default function Home() {
     // Fetch latest event and achievements
     fetchLatestEvent();
     fetchAchievements();
+    
+    return () => window.removeEventListener('resize', checkScreenSize);
   }, []);
 
   const fetchLatestEvent = async () => {
@@ -68,7 +79,9 @@ export default function Home() {
 
   return (
     <div style={{
-      backgroundImage: `url('/images/decorative/Screenshot_2025-11-23_180245.png')`,
+      backgroundImage: isMobile 
+        ? `url('/images/phone/Screenshot_2025-11-23_180245_750x1334.jpg')`
+        : `url('/images/decorative/Screenshot_2025-11-23_180245.png')`,
       backgroundSize: 'cover',
       backgroundPosition: 'center',
       backgroundAttachment: 'fixed',
