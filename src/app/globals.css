@@ -904,21 +904,21 @@ html {
   .navbar {
     height: 75px !important;
     font-size: 1.2rem !important;
-    padding: 0 2px !important;
+    padding: 0 0px !important;
   }
   
   .nav-container {
     max-width: none !important;
-    padding: 0 5px !important;
+    padding: 0 0px !important;
     justify-content: space-between !important;
   }
   
   .nav-logo {
-    margin-left: -15px !important;
+    margin-left: -25px !important;
   }
   
   .nav-logo img {
-    width: 130px !important;
+    width: 150px !important;
     height: auto !important;
     max-height: 70px !important;
     image-rendering: -webkit-optimize-contrast !important;
@@ -926,11 +926,11 @@ html {
   }
   
   .nav-menu {
-    margin: 0 5rem !important;
+    margin: 0 6rem !important;
   }
   
   #authNavigation {
-    margin-right: -15px !important;
+    margin-right: -25px !important;
   }
   
   /* Adjust main content padding for 34" screens */
