@@ -13,9 +13,16 @@ const getPlaceholderColor = (name: string) => {
 export default function Drivers() {
   const [drivers, setDrivers] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
+    const checkScreenSize = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+    checkScreenSize();
+    window.addEventListener('resize', checkScreenSize);
     fetchDrivers();
+    return () => window.removeEventListener('resize', checkScreenSize);
   }, []);
 
   const fetchDrivers = async () => {
@@ -36,7 +43,12 @@ export default function Drivers() {
     <div className="min-h-screen" style={{
       backgroundColor: '#0a0a0a', 
       paddingTop: '100px',
-      backgroundImage: `linear-gradient(rgba(10,10,10,0.9), rgba(10,10,10,0.9)), url('/images/decorative/Screenshot_2026-01-23_201045.png')`,
+      backgroundImage: isMobile
+        ? 'none'
+        : `linear-gradient(rgba(10,10,10,0.9), rgba(10,10,10,0.9)), url('/images/decorative/Screenshot_2026-01-23_201045.png')`,
+      background: isMobile
+        ? 'linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%)'
+        : undefined,
       backgroundSize: 'cover',
       backgroundPosition: 'center',
       backgroundAttachment: 'fixed'

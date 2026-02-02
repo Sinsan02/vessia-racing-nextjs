@@ -33,6 +33,7 @@ export default function Events() {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [uploading, setUploading] = useState(false);
   const [previewUrl, setPreviewUrl] = useState<string>('');
+  const [isMobile, setIsMobile] = useState(false);
   
   // Form state
   const [formData, setFormData] = useState({
@@ -44,11 +45,16 @@ export default function Events() {
   });
 
   useEffect(() => {
+    const checkScreenSize = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+    checkScreenSize();
+    window.addEventListener('resize', checkScreenSize);
     checkAuthStatus();
     fetchEvents();
     
-    // Cleanup function for object URLs
     return () => {
+      window.removeEventListener('resize', checkScreenSize);
       if (previewUrl && previewUrl.startsWith('blob:')) {
         URL.revokeObjectURL(previewUrl);
       }
@@ -226,7 +232,12 @@ export default function Events() {
     <div className="min-h-screen" style={{
       backgroundColor: '#0a0a0a', 
       paddingTop: '100px',
-      backgroundImage: `linear-gradient(rgba(10,10,10,0.9), rgba(10,10,10,0.9)), url('/images/decorative/Skjermbilde 2026-01-30 214430.png')`,
+      backgroundImage: isMobile
+        ? 'none'
+        : `linear-gradient(rgba(10,10,10,0.9), rgba(10,10,10,0.9)), url('/images/decorative/Skjermbilde 2026-01-30 214430.png')`,
+      background: isMobile
+        ? 'linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%)'
+        : undefined,
       backgroundSize: 'cover',
       backgroundPosition: 'center',
       backgroundAttachment: 'fixed'

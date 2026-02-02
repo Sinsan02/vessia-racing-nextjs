@@ -6,9 +6,16 @@ import Link from 'next/link';
 export default function Achievements() {
   const [achievements, setAchievements] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
+    const checkScreenSize = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+    checkScreenSize();
+    window.addEventListener('resize', checkScreenSize);
     fetchAchievements();
+    return () => window.removeEventListener('resize', checkScreenSize);
   }, []);
 
   const fetchAchievements = async () => {
@@ -42,7 +49,12 @@ export default function Achievements() {
 
   return (
     <div style={{
-      backgroundImage: `linear-gradient(rgba(10,10,10,0.75), rgba(10,10,10,0.75)), url('/images/decorative/Screenshot_2025-10-11_170713.png')`,
+      backgroundImage: isMobile
+        ? 'none'
+        : `linear-gradient(rgba(10,10,10,0.75), rgba(10,10,10,0.75)), url('/images/decorative/Screenshot_2025-10-11_170713.png')`,
+      background: isMobile
+        ? 'linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%)'
+        : undefined,
       backgroundSize: 'cover',
       backgroundPosition: 'center',
       backgroundAttachment: 'fixed',

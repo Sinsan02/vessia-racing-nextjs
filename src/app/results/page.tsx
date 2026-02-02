@@ -30,9 +30,16 @@ export default function Results() {
   const [points, setPoints] = useState<DriverPoint[]>([]);
   const [loading, setLoading] = useState(true);
   const [pointsLoading, setPointsLoading] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
+    const checkScreenSize = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+    checkScreenSize();
+    window.addEventListener('resize', checkScreenSize);
     fetchLeagues();
+    return () => window.removeEventListener('resize', checkScreenSize);
   }, []);
 
   useEffect(() => {
@@ -87,7 +94,12 @@ export default function Results() {
     <div className="min-h-screen" style={{
       backgroundColor: '#0a0a0a', 
       paddingTop: '100px',
-      backgroundImage: `linear-gradient(rgba(10,10,10,0.9), rgba(10,10,10,0.9)), url('/images/decorative/Screenshot_2025-11-10_214034.png')`,
+      backgroundImage: isMobile
+        ? 'none'
+        : `linear-gradient(rgba(10,10,10,0.9), rgba(10,10,10,0.9)), url('/images/decorative/Screenshot_2025-11-10_214034.png')`,
+      background: isMobile
+        ? 'linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%)'
+        : undefined,
       backgroundSize: 'cover',
       backgroundPosition: 'center',
       backgroundAttachment: 'fixed'
