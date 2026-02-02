@@ -828,28 +828,9 @@ html {
 }
 
 @media (max-width: 480px) {
-  /* Use mobile-optimized background images */
-  body > div:first-child[style*="Screenshot_2025-11-23_180245"] {
-    background-image: url('/images/phone/Screenshot_2025-11-23_180245_750x1334.jpg') !important;
-  }
-  
+  /* Better mobile background handling */
   [style*="background-attachment: fixed"] {
     background-attachment: scroll !important;
-    background-size: cover !important;
-    background-position: center center !important;
-    background-repeat: no-repeat !important;
-    min-height: 100vh !important;
-    image-rendering: -webkit-optimize-contrast !important;
-    image-rendering: crisp-edges !important;
-  }
-  
-  .bg-responsive {
-    background-attachment: scroll !important;
-    background-size: cover !important;
-    background-position: center center !important;
-    background-repeat: no-repeat !important;
-    min-height: 100vh !important;
-    image-rendering: -webkit-optimize-contrast !important;
   }
   
   /* Ensure full background coverage with better quality */
@@ -858,9 +839,6 @@ html {
     background-position: center center !important;
     min-height: 100vh !important;
     background-attachment: scroll !important;
-    -webkit-background-size: cover !important;
-    -moz-background-size: cover !important;
-    -o-background-size: cover !important;
   }
   
   /* Extra small screens - clean PC-like design */
@@ -2489,36 +2467,22 @@ html {
 @media (max-width: 768px) {
   .min-h-screen main,
   main {
-    padding: 8px 0 !important;
+    padding: 20px !important;
   }
   
   .min-h-screen {
-    padding-top: 60px !important;
-  }
-  
-  /* Force all page containers to be smaller */
-  [style*="padding: 20px"],
-  [style*="padding:20px"] {
-    padding: 8px !important;
+    padding-top: 100px !important;
   }
 }
 
 @media (max-width: 480px) {
   .min-h-screen main,
   main {
-    padding: 5px 0 !important;
+    padding: 15px !important;
   }
   
   .min-h-screen {
-    padding-top: 65px !important;
-  }
-  
-  /* Force even smaller padding on very small screens */
-  [style*="padding: 20px"],
-  [style*="padding:20px"],
-  [style*="padding: 25px"],
-  [style*="padding:25px"] {
-    padding: 5px !important;
+    padding-top: 90px !important;
   }
 }
 
@@ -2536,22 +2500,13 @@ html {
   z-index: 1000;
 }
 
+/* Enhanced Mobile Grid System for Achievement Cards */
 @media (max-width: 768px) {
   .user-dropdown {
     right: -30px !important;
     min-width: 180px !important;
   }
-}
-
-@media (max-width: 480px) {
-  .user-dropdown {
-    right: -50px !important;
-    min-width: 160px !important;
-  }
-}
-
-/* Enhanced Mobile Grid System for Achievement Cards */
-@media (max-width: 768px) {
+  
   /* Grid system improvements */
   .grid {
     display: grid !important;
@@ -2642,16 +2597,7 @@ html {
 
 /* Mobile-specific improvements for better PC-like experience */
 @media (max-width: 768px) {
-  /* Ensure proper spacing and sizing for mobile cards */
-  [style*="padding: 20px"] {
-    padding: 25px !important;
-  }
-  
-  [style*="margin-bottom: 20px"] {
-    margin-bottom: 25px !important;
-  }
-  
-  /* Better mobile navigation menu */
+/* Better mobile navigation menu */
   .nav-menu {
     background-color: rgba(26, 26, 26, 0.98) !important;
     backdrop-filter: blur(10px) !important;
@@ -2677,16 +2623,13 @@ html {
 }
 
 @media (max-width: 480px) {
-  [style*="padding: 20px"] {
-    padding: 20px !important;
-  }
-  
-  [style*="margin-bottom: 20px"] {
-    margin-bottom: 20px !important;
-  }
-  
   .nav-menu {
     margin-top: 8px !important;
     padding: 18px !important;
+  }
+  
+  .user-dropdown {
+    right: -50px !important;
+    min-width: 160px !important;
   }
 }
