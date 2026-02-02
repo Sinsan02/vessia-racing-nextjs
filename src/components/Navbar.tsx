@@ -112,9 +112,11 @@ export default function Navbar() {
               <Image 
                 src="/Vessia_Logo.png" 
                 alt="Vessia Racing" 
-                width={40} 
-                height={40}
-                style={{height: '40px', width: 'auto'}}
+                width={200}
+                height={200}
+                priority
+                quality={100}
+                style={{height: 'auto', width: '100%', maxWidth: '60px'}}
               />
             </Link>
           </div>

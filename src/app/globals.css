@@ -186,9 +186,42 @@ p, .body-text {
   image-rendering: -webkit-optimize-contrast;
   image-rendering: crisp-edges;
   image-rendering: pixelated;
+  width: 45px !important;
+  height: auto !important;
+  max-width: 60px !important;
 }
 
-.nav-logo:hover img {
+/* Responsive logo sizing with high quality */\n/* Normal desktop screens */
+@media (min-width: 769px) and (max-width: 1199px) {
+  .nav-logo img {
+    width: 50px !important;
+    max-width: 65px !important;
+  }
+}
+
+/* Laptop screens */
+@media (min-width: 1200px) and (max-width: 1919px) {
+  .nav-logo img {
+    width: 55px !important;
+    max-width: 70px !important;
+  }
+}
+
+/* Large screens (27" monitors) */
+@media (min-width: 1920px) and (max-width: 2559px) {
+  .nav-logo img {
+    width: 65px !important;
+    max-width: 80px !important;
+  }
+}
+
+/* Ultra-wide screens (34" monitors) */
+@media (min-width: 2560px) {
+  .nav-logo img {
+    width: 75px !important;
+    max-width: 90px !important;
+  }
+}
   transform: scale(1.1) rotate(5deg);
   filter: drop-shadow(0 0 10px var(--primary-color));
 }
@@ -756,20 +789,20 @@ html {
 /* Normal desktop screens - reduce navbar height */
 @media (min-width: 769px) and (max-width: 1199px) {
   .navbar {
-    height: 60px !important;
-    font-size: 0.95rem !important;
+    height: 50px !important;
+    font-size: 0.9rem !important;
   }
   
   .nav-logo img {
     width: 50px !important;
     height: auto !important;
-    max-height: 45px !important;
+    max-height: 40px !important;
     image-rendering: -webkit-optimize-contrast !important;
     image-rendering: crisp-edges !important;
   }
   
   .main-content {
-    padding-top: 60px !important;
+    padding-top: 50px !important;
   }
 }
 
@@ -1097,36 +1130,41 @@ html {
   margin: 0 auto;
   padding: 0 20px;
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-start;
   align-items: center;
   width: 100%;
 }
 
-/* Position logo at far left */
+/* Position logo at absolute left */
 .nav-logo {
-  margin-right: auto;
+  margin-right: 0;
+  padding-right: 0;
   order: 1;
+  flex-shrink: 0;
 }
 
-/* Position nav menu in center */
+/* Position nav menu with proper spacing */
 .nav-menu {
   order: 2;
   flex: 1;
   display: flex;
   justify-content: center;
   gap: 2rem;
+  margin: 0 2rem;
 }
 
 /* Position user menu/auth at far right */
 #authNavigation {
   order: 3;
-  margin-left: auto;
+  margin-left: 0;
+  flex-shrink: 0;
 }
 
 /* Mobile menu toggle positioning */
 .mobile-menu-toggle {
   order: 3;
-  margin-left: auto;
+  margin-left: 0;
+  flex-shrink: 0;
 }
 
 .nav-logo img {
@@ -1138,43 +1176,49 @@ html {
 @media (min-width: 769px) {
   .nav-container {
     justify-content: flex-start !important;
-    gap: 2rem;
+    padding: 0 15px !important;
   }
   
   .nav-logo {
     margin-right: 0 !important;
+    padding-right: 0 !important;
     order: 1 !important;
+    flex-shrink: 0 !important;
   }
   
   .nav-menu {
     order: 2 !important;
     flex: 1 !important;
     justify-content: center !important;
-    margin: 0 auto !important;
+    margin: 0 3rem !important;
     align-items: center;
     gap: 2rem;
   }
   
   #authNavigation {
     order: 3 !important;
-    margin-left: auto !important;
+    margin-left: 0 !important;
+    flex-shrink: 0 !important;
   }
 }
 
 /* Mobile specific positioning */
 @media (max-width: 768px) {
   .nav-container {
-    justify-content: space-between !important;
+    justify-content: flex-start !important;
+    padding: 0 15px !important;
   }
   
   .nav-logo {
     order: 1 !important;
     margin-right: 0 !important;
+    flex-shrink: 0 !important;
   }
   
   .mobile-menu-toggle {
     order: 3 !important;
     margin-left: auto !important;
+    flex-shrink: 0 !important;
   }
   
   .nav-menu {
