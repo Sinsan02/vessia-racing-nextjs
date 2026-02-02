@@ -98,7 +98,7 @@ export default function Results() {
         ? 'none'
         : `linear-gradient(rgba(10,10,10,0.9), rgba(10,10,10,0.9)), url('/images/decorative/Screenshot_2025-11-10_214034.png')`,
       background: isMobile
-        ? 'linear-gradient(135deg, #0d1f0d 0%, #1a2e1a 50%, #0d1f0d 100%)'
+        ? 'linear-gradient(135deg, #0d1f0d 0%, #1a2e1a 25%, #0d1f0d 50%, #1a2e1a 75%, #0d1f0d 100%)'
         : undefined,
       backgroundSize: 'cover',
       backgroundPosition: 'center',

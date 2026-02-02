@@ -482,7 +482,7 @@ html {
     position: fixed !important;
     width: 100% !important;
     height: 100% !important;
-    background: #0a0a0a !important;
+    background: #0d1f0d !important;
   }
   
   /* Professional gradient design for mobile - no images */
@@ -508,6 +508,7 @@ html {
     overflow-x: hidden !important;
     -webkit-overflow-scrolling: touch !important;
     overscroll-behavior-y: contain !important;
+    background: linear-gradient(135deg, #0d1f0d 0%, #1a2e1a 25%, #0d1f0d 50%, #1a2e1a 75%, #0d1f0d 100%) !important;
   }
   
   /* Add subtle pattern overlay for depth */
@@ -1437,7 +1438,8 @@ html {
   /* Remove background images on all pages */
   .min-h-screen {
     background-image: none !important;
-    background: linear-gradient(135deg, #0d1f0d 0%, #1a2e1a 50%, #0d1f0d 100%) !important;
+    background: linear-gradient(135deg, #0d1f0d 0%, #1a2e1a 25%, #0d1f0d 50%, #1a2e1a 75%, #0d1f0d 100%) !important;
+    min-height: 100vh !important;
   }
   
   .form-container {

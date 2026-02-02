@@ -85,9 +85,9 @@ export default function Home() {
       background: isMobile 
         ? 'linear-gradient(135deg, #0d1f0d 0%, #1a2e1a 25%, #0d1f0d 50%, #1a2e1a 75%, #0d1f0d 100%)'
         : undefined,
-      backgroundSize: isMobile ? 'auto' : 'cover',
-      backgroundPosition: isMobile ? 'center' : 'center',
-      backgroundAttachment: isMobile ? 'fixed' : 'fixed',
+      backgroundSize: 'cover',
+      backgroundPosition: 'center',
+      backgroundAttachment: 'fixed',
       backgroundRepeat: 'no-repeat',
       minHeight: '100vh',
       position: 'relative'
