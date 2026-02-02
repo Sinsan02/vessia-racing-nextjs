@@ -80,13 +80,17 @@ export default function Home() {
   return (
     <div style={{
       backgroundImage: isMobile 
-        ? `url('/images/phone/Screenshot_2025-11-23_180245_750x1334.jpg')`
+        ? 'none'
         : `url('/images/decorative/Screenshot_2025-11-23_180245.png')`,
-      backgroundSize: isMobile ? '100% auto' : 'cover',
-      backgroundPosition: isMobile ? 'center top' : 'center',
-      backgroundAttachment: isMobile ? 'scroll' : 'fixed',
+      background: isMobile 
+        ? 'linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 25%, #0d1f0d 50%, #1a1a1a 75%, #0a0a0a 100%)'
+        : undefined,
+      backgroundSize: isMobile ? 'auto' : 'cover',
+      backgroundPosition: isMobile ? 'center' : 'center',
+      backgroundAttachment: isMobile ? 'fixed' : 'fixed',
       backgroundRepeat: 'no-repeat',
-      minHeight: '100vh'
+      minHeight: '100vh',
+      position: 'relative'
     }}>
       {/* Welcome Message */}
       {welcomeMessage && (

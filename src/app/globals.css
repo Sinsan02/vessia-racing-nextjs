@@ -475,77 +475,121 @@ html {
 
 /* Responsive background adjustments for mobile only */
 @media (max-width: 768px) {
-  /* Use mobile-optimized background images */
-  body > div:first-child[style*="Screenshot_2025-11-23_180245"] {
-    background-image: url('/images/phone/Screenshot_2025-11-23_180245_750x1334.jpg') !important;
-  }
-  
-  [style*="background-attachment: fixed"] {
-    background-attachment: scroll !important;
-    background-size: cover !important;
-    background-position: center center !important;
-    background-repeat: no-repeat !important;
-    min-height: 100vh !important;
-    image-rendering: -webkit-optimize-contrast !important;
-    image-rendering: crisp-edges !important;
-  }
-  
-  .bg-responsive {
-    background-attachment: scroll !important;
-    background-size: cover !important;
-    background-position: center center !important;
-    background-repeat: no-repeat !important;
-    min-height: 100vh !important;
-    image-rendering: -webkit-optimize-contrast !important;
-  }
-  
-  /* Ensure full background coverage with better quality */
-  body > div:first-child[style*="backgroundImage"] {
-    background-size: cover !important;
-    background-position: center center !important;
-    min-height: 100vh !important;
-    background-attachment: scroll !important;
-    -webkit-background-size: cover !important;
-    -moz-background-size: cover !important;
-    -o-background-size: cover !important;
-  }
-  
-  /* Mobile scaling for better fit */
+  /* Professional gradient design for mobile - no images */
   body {
     overflow-x: hidden;
     width: 100vw !important;
+    background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%) !important;
+  }
+  
+  /* Add subtle pattern overlay for depth */
+  body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: 
+      radial-gradient(circle at 20% 30%, rgba(62, 168, 34, 0.1) 0%, transparent 50%),
+      radial-gradient(circle at 80% 70%, rgba(62, 168, 34, 0.08) 0%, transparent 50%),
+      linear-gradient(180deg, transparent 0%, rgba(62, 168, 34, 0.03) 50%, transparent 100%);
+    pointer-events: none;
+    z-index: 0;
+  }
+  
+  /* Ensure content appears above overlay */
+  body > * {
+    position: relative;
+    z-index: 1;
+  }
+  
+  /* Clean card design for sections */
+  .section {
+    padding: 40px 20px !important;
+    min-height: auto !important;
+    width: 100vw !important;
+    background: rgba(26, 26, 26, 0.6) !important;
+    backdrop-filter: blur(10px) !important;
+    margin: 20px 0 !important;
+    border-radius: 0 !important;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3) !important;
+  }
+  
+  /* Hero section styling */
+  .hero {
+    background: linear-gradient(180deg, rgba(62, 168, 34, 0.1) 0%, transparent 100%) !important;
+    padding: 60px 20px 40px !important;
+    border-bottom: 2px solid rgba(62, 168, 34, 0.2) !important;
   }
   
   .container {
-    padding: 0 20px !important;
+    padding: 0 16px !important;
     max-width: 100% !important;
     width: 100% !important;
   }
   
-  .section {
-    padding: 40px 0 !important;
-    min-height: 80vh !important;
-    width: 100vw !important;
+  /* Modern card-based achievement design */
+  .achievement-card {
+    background: rgba(26, 26, 26, 0.9) !important;
+    backdrop-filter: blur(10px) !important;
+    border: 1px solid rgba(62, 168, 34, 0.3) !important;
+    border-radius: 12px !important;
+    margin-bottom: 20px !important;
+    padding: 20px !important;
+    min-height: 180px !important;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3) !important;
+    transition: all 0.3s ease !important;
   }
   
+  .achievement-card:hover {
+    transform: translateY(-5px) !important;
+    box-shadow: 0 8px 30px rgba(62, 168, 34, 0.3) !important;
+    border-color: rgba(62, 168, 34, 0.6) !important;
+  }
+  
+  /* Professional button styling */
+  .btn-primary {
+    background: linear-gradient(135deg, #3EA822 0%, #2d7a19 100%) !important;
+    box-shadow: 0 4px 15px rgba(62, 168, 34, 0.3) !important;
+    border: none !important;
+    transition: all 0.3s ease !important;
+  }
+  
+  .btn-primary:hover {
+    transform: translateY(-2px) !important;
+    box-shadow: 0 6px 20px rgba(62, 168, 34, 0.4) !important;
+  }
+  
+  /* Enhanced typography for mobile */
   .hero-content h1 {
     font-size: 2.2rem !important;
     margin-bottom: 18px !important;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5) !important;
+    color: #ffffff !important;
   }
   
   .hero-subtitle {
     font-size: 1.3rem !important;
     margin-bottom: 14px !important;
+    color: #3EA822 !important;
+    text-shadow: 0 2px 8px rgba(62, 168, 34, 0.3) !important;
   }
   
   .hero-description {
     font-size: 1.05rem !important;
     margin-bottom: 22px !important;
+    color: #cccccc !important;
+    line-height: 1.6 !important;
   }
   
   .section h2 {
     font-size: 1.9rem !important;
     margin-bottom: 18px !important;
+    color: #ffffff !important;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5) !important;
+    border-bottom: 2px solid rgba(62, 168, 34, 0.3) !important;
+    padding-bottom: 10px !important;
   }
   
   .section p {
