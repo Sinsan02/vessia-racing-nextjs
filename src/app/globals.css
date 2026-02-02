@@ -183,6 +183,9 @@ p, .body-text {
 
 .nav-logo img {
   transition: all 0.3s ease;
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: crisp-edges;
+  image-rendering: pixelated;
 }
 
 .nav-logo:hover img {
@@ -732,6 +735,44 @@ html {
   }
 }
 
+/* Normal desktop screens - reduce navbar height */
+@media (min-width: 769px) and (max-width: 1199px) {
+  .navbar {
+    height: 60px !important;
+    font-size: 0.95rem !important;
+  }
+  
+  .nav-logo img {
+    width: 50px !important;
+    height: auto !important;
+    max-height: 45px !important;
+  }
+  
+  .main-content {
+    padding-top: 60px !important;
+  }
+}
+
+/* Normal desktop screens - reduce navbar height */
+@media (min-width: 769px) and (max-width: 1199px) {
+  .navbar {
+    height: 60px !important;
+    font-size: 0.95rem !important;
+  }
+  
+  .nav-logo img {
+    width: 50px !important;
+    height: auto !important;
+    max-height: 45px !important;
+    image-rendering: -webkit-optimize-contrast !important;
+    image-rendering: crisp-edges !important;
+  }
+  
+  .main-content {
+    padding-top: 60px !important;
+  }
+}
+
 /* Laptop - increase height of last section and move join team down */
 @media (min-width: 1200px) and (max-width: 1919px) {
   .section:last-of-type {
@@ -751,8 +792,11 @@ html {
   }
   
   .nav-logo img {
-    width: 45px !important;
+    width: 55px !important;
     height: auto !important;
+    max-height: 50px !important;
+    image-rendering: -webkit-optimize-contrast !important;
+    image-rendering: crisp-edges !important;
   }
   
   /* Adjust main content padding to match smaller navbar */
@@ -769,8 +813,11 @@ html {
   }
   
   .nav-logo img {
-    width: 50px !important;
+    width: 60px !important;
     height: auto !important;
+    max-height: 55px !important;
+    image-rendering: -webkit-optimize-contrast !important;
+    image-rendering: crisp-edges !important;
   }
   
   /* Adjust main content padding for 27" screens */
@@ -787,8 +834,11 @@ html {
   }
   
   .nav-logo img {
-    width: 55px !important;
+    width: 65px !important;
     height: auto !important;
+    max-height: 60px !important;
+    image-rendering: -webkit-optimize-contrast !important;
+    image-rendering: crisp-edges !important;
   }
   
   /* Adjust main content padding for 34" screens */
@@ -1049,6 +1099,34 @@ html {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  width: 100%;
+}
+
+/* Position logo at far left */
+.nav-logo {
+  margin-right: auto;
+  order: 1;
+}
+
+/* Position nav menu in center */
+.nav-menu {
+  order: 2;
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+}
+
+/* Position user menu/auth at far right */
+#authNavigation {
+  order: 3;
+  margin-left: auto;
+}
+
+/* Mobile menu toggle positioning */
+.mobile-menu-toggle {
+  order: 3;
+  margin-left: auto;
 }
 
 .nav-logo img {
@@ -1056,10 +1134,54 @@ html {
   width: auto;
 }
 
-.nav-menu {
-  display: flex;
-  align-items: center;
-  gap: 2rem;
+/* Navbar positioning for all screen sizes */
+@media (min-width: 769px) {
+  .nav-container {
+    justify-content: flex-start !important;
+    gap: 2rem;
+  }
+  
+  .nav-logo {
+    margin-right: 0 !important;
+    order: 1 !important;
+  }
+  
+  .nav-menu {
+    order: 2 !important;
+    flex: 1 !important;
+    justify-content: center !important;
+    margin: 0 auto !important;
+    align-items: center;
+    gap: 2rem;
+  }
+  
+  #authNavigation {
+    order: 3 !important;
+    margin-left: auto !important;
+  }
+}
+
+/* Mobile specific positioning */
+@media (max-width: 768px) {
+  .nav-container {
+    justify-content: space-between !important;
+  }
+  
+  .nav-logo {
+    order: 1 !important;
+    margin-right: 0 !important;
+  }
+  
+  .mobile-menu-toggle {
+    order: 3 !important;
+    margin-left: auto !important;
+  }
+  
+  .nav-menu {
+    order: 2 !important;
+    align-items: center;
+    gap: 2rem;
+  }
 }
 
 .nav-link {
