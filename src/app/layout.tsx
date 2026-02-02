@@ -50,7 +50,7 @@ export default function RootLayout({
         }}
       >
         <Navbar />
-        <main className="pt-20" style={{ flexGrow: 1 }}>
+        <main className="pt-20 main-content" style={{ flexGrow: 1 }}>
           {children}
         </main>
         <footer style={{

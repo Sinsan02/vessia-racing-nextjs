@@ -10,6 +10,7 @@ export default function Home() {
   const [welcomeMessage, setWelcomeMessage] = useState('');
   const [latestEvent, setLatestEvent] = useState<any>(null);
   const [achievements, setAchievements] = useState<any[]>([]);
+  const [achievementsLoading, setAchievementsLoading] = useState(true);
 
   
   useEffect(() => {
@@ -52,13 +53,16 @@ export default function Home() {
 
   const fetchAchievements = async () => {
     try {
+      setAchievementsLoading(true);
       const response = await fetch('/api/achievements/homepage');
       const data = await response.json();
-      if (data.success) {
+      if (data.success && data.achievements) {
         setAchievements(data.achievements);
       }
     } catch (error) {
       console.error('Failed to fetch achievements:', error);
+    } finally {
+      setAchievementsLoading(false);
     }
   };
 
@@ -116,7 +120,7 @@ export default function Home() {
           <h2 className="section-title">🏆 Our Achievements</h2>
           <p className="section-subtitle">Celebrating our victories on the world's most challenging circuits</p>
           
-          {achievements.length > 0 ? (
+          {achievementsLoading ? (
             <div className="achievements-grid" style={{
               display: 'grid',
               gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
@@ -124,7 +128,19 @@ export default function Home() {
               maxWidth: '1200px',
               margin: '0 auto'
             }}>
-              {achievements.map((achievement) => (
+              {[1, 2, 3].map((i) => (
+                <div key={i} className="skeleton-card"></div>
+              ))}
+            </div>
+          ) : achievements.length > 0 ? (
+            <div className="achievements-grid" style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
+              gap: '25px',
+              maxWidth: '1200px',
+              margin: '0 auto'
+            }}>
+              {achievements.map((achievement, index) => (
                 <div key={achievement.id} className="achievement-card" style={{
                   backgroundColor: '#1a1a1a',
                   borderRadius: '15px',
@@ -133,7 +149,8 @@ export default function Home() {
                   textAlign: 'center',
                   position: 'relative',
                   overflow: 'hidden',
-                  transition: 'transform 0.3s ease, box-shadow 0.3s ease'
+                  transition: 'transform 0.3s ease, box-shadow 0.3s ease',
+                  animationDelay: `${index * 0.1}s`
                 }}>
                   {/* Achievement Icon/Badge */}
                   <div style={{
