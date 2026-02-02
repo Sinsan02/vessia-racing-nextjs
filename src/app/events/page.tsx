@@ -240,7 +240,7 @@ export default function Events() {
         : undefined,
       backgroundSize: 'cover',
       backgroundPosition: 'center',
-      backgroundAttachment: 'fixed'
+      backgroundAttachment: 'scroll'
     }}>
       <main style={{padding: '20px'}}>
         <div className="container">

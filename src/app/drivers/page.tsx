@@ -51,7 +51,7 @@ export default function Drivers() {
         : undefined,
       backgroundSize: 'cover',
       backgroundPosition: 'center',
-      backgroundAttachment: 'fixed'
+      backgroundAttachment: 'scroll'
     }}>
       <main style={{padding: '20px'}}>
         <div className="container">

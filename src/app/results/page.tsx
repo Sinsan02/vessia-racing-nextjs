@@ -102,7 +102,7 @@ export default function Results() {
         : undefined,
       backgroundSize: 'cover',
       backgroundPosition: 'center',
-      backgroundAttachment: 'fixed'
+      backgroundAttachment: 'scroll'
     }}>
       <main style={{padding: '20px'}}>
         <div className="container">

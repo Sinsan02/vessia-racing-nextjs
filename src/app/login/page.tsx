@@ -76,7 +76,7 @@ export default function Login() {
         : undefined,
       backgroundSize: 'cover',
       backgroundPosition: 'center',
-      backgroundAttachment: 'fixed'
+      backgroundAttachment: 'scroll'
     }}>
       <div className="form-container">
         <h2 className="form-title">✓ Sign In</h2>

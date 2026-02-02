@@ -116,7 +116,7 @@ export default function Register() {
         : undefined,
       backgroundSize: 'cover',
       backgroundPosition: 'center',
-      backgroundAttachment: 'fixed'
+      backgroundAttachment: 'scroll'
     }}>
       <div className="form-container">
         <h2 className="form-title">✓ Become a Member</h2>

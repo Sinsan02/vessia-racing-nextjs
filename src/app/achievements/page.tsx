@@ -57,7 +57,7 @@ export default function Achievements() {
         : undefined,
       backgroundSize: 'cover',
       backgroundPosition: 'center',
-      backgroundAttachment: 'fixed',
+      backgroundAttachment: 'scroll',
       minHeight: '100vh',
       width: '100%',
       paddingTop: '40px'
