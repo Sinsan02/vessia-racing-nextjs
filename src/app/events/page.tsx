@@ -236,7 +236,7 @@ export default function Events() {
         ? 'none'
         : `linear-gradient(rgba(10,10,10,0.9), rgba(10,10,10,0.9)), url('/images/decorative/Skjermbilde 2026-01-30 214430.png')`,
       background: isMobile
-        ? 'linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%)'
+        ? 'linear-gradient(135deg, #0d1f0d 0%, #1a2e1a 50%, #0d1f0d 100%)'
         : undefined,
       backgroundSize: 'cover',
       backgroundPosition: 'center',

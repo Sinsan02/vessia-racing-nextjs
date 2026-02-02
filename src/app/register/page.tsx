@@ -112,7 +112,7 @@ export default function Register() {
         ? 'none'
         : `linear-gradient(rgba(10,10,10,0.85), rgba(10,10,10,0.85)), url('/images/decorative/Image 30. jan. 2026, 22_05_23.png')`,
       background: isMobile
-        ? 'linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%)'
+        ? 'linear-gradient(135deg, #0d1f0d 0%, #1a2e1a 50%, #0d1f0d 100%)'
         : undefined,
       backgroundSize: 'cover',
       backgroundPosition: 'center',

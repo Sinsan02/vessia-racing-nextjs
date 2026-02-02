@@ -294,7 +294,7 @@ p, .body-text {
   left: 0;
   width: 100vw;
   height: 100vh;
-  background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
+  background: linear-gradient(135deg, #0d1f0d 0%, #1a2e1a 50%, #0d1f0d 100%);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -498,7 +498,7 @@ html {
     bottom: 0 !important;
     overscroll-behavior: none !important;
     -webkit-overflow-scrolling: touch !important;
-    background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%) !important;
+    background: linear-gradient(135deg, #0d1f0d 0%, #1a2e1a 50%, #0d1f0d 100%) !important;
   }
   
   /* Main content wrapper with proper scrolling */
@@ -1437,7 +1437,7 @@ html {
   /* Remove background images on all pages */
   .min-h-screen {
     background-image: none !important;
-    background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%) !important;
+    background: linear-gradient(135deg, #0d1f0d 0%, #1a2e1a 50%, #0d1f0d 100%) !important;
   }
   
   .form-container {

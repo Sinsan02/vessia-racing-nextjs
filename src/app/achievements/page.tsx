@@ -53,7 +53,7 @@ export default function Achievements() {
         ? 'none'
         : `linear-gradient(rgba(10,10,10,0.75), rgba(10,10,10,0.75)), url('/images/decorative/Screenshot_2025-10-11_170713.png')`,
       background: isMobile
-        ? 'linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%)'
+        ? 'linear-gradient(135deg, #0d1f0d 0%, #1a2e1a 50%, #0d1f0d 100%)'
         : undefined,
       backgroundSize: 'cover',
       backgroundPosition: 'center',
