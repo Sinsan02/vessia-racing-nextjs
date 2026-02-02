@@ -191,7 +191,8 @@ p, .body-text {
   max-width: 60px !important;
 }
 
-/* Responsive logo sizing with high quality */\n/* Normal desktop screens */
+/* Responsive logo sizing with high quality */
+/* Normal desktop screens */
 @media (min-width: 769px) and (max-width: 1199px) {
   .nav-logo img {
     width: 50px !important;
@@ -222,6 +223,8 @@ p, .body-text {
     max-width: 90px !important;
   }
 }
+
+.nav-logo:hover img {
   transform: scale(1.1) rotate(5deg);
   filter: drop-shadow(0 0 10px var(--primary-color));
 }
