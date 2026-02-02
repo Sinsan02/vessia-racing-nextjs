@@ -72,7 +72,9 @@ export default function Login() {
       backgroundSize: 'cover',
       backgroundPosition: 'center',
       backgroundAttachment: 'scroll',
-      backgroundRepeat: 'no-repeat'
+      backgroundRepeat: 'no-repeat',
+      minHeight: '100vh',
+      position: 'relative'
     }}>
       <div className="form-container">
         <h2 className="form-title">✓ Sign In</h2>

@@ -56,7 +56,8 @@ export default function Achievements() {
       backgroundRepeat: 'no-repeat',
       minHeight: '100vh',
       width: '100%',
-      paddingTop: '40px'
+      paddingTop: '40px',
+      position: 'relative'
     }}>
       <div className="container" style={{
         maxWidth: '1200px',

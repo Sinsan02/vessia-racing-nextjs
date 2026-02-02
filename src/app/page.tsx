@@ -129,7 +129,9 @@ export default function Home() {
         backgroundSize: 'cover',
         backgroundPosition: 'center',
         backgroundAttachment: 'fixed',
-        backgroundRepeat: 'no-repeat'
+        backgroundRepeat: 'no-repeat',
+        minHeight: '100vh',
+        position: 'relative'
       }}>
         <div className="container">
           <h2 className="section-title">🏆 Our Achievements</h2>
@@ -156,7 +158,7 @@ export default function Home() {
               margin: '0 auto'
             }}>              {achievements.map((achievement, index) => (
                 <div key={achievement.id} className="achievement-card" style={{
-                  backgroundColor: isMobile ? 'transparent' : '#1a1a1a',
+                  backgroundColor: '#1a1a1a',
                   borderRadius: '15px',
                   padding: '25px',
                   border: '2px solid #3EA822',
@@ -326,16 +328,18 @@ export default function Home() {
         backgroundSize: 'cover',
         backgroundPosition: 'center',
         backgroundAttachment: 'fixed',
-        backgroundRepeat: 'no-repeat'
+        backgroundRepeat: 'no-repeat',
+        minHeight: '100vh',
+        position: 'relative'
       }}>
         <div className="container">
           <h2 className="section-title">Latest Event</h2>
           {latestEvent ? (
             <div className="latest-event" style={{
-              backgroundColor: isMobile ? 'transparent' : '#1a1a1a',
+              backgroundColor: '#1a1a1a',
               borderRadius: '15px',
               padding: '25px',
-              border: isMobile ? '1px solid rgba(62, 168, 34, 0.3)' : '1px solid #333',
+              border: '1px solid #333',
               textAlign: 'center',
               maxWidth: '800px',
               margin: '0 auto'
@@ -454,13 +458,15 @@ export default function Home() {
         backgroundSize: 'cover',
         backgroundPosition: 'center',
         backgroundAttachment: 'fixed',
-        backgroundRepeat: 'no-repeat'
+        backgroundRepeat: 'no-repeat',
+        minHeight: '100vh',
+        position: 'relative'
       }}>
         <div className="container">
           <div style={{
             textAlign: 'center',
             padding: '50px 20px',
-            backgroundColor: isMobile ? 'transparent' : '#1a1a1a',
+            backgroundColor: '#1a1a1a',
             borderRadius: '15px',
             border: '2px solid #3EA822',
             maxWidth: '800px',

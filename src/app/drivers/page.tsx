@@ -47,7 +47,9 @@ export default function Drivers() {
       backgroundSize: 'cover',
       backgroundPosition: 'center',
       backgroundAttachment: 'scroll',
-      backgroundRepeat: 'no-repeat'
+      backgroundRepeat: 'no-repeat',
+      minHeight: '100vh',
+      position: 'relative'
     }}>
       <main style={{padding: '20px'}}>
         <div className="container">
