@@ -4,8 +4,6 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { useState, useEffect } from 'react';
 
-export const dynamic = "force-dynamic";
-
 export default function Home() {
   const [welcomeMessage, setWelcomeMessage] = useState('');
   const [latestEvent, setLatestEvent] = useState<any>(null);
