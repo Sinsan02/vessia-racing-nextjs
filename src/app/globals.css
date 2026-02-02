@@ -828,11 +828,11 @@ html {
 }
 
 @media (max-width: 480px) {
-  /* Remove heavy background images on mobile - use gradient instead */
+  /* Remove heavy background images on mobile - use solid gradient instead */
   [style*="background-attachment: fixed"],
   [style*="backgroundImage"],
   [style*="background-image"] {
-    background-image: linear-gradient(135deg, #0d1f0d 0%, #1a2e1a 25%, #0d1f0d 50%, #1a2e1a 75%, #0d1f0d 100%) !important;
+    background-image: linear-gradient(180deg, #0d1f0d 0%, #1a2e1a 100%) !important;
     background-attachment: scroll !important;
   }
   
@@ -1407,12 +1407,12 @@ html {
 }
 
 @media (max-width: 768px) {
-  /* Remove heavy background images on mobile - use gradient instead */
+  /* Remove heavy background images on mobile - use solid gradient instead */
   div[style*="background-attachment: fixed"],
   section[style*="background-attachment: fixed"],
   div[style*="backgroundImage"],
   section[style*="backgroundImage"] {
-    background-image: linear-gradient(135deg, #0d1f0d 0%, #1a2e1a 25%, #0d1f0d 50%, #1a2e1a 75%, #0d1f0d 100%) !important;
+    background-image: linear-gradient(180deg, #0d1f0d 0%, #1a2e1a 100%) !important;
     background-attachment: scroll !important;
   }
   
