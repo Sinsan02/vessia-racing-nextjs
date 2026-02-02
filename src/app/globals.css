@@ -828,16 +828,11 @@ html {
 }
 
 @media (max-width: 480px) {
-  /* Better mobile background handling */
-  [style*="background-attachment: fixed"] {
-    background-attachment: scroll !important;
-  }
-  
-  /* Ensure full background coverage with better quality */
-  body > div:first-child[style*="backgroundImage"] {
-    background-size: cover !important;
-    background-position: center center !important;
-    min-height: 100vh !important;
+  /* Remove heavy background images on mobile - use gradient instead */
+  [style*="background-attachment: fixed"],
+  [style*="backgroundImage"],
+  [style*="background-image"] {
+    background-image: linear-gradient(135deg, #0d1f0d 0%, #1a2e1a 25%, #0d1f0d 50%, #1a2e1a 75%, #0d1f0d 100%) !important;
     background-attachment: scroll !important;
   }
   
@@ -1412,9 +1407,12 @@ html {
 }
 
 @media (max-width: 768px) {
-  /* Fix background attachment for mobile - fixed doesn't work well on mobile */
+  /* Remove heavy background images on mobile - use gradient instead */
   div[style*="background-attachment: fixed"],
-  section[style*="background-attachment: fixed"] {
+  section[style*="background-attachment: fixed"],
+  div[style*="backgroundImage"],
+  section[style*="backgroundImage"] {
+    background-image: linear-gradient(135deg, #0d1f0d 0%, #1a2e1a 25%, #0d1f0d 50%, #1a2e1a 75%, #0d1f0d 100%) !important;
     background-attachment: scroll !important;
   }
   
