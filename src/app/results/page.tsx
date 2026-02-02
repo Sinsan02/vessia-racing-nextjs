@@ -168,10 +168,10 @@ export default function Results() {
                 <div className="standings-table" style={{overflowX: 'auto'}}>
                   <table style={{
                     width: '100%',
-                    backgroundColor: '#1a1a1a',
+                    backgroundColor: isMobile ? 'transparent' : '#1a1a1a',
                     borderRadius: '10px',
                     overflow: 'hidden',
-                    border: '1px solid #333'
+                    border: isMobile ? '1px solid rgba(62, 168, 34, 0.3)' : '1px solid #333'
                   }}>
                     <thead>
                       <tr style={{backgroundColor: '#333'}}>

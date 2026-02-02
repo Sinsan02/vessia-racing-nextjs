@@ -159,10 +159,9 @@ export default function Home() {
               gap: '25px',
               maxWidth: '1200px',
               margin: '0 auto'
-            }}>
-              {achievements.map((achievement, index) => (
+            }}>              {achievements.map((achievement, index) => (
                 <div key={achievement.id} className="achievement-card" style={{
-                  backgroundColor: '#1a1a1a',
+                  backgroundColor: isMobile ? 'transparent' : '#1a1a1a',
                   borderRadius: '15px',
                   padding: '25px',
                   border: '2px solid #3EA822',
@@ -339,10 +338,10 @@ export default function Home() {
           <h2 className="section-title">Latest Event</h2>
           {latestEvent ? (
             <div className="latest-event" style={{
-              backgroundColor: '#1a1a1a',
+              backgroundColor: isMobile ? 'transparent' : '#1a1a1a',
               borderRadius: '15px',
               padding: '25px',
-              border: '1px solid #333',
+              border: isMobile ? '1px solid rgba(62, 168, 34, 0.3)' : '1px solid #333',
               textAlign: 'center',
               maxWidth: '800px',
               margin: '0 auto'
@@ -468,7 +467,7 @@ export default function Home() {
           <div style={{
             textAlign: 'center',
             padding: '50px 20px',
-            backgroundColor: '#1a1a1a',
+            backgroundColor: isMobile ? 'transparent' : '#1a1a1a',
             borderRadius: '15px',
             border: '2px solid #3EA822',
             maxWidth: '800px',

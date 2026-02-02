@@ -19,6 +19,7 @@ export default function Profile() {
   const [isEditing, setIsEditing] = useState(false);
   const [hasChanges, setHasChanges] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
+  const [isMobile, setIsMobile] = useState(typeof window !== 'undefined' ? window.innerWidth <= 768 : false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   
   // Form data
@@ -29,7 +30,13 @@ export default function Profile() {
   });
 
   useEffect(() => {
+    const checkScreenSize = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+    checkScreenSize();
+    window.addEventListener('resize', checkScreenSize);
     fetchUserProfile();
+    return () => window.removeEventListener('resize', checkScreenSize);
   }, []);
 
   const fetchUserProfile = async () => {
@@ -197,7 +204,7 @@ export default function Profile() {
           </div>
 
           <div style={{maxWidth: '600px', margin: '0 auto'}}>
-            <div style={{backgroundColor: '#1a1a1a', padding: '30px', borderRadius: '10px', marginBottom: '20px'}}>
+            <div style={{backgroundColor: isMobile ? 'transparent' : '#1a1a1a', padding: '30px', borderRadius: '10px', marginBottom: '20px', border: isMobile ? '1px solid rgba(62, 168, 34, 0.3)' : 'none'}}>
               <div style={{textAlign: 'center', marginBottom: '30px'}}>
                 <div style={{position: 'relative', display: 'inline-block'}}>
                   {user.profile_picture && user.profile_picture.trim() && user.profile_picture !== '/uploads/default-avatar.png' ? (
