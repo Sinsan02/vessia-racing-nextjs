@@ -1440,16 +1440,6 @@ html {
     background-attachment: scroll !important;
   }
   
-  /* Make cards transparent on mobile */
-  .achievement-card,
-  .event-card,
-  .driver-card,
-  .latest-event,
-  div[style*="backgroundColor: '#1a1a1a'"] {
-    background-color: transparent !important;
-    border: 1px solid rgba(62, 168, 34, 0.3) !important;
-  }
-  
   .form-container {
     margin: 90px auto 30px;
     padding: 1.8rem;
