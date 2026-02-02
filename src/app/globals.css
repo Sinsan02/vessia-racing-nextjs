@@ -589,11 +589,9 @@ html {
     padding: 40px 20px !important;
     min-height: auto !important;
     width: 100vw !important;
-    background: rgba(26, 26, 26, 0.6) !important;
-    backdrop-filter: blur(10px) !important;
+    background: transparent !important;
     margin: 20px 0 !important;
     border-radius: 0 !important;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3) !important;
   }
   
   /* Hero section styling */
@@ -622,6 +620,7 @@ html {
     display: flex !important;
     flex-direction: column !important;
     align-items: center !important;
+    background: transparent !important;
   }
   
   /* Modern card-based achievement design */
