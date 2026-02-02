@@ -87,7 +87,7 @@ export default function Home() {
         : undefined,
       backgroundSize: 'cover',
       backgroundPosition: 'center',
-      backgroundAttachment: 'scroll',
+      backgroundAttachment: isMobile ? 'scroll' : 'fixed',
       backgroundRepeat: 'no-repeat',
       minHeight: '100vh',
       position: 'relative'
@@ -134,7 +134,7 @@ export default function Home() {
           : `linear-gradient(rgba(10,10,10,0.7), rgba(10,10,10,0.8)), url('/images/decorative/Screenshot_2025-10-11_170801.png')`,
         backgroundSize: 'cover',
         backgroundPosition: 'center',
-        backgroundAttachment: 'scroll'
+        backgroundAttachment: isMobile ? 'scroll' : 'fixed'
       }}>
         <div className="container">
           <h2 className="section-title">🏆 Our Achievements</h2>
@@ -333,7 +333,7 @@ export default function Home() {
           : `linear-gradient(rgba(10,10,10,0.7), rgba(10,10,10,0.8)), url('/images/decorative/Screenshot_2025-11-15_150823.png')`,
         backgroundSize: 'cover',
         backgroundPosition: 'center',
-        backgroundAttachment: 'scroll'
+        backgroundAttachment: isMobile ? 'scroll' : 'fixed'
       }}>
         <div className="container">
           <h2 className="section-title">Latest Event</h2>
@@ -462,7 +462,7 @@ export default function Home() {
           : `linear-gradient(rgba(10,10,10,0.7), rgba(10,10,10,0.8)), url('/images/decorative/Screenshot_2025-05-18_205724.png')`,
         backgroundSize: 'cover',
         backgroundPosition: 'center',
-        backgroundAttachment: 'scroll'
+        backgroundAttachment: isMobile ? 'scroll' : 'fixed'
       }}>
         <div className="container">
           <div style={{
