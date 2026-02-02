@@ -999,7 +999,7 @@ html {
   }
   
   #authNavigation {
-    margin-right: -10px !important;
+    margin-right: -20px !important;
     display: flex !important;
     align-items: center !important;
   }
