@@ -49,15 +49,15 @@ export default function Achievements() {
 
   return (
     <div style={{
-      backgroundImage: isMobile
-        ? 'none'
-        : `linear-gradient(rgba(10,10,10,0.75), rgba(10,10,10,0.75)), url('/images/decorative/Screenshot_2025-10-11_170713.png')`,
-      background: isMobile
-        ? 'linear-gradient(135deg, #0d1f0d 0%, #1a2e1a 25%, #0d1f0d 50%, #1a2e1a 75%, #0d1f0d 100%)'
-        : undefined,
-      backgroundSize: 'cover',
+      ...(isMobile ? {
+        background: 'linear-gradient(135deg, #0d1f0d 0%, #1a2e1a 25%, #0d1f0d 50%, #1a2e1a 75%, #0d1f0d 100%)'
+      } : {
+        backgroundImage: `linear-gradient(rgba(10,10,10,0.75), rgba(10,10,10,0.75)), url('/images/decorative/Screenshot_2025-10-11_170713.png')`,
+        backgroundSize: 'cover',
+        backgroundAttachment: 'scroll'
+      }),
       backgroundPosition: 'center',
-      backgroundAttachment: 'scroll',
+      backgroundRepeat: 'no-repeat',
       minHeight: '100vh',
       width: '100%',
       paddingTop: '40px'

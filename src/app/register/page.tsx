@@ -107,16 +107,16 @@ export default function Register() {
 
   return (
     <div className="min-h-screen" style={{
-      backgroundColor: '#0a0a0a',
-      backgroundImage: isMobile 
-        ? 'none'
-        : `linear-gradient(rgba(10,10,10,0.85), rgba(10,10,10,0.85)), url('/images/decorative/Image 30. jan. 2026, 22_05_23.png')`,
-      background: isMobile
-        ? 'linear-gradient(135deg, #0d1f0d 0%, #1a2e1a 25%, #0d1f0d 50%, #1a2e1a 75%, #0d1f0d 100%)'
-        : undefined,
-      backgroundSize: 'cover',
+      ...(isMobile ? {
+        background: 'linear-gradient(135deg, #0d1f0d 0%, #1a2e1a 25%, #0d1f0d 50%, #1a2e1a 75%, #0d1f0d 100%)'
+      } : {
+        backgroundImage: `linear-gradient(rgba(10,10,10,0.85), rgba(10,10,10,0.85)), url('/images/decorative/Image 30. jan. 2026, 22_05_23.png')`,
+        backgroundColor: '#0a0a0a',
+        backgroundSize: 'cover',
+        backgroundAttachment: 'scroll'
+      }),
       backgroundPosition: 'center',
-      backgroundAttachment: 'scroll'
+      backgroundRepeat: 'no-repeat'
     }}>
       <div className="form-container">
         <h2 className="form-title">✓ Become a Member</h2>

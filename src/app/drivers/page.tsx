@@ -41,17 +41,17 @@ export default function Drivers() {
 
   return (
     <div className="min-h-screen" style={{
-      backgroundColor: '#0a0a0a', 
       paddingTop: '100px',
-      backgroundImage: isMobile
-        ? 'none'
-        : `linear-gradient(rgba(10,10,10,0.9), rgba(10,10,10,0.9)), url('/images/decorative/Screenshot_2026-01-23_201045.png')`,
-      background: isMobile
-        ? 'linear-gradient(135deg, #0d1f0d 0%, #1a2e1a 25%, #0d1f0d 50%, #1a2e1a 75%, #0d1f0d 100%)'
-        : undefined,
-      backgroundSize: 'cover',
+      ...(isMobile ? {
+        background: 'linear-gradient(135deg, #0d1f0d 0%, #1a2e1a 25%, #0d1f0d 50%, #1a2e1a 75%, #0d1f0d 100%)'
+      } : {
+        backgroundImage: `linear-gradient(rgba(10,10,10,0.9), rgba(10,10,10,0.9)), url('/images/decorative/Screenshot_2026-01-23_201045.png')`,
+        backgroundColor: '#0a0a0a',
+        backgroundSize: 'cover',
+        backgroundAttachment: 'scroll'
+      }),
       backgroundPosition: 'center',
-      backgroundAttachment: 'scroll'
+      backgroundRepeat: 'no-repeat'
     }}>
       <main style={{padding: '20px'}}>
         <div className="container">
