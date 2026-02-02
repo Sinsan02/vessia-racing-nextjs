@@ -477,25 +477,32 @@ html {
 @media (max-width: 768px) {
   [style*="background-attachment: fixed"] {
     background-attachment: scroll !important;
-    background-size: contain !important;
+    background-size: 100% auto !important;
     background-position: center top !important;
     background-repeat: no-repeat !important;
     min-height: 100vh !important;
+    image-rendering: -webkit-optimize-contrast !important;
+    image-rendering: crisp-edges !important;
   }
   
   .bg-responsive {
     background-attachment: scroll !important;
-    background-size: contain !important;
+    background-size: 100% auto !important;
     background-position: center top !important;
     background-repeat: no-repeat !important;
     min-height: 100vh !important;
+    image-rendering: -webkit-optimize-contrast !important;
   }
   
-  /* Ensure full background coverage */
+  /* Ensure full background coverage with better quality */
   body > div:first-child[style*="backgroundImage"] {
-    background-size: contain !important;
+    background-size: 100% auto !important;
     background-position: center top !important;
     min-height: 100vh !important;
+    background-attachment: scroll !important;
+    -webkit-background-size: 100% auto !important;
+    -moz-background-size: 100% auto !important;
+    -o-background-size: 100% auto !important;
   }
   
   /* Mobile scaling for better fit */
@@ -662,25 +669,32 @@ html {
 @media (max-width: 480px) {
   [style*="background-attachment: fixed"] {
     background-attachment: scroll !important;
-    background-size: contain !important;
+    background-size: 100% auto !important;
     background-position: center top !important;
     background-repeat: no-repeat !important;
     min-height: 100vh !important;
+    image-rendering: -webkit-optimize-contrast !important;
+    image-rendering: crisp-edges !important;
   }
   
   .bg-responsive {
     background-attachment: scroll !important;
-    background-size: contain !important;
+    background-size: 100% auto !important;
     background-position: center top !important;
     background-repeat: no-repeat !important;
     min-height: 100vh !important;
+    image-rendering: -webkit-optimize-contrast !important;
   }
   
-  /* Ensure full background coverage */
+  /* Ensure full background coverage with better quality */
   body > div:first-child[style*="backgroundImage"] {
-    background-size: contain !important;
+    background-size: 100% auto !important;
     background-position: center top !important;
     min-height: 100vh !important;
+    background-attachment: scroll !important;
+    -webkit-background-size: 100% auto !important;
+    -moz-background-size: 100% auto !important;
+    -o-background-size: 100% auto !important;
   }
   
   /* Extra small screens - clean PC-like design */
