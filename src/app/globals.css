@@ -475,10 +475,15 @@ html {
 
 /* Responsive background adjustments for mobile only */
 @media (max-width: 768px) {
+  /* Use mobile-optimized background images */
+  body > div:first-child[style*="Screenshot_2025-11-23_180245"] {
+    background-image: url('/images/phone/Screenshot_2025-11-23_180245_750x1334.jpg') !important;
+  }
+  
   [style*="background-attachment: fixed"] {
     background-attachment: scroll !important;
-    background-size: 100% auto !important;
-    background-position: center top !important;
+    background-size: cover !important;
+    background-position: center center !important;
     background-repeat: no-repeat !important;
     min-height: 100vh !important;
     image-rendering: -webkit-optimize-contrast !important;
@@ -487,8 +492,8 @@ html {
   
   .bg-responsive {
     background-attachment: scroll !important;
-    background-size: 100% auto !important;
-    background-position: center top !important;
+    background-size: cover !important;
+    background-position: center center !important;
     background-repeat: no-repeat !important;
     min-height: 100vh !important;
     image-rendering: -webkit-optimize-contrast !important;
@@ -496,13 +501,13 @@ html {
   
   /* Ensure full background coverage with better quality */
   body > div:first-child[style*="backgroundImage"] {
-    background-size: 100% auto !important;
-    background-position: center top !important;
+    background-size: cover !important;
+    background-position: center center !important;
     min-height: 100vh !important;
     background-attachment: scroll !important;
-    -webkit-background-size: 100% auto !important;
-    -moz-background-size: 100% auto !important;
-    -o-background-size: 100% auto !important;
+    -webkit-background-size: cover !important;
+    -moz-background-size: cover !important;
+    -o-background-size: cover !important;
   }
   
   /* Mobile scaling for better fit */
@@ -667,10 +672,15 @@ html {
 }
 
 @media (max-width: 480px) {
+  /* Use mobile-optimized background images */
+  body > div:first-child[style*="Screenshot_2025-11-23_180245"] {
+    background-image: url('/images/phone/Screenshot_2025-11-23_180245_750x1334.jpg') !important;
+  }
+  
   [style*="background-attachment: fixed"] {
     background-attachment: scroll !important;
-    background-size: 100% auto !important;
-    background-position: center top !important;
+    background-size: cover !important;
+    background-position: center center !important;
     background-repeat: no-repeat !important;
     min-height: 100vh !important;
     image-rendering: -webkit-optimize-contrast !important;
@@ -679,8 +689,8 @@ html {
   
   .bg-responsive {
     background-attachment: scroll !important;
-    background-size: 100% auto !important;
-    background-position: center top !important;
+    background-size: cover !important;
+    background-position: center center !important;
     background-repeat: no-repeat !important;
     min-height: 100vh !important;
     image-rendering: -webkit-optimize-contrast !important;
@@ -688,13 +698,13 @@ html {
   
   /* Ensure full background coverage with better quality */
   body > div:first-child[style*="backgroundImage"] {
-    background-size: 100% auto !important;
-    background-position: center top !important;
+    background-size: cover !important;
+    background-position: center center !important;
     min-height: 100vh !important;
     background-attachment: scroll !important;
-    -webkit-background-size: 100% auto !important;
-    -moz-background-size: 100% auto !important;
-    -o-background-size: 100% auto !important;
+    -webkit-background-size: cover !important;
+    -moz-background-size: cover !important;
+    -o-background-size: cover !important;
   }
   
   /* Extra small screens - clean PC-like design */
