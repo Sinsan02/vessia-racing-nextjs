@@ -82,9 +82,10 @@ export default function Home() {
       backgroundImage: isMobile 
         ? `url('/images/phone/Screenshot_2025-11-23_180245_750x1334.jpg')`
         : `url('/images/decorative/Screenshot_2025-11-23_180245.png')`,
-      backgroundSize: 'cover',
-      backgroundPosition: 'center',
-      backgroundAttachment: 'fixed',
+      backgroundSize: isMobile ? '100% auto' : 'cover',
+      backgroundPosition: isMobile ? 'center top' : 'center',
+      backgroundAttachment: isMobile ? 'scroll' : 'fixed',
+      backgroundRepeat: 'no-repeat',
       minHeight: '100vh'
     }}>
       {/* Welcome Message */}
