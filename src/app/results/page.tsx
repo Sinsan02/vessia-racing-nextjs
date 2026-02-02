@@ -93,15 +93,11 @@ export default function Results() {
   return (
     <div className="min-h-screen" style={{
       paddingTop: '100px',
-      ...(isMobile ? {
-        background: 'linear-gradient(135deg, #0d1f0d 0%, #1a2e1a 25%, #0d1f0d 50%, #1a2e1a 75%, #0d1f0d 100%)'
-      } : {
-        backgroundImage: `linear-gradient(rgba(10,10,10,0.9), rgba(10,10,10,0.9)), url('/images/decorative/Screenshot_2025-11-10_214034.png')`,
-        backgroundColor: '#0a0a0a',
-        backgroundSize: 'cover',
-        backgroundAttachment: 'scroll'
-      }),
+      backgroundImage: `linear-gradient(rgba(10,10,10,0.9), rgba(10,10,10,0.9)), url('/images/decorative/Screenshot_2025-11-10_214034.png')`,
+      backgroundColor: '#0a0a0a',
+      backgroundSize: 'cover',
       backgroundPosition: 'center',
+      backgroundAttachment: isMobile ? 'scroll' : 'scroll',
       backgroundRepeat: 'no-repeat'
     }}>
       <main style={{padding: '20px'}}>
