@@ -477,16 +477,25 @@ html {
 @media (max-width: 768px) {
   [style*="background-attachment: fixed"] {
     background-attachment: scroll !important;
-    background-size: cover !important;
-    background-position: center !important;
+    background-size: contain !important;
+    background-position: center top !important;
     background-repeat: no-repeat !important;
+    min-height: 100vh !important;
   }
   
   .bg-responsive {
     background-attachment: scroll !important;
-    background-size: cover !important;
-    background-position: center !important;
+    background-size: contain !important;
+    background-position: center top !important;
     background-repeat: no-repeat !important;
+    min-height: 100vh !important;
+  }
+  
+  /* Ensure full background coverage */
+  body > div:first-child[style*="backgroundImage"] {
+    background-size: contain !important;
+    background-position: center top !important;
+    min-height: 100vh !important;
   }
   
   /* Mobile scaling for better fit */
@@ -508,109 +517,185 @@ html {
   }
   
   .hero-content h1 {
-    font-size: 2.5rem !important;
-    margin-bottom: 20px !important;
-  }
-  
-  .hero-subtitle {
-    font-size: 1.4rem !important;
-    margin-bottom: 15px !important;
-  }
-  
-  .hero-description {
-    font-size: 1.1rem !important;
-    margin-bottom: 25px !important;
-  }
-  
-  .section h2 {
-    font-size: 2rem !important;
-    margin-bottom: 20px !important;
-  }
-  
-  .section p {
-    font-size: 1rem !important;
-    line-height: 1.6 !important;
-  }
-  
-  .btn-primary {
-    font-size: 1rem !important;
-    padding: 12px 25px !important;
-    min-width: 140px !important;
-  }
-  
-  .navbar {
-    height: 65px !important;
-    font-size: 1rem !important;
-    width: 100vw !important;
-    padding: 0 20px !important;
-  }
-  
-  .nav-container {
-    width: 100% !important;
-    justify-content: space-between !important;
-    padding: 0 !important;
-  }
-  
-  .nav-logo img {
-    width: 55px !important;
-    height: auto !important;
-    max-height: 50px !important;
-  }
-  
-  .mobile-menu-toggle {
-    font-size: 1.5rem !important;
-    padding: 8px 12px !important;
-    color: #3EA822 !important;
-    background: transparent !important;
-    border: 2px solid #3EA822 !important;
-    border-radius: 5px !important;
-    position: relative !important;
-    right: 0 !important;
-    margin-right: 0 !important;
-  }
-  
-  /* Achievement cards mobile layout */
-  .achievement-card {
-    margin-bottom: 25px !important;
-    padding: 25px !important;
-    min-height: 220px !important;
-  }
-  
-  .achievement-icon {
-    width: 70px !important;
-    height: 70px !important;
-    font-size: 2.5rem !important;
-  }
-}
-
-@media (max-width: 480px) {
-  [style*="background-attachment: fixed"] {
-    background-attachment: scroll !important;
-    background-size: cover !important;
-    background-position: center !important;
-    background-repeat: no-repeat !important;
-  }
-  
-  .bg-responsive {
-    background-attachment: scroll !important;
-    background-size: cover !important;
-    background-position: center !important;
-    background-repeat: no-repeat !important;
-  }
-  
-  /* Extra small screens - keep similar to desktop but scaled */
-  .hero-content h1 {
     font-size: 2.2rem !important;
     margin-bottom: 18px !important;
   }
   
   .hero-subtitle {
     font-size: 1.3rem !important;
+    margin-bottom: 14px !important;
+  }
+  
+  .hero-description {
+    font-size: 1.05rem !important;
+    margin-bottom: 22px !important;
+  }
+  
+  .section h2 {
+    font-size: 1.9rem !important;
+    margin-bottom: 18px !important;
+  }
+  
+  .section p {
+    font-size: 0.98rem !important;
+    line-height: 1.6 !important;
+  }
+  
+  .btn-primary {
+    font-size: 0.95rem !important;
+    padding: 11px 23px !important;
+    min-width: 130px !important;
+  }
+  
+  /* Clean navbar design like PC */
+  .navbar {
+    height: 60px !important;
+    font-size: 0.95rem !important;
+    width: 100vw !important;
+    padding: 0 15px !important;
+    display: flex !important;
+    align-items: center !important;
+  }
+  
+  .nav-container {
+    width: 100% !important;
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    padding: 0 !important;
+  }
+  
+  .nav-logo {
+    order: 1 !important;
+    display: flex !important;
+    align-items: center !important;
+  }
+  
+  .nav-logo img {
+    width: 50px !important;
+    height: auto !important;
+    max-height: 45px !important;
+  }
+  
+  /* Hamburger menu positioned properly to the left */
+  .mobile-menu-toggle {
+    order: 3 !important;
+    font-size: 1.3rem !important;
+    padding: 6px 10px !important;
+    color: #3EA822 !important;
+    background: transparent !important;
+    border: 2px solid #3EA822 !important;
+    border-radius: 5px !important;
+    position: relative !important;
+    right: auto !important;
+    left: auto !important;
+    margin: 0 !important;
+    cursor: pointer !important;
+    transition: all 0.3s ease !important;
+  }
+  
+  .mobile-menu-toggle:hover {
+    background: rgba(62, 168, 34, 0.1) !important;
+    transform: scale(1.05) !important;
+  }
+  
+  /* Clean navigation menu */
+  .nav-menu {
+    position: fixed !important;
+    top: 60px !important;
+    left: 0 !important;
+    right: 0 !important;
+    width: 100vw !important;
+    background: rgba(10, 10, 10, 0.98) !important;
+    backdrop-filter: blur(10px) !important;
+    padding: 20px 15px !important;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.5) !important;
+    display: none !important;
+    flex-direction: column !important;
+    gap: 12px !important;
+    z-index: 999 !important;
+    border-bottom: 2px solid #3EA822 !important;
+  }
+  
+  .nav-menu.active {
+    display: flex !important;
+    animation: slideDown 0.3s ease-out !important;
+  }
+  
+  .nav-link {
+    padding: 12px 15px !important;
+    text-align: left !important;
+    border-radius: 5px !important;
+    transition: all 0.3s ease !important;
+  }
+  
+  .nav-link:hover {
+    background: rgba(62, 168, 34, 0.1) !important;
+    transform: translateX(5px) !important;
+  }
+  
+  #authNavigation {
+    width: 100% !important;
+    padding-top: 10px !important;
+    border-top: 1px solid #333 !important;
+  }
+  
+  /* Achievement cards mobile layout */
+  .achievement-card {
+    margin-bottom: 20px !important;
+    padding: 22px !important;
+    min-height: 200px !important;
+  }
+  
+  .achievement-icon {
+    width: 65px !important;
+    height: 65px !important;
+    font-size: 2.3rem !important;
+  }
+  
+  /* Adjust main content for navbar */
+  .main-content {
+    padding-top: 60px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  [style*="background-attachment: fixed"] {
+    background-attachment: scroll !important;
+    background-size: contain !important;
+    background-position: center top !important;
+    background-repeat: no-repeat !important;
+    min-height: 100vh !important;
+  }
+  
+  .bg-responsive {
+    background-attachment: scroll !important;
+    background-size: contain !important;
+    background-position: center top !important;
+    background-repeat: no-repeat !important;
+    min-height: 100vh !important;
+  }
+  
+  /* Ensure full background coverage */
+  body > div:first-child[style*="backgroundImage"] {
+    background-size: contain !important;
+    background-position: center top !important;
+    min-height: 100vh !important;
+  }
+  
+  /* Extra small screens - clean PC-like design */
+  .hero-content h1 {
+    font-size: 2rem !important;
+    margin-bottom: 16px !important;
+  }
+  
+  .hero-subtitle {
+    font-size: 1.2rem !important;
     margin-bottom: 12px !important;
   }
   
   .hero-description {
-    font-size: 1rem !important;
+    font-size: 0.95rem !important;
     margin-bottom: 20px !important;
   }
   
@@ -621,12 +706,12 @@ html {
   }
   
   .section h2 {
-    font-size: 1.8rem !important;
-    margin-bottom: 18px !important;
+    font-size: 1.7rem !important;
+    margin-bottom: 16px !important;
   }
   
   .section p {
-    font-size: 0.95rem !important;
+    font-size: 0.92rem !important;
     line-height: 1.5 !important;
   }
   
@@ -635,37 +720,51 @@ html {
   }
   
   .btn-primary {
-    font-size: 0.95rem !important;
-    padding: 11px 22px !important;
-    min-width: 130px !important;
+    font-size: 0.9rem !important;
+    padding: 10px 20px !important;
+    min-width: 120px !important;
   }
   
   .navbar {
-    height: 60px !important;
-    padding: 0 16px !important;
+    height: 55px !important;
+    padding: 0 12px !important;
   }
   
   .nav-logo img {
-    width: 50px !important;
-    max-height: 45px !important;
+    width: 45px !important;
+    max-height: 40px !important;
   }
   
   .mobile-menu-toggle {
-    font-size: 1.4rem !important;
-    padding: 6px 10px !important;
+    font-size: 1.2rem !important;
+    padding: 5px 8px !important;
+  }
+  
+  .nav-menu {
+    top: 55px !important;
+    padding: 18px 12px !important;
+    gap: 10px !important;
+  }
+  
+  .nav-link {
+    padding: 10px 12px !important;
   }
   
   /* Achievement cards for small screens */
   .achievement-card {
-    margin-bottom: 20px !important;
-    padding: 20px !important;
-    min-height: 200px !important;
+    margin-bottom: 18px !important;
+    padding: 18px !important;
+    min-height: 180px !important;
   }
   
   .achievement-icon {
-    width: 65px !important;
-    height: 65px !important;
-    font-size: 2.3rem !important;
+    width: 60px !important;
+    height: 60px !important;
+    font-size: 2.1rem !important;
+  }
+  
+  .main-content {
+    padding-top: 55px !important;
   }
 }
 
