@@ -83,7 +83,7 @@ export default function Home() {
       backgroundColor: '#0a0a0a',
       backgroundSize: 'cover',
       backgroundPosition: 'center',
-      backgroundAttachment: isMobile ? 'scroll' : 'fixed',
+      backgroundAttachment: 'fixed',
       backgroundRepeat: 'no-repeat',
       minHeight: '100vh',
       position: 'relative'
@@ -128,7 +128,7 @@ export default function Home() {
         backgroundImage: `linear-gradient(rgba(10,10,10,0.7), rgba(10,10,10,0.8)), url('/images/decorative/Screenshot_2025-10-11_170801.png')`,
         backgroundSize: 'cover',
         backgroundPosition: 'center',
-        backgroundAttachment: isMobile ? 'scroll' : 'fixed',
+        backgroundAttachment: 'fixed',
         backgroundRepeat: 'no-repeat'
       }}>
         <div className="container">
@@ -325,7 +325,7 @@ export default function Home() {
         backgroundImage: `linear-gradient(rgba(10,10,10,0.7), rgba(10,10,10,0.8)), url('/images/decorative/Screenshot_2025-11-15_150823.png')`,
         backgroundSize: 'cover',
         backgroundPosition: 'center',
-        backgroundAttachment: isMobile ? 'scroll' : 'fixed',
+        backgroundAttachment: 'fixed',
         backgroundRepeat: 'no-repeat'
       }}>
         <div className="container">
@@ -453,7 +453,7 @@ export default function Home() {
         backgroundImage: `linear-gradient(rgba(10,10,10,0.7), rgba(10,10,10,0.8)), url('/images/decorative/Screenshot_2025-05-18_205724.png')`,
         backgroundSize: 'cover',
         backgroundPosition: 'center',
-        backgroundAttachment: isMobile ? 'scroll' : 'fixed',
+        backgroundAttachment: 'fixed',
         backgroundRepeat: 'no-repeat'
       }}>
         <div className="container">

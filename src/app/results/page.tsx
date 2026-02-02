@@ -97,7 +97,7 @@ export default function Results() {
       backgroundColor: '#0a0a0a',
       backgroundSize: 'cover',
       backgroundPosition: 'center',
-      backgroundAttachment: isMobile ? 'scroll' : 'scroll',
+      backgroundAttachment: 'scroll',
       backgroundRepeat: 'no-repeat'
     }}>
       <main style={{padding: '20px'}}>

@@ -52,7 +52,7 @@ export default function Achievements() {
       backgroundImage: `linear-gradient(rgba(10,10,10,0.75), rgba(10,10,10,0.75)), url('/images/decorative/Screenshot_2025-10-11_170713.png')`,
       backgroundSize: 'cover',
       backgroundPosition: 'center',
-      backgroundAttachment: isMobile ? 'scroll' : 'scroll',
+      backgroundAttachment: 'scroll',
       backgroundRepeat: 'no-repeat',
       minHeight: '100vh',
       width: '100%',

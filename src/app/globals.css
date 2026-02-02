@@ -1434,13 +1434,6 @@ html {
 }
 
 @media (max-width: 768px) {
-  /* Remove background images on all pages */
-  .min-h-screen {
-    background-image: none;
-    background: linear-gradient(135deg, #0d1f0d 0%, #1a2e1a 25%, #0d1f0d 50%, #1a2e1a 75%, #0d1f0d 100%);
-    min-height: 100vh;
-  }
-  
   .form-container {
     margin: 90px auto 30px;
     padding: 1.8rem;

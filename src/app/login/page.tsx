@@ -71,7 +71,7 @@ export default function Login() {
       backgroundColor: '#0a0a0a',
       backgroundSize: 'cover',
       backgroundPosition: 'center',
-      backgroundAttachment: isMobile ? 'scroll' : 'scroll',
+      backgroundAttachment: 'scroll',
       backgroundRepeat: 'no-repeat'
     }}>
       <div className="form-container">

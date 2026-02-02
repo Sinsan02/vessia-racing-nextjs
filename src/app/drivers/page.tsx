@@ -46,7 +46,7 @@ export default function Drivers() {
       backgroundColor: '#0a0a0a',
       backgroundSize: 'cover',
       backgroundPosition: 'center',
-      backgroundAttachment: isMobile ? 'scroll' : 'scroll',
+      backgroundAttachment: 'scroll',
       backgroundRepeat: 'no-repeat'
     }}>
       <main style={{padding: '20px'}}>
