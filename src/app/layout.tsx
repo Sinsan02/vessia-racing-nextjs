@@ -42,6 +42,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head>
+        <link rel="preload" as="image" href="/images/decorative/Screenshot_2025-11-23_180245.png" />
+        <link rel="preload" as="image" href="/images/decorative/Screenshot_2025-10-11_170801.png" />
+        <link rel="preload" as="image" href="/images/decorative/Screenshot_2025-11-15_150823.png" />
+        <link rel="preload" as="image" href="/images/decorative/Screenshot_2025-05-18_205724.png" />
+      </head>
       <body
         className={`${orbitron.variable} ${racingSansOne.variable} ${rajdhani.variable} font-segoe bg-background-dark text-text-primary antialiased min-h-screen`}
         style={{
