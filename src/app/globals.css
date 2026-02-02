@@ -834,6 +834,16 @@ html {
   body > div:first-child {
     background-image: linear-gradient(180deg, #0d1f0d 0%, #1a2e1a 100%) !important;
     background-attachment: scroll !important;
+    width: 100vw !important;
+    min-height: 100vh !important;
+  }
+  
+  /* Ensure body and html take full width */
+  body, html {
+    width: 100vw !important;
+    overflow-x: hidden !important;
+    margin: 0 !important;
+    padding: 0 !important;
   }
   
   /* Extra small screens - clean PC-like design */
@@ -1413,6 +1423,16 @@ html {
   body > div:first-child {
     background-image: linear-gradient(180deg, #0d1f0d 0%, #1a2e1a 100%) !important;
     background-attachment: scroll !important;
+    width: 100vw !important;
+    min-height: 100vh !important;
+  }
+  
+  /* Ensure body and html take full width */
+  body, html {
+    width: 100vw !important;
+    overflow-x: hidden !important;
+    margin: 0 !important;
+    padding: 0 !important;
   }
   
   .form-container {

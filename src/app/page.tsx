@@ -88,6 +88,7 @@ export default function Home() {
       backgroundAttachment: isMobile ? 'scroll' : 'fixed',
       backgroundRepeat: 'no-repeat',
       minHeight: '100vh',
+      width: '100%',
       position: 'relative'
     }}>
       {/* Welcome Message */}
