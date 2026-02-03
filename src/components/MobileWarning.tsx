@@ -21,6 +21,23 @@ export default function MobileWarning() {
     return () => window.removeEventListener('resize', checkIfMobile);
   }, []);
 
+  useEffect(() => {
+    // Lås scrolling når mobil-varsel vises
+    if (isMobile) {
+      document.body.style.overflow = 'hidden';
+      document.body.style.position = 'fixed';
+      document.body.style.width = '100%';
+      document.body.style.height = '100%';
+    }
+    
+    return () => {
+      document.body.style.overflow = '';
+      document.body.style.position = '';
+      document.body.style.width = '';
+      document.body.style.height = '';
+    };
+  }, [isMobile]);
+
   if (!isMobile) return null;
 
   return (
@@ -30,6 +47,8 @@ export default function MobileWarning() {
       left: 0,
       width: '100vw',
       height: '100vh',
+      minHeight: '100vh',
+      minHeight: '-webkit-fill-available',
       background: 'linear-gradient(180deg, #0d1f0d 0%, #1a3e1a 20%, #1a3e1a 90%, #0d1f0d 100%)',
       display: 'flex',
       flexDirection: 'column',
@@ -38,7 +57,8 @@ export default function MobileWarning() {
       zIndex: 10000,
       padding: '15px',
       textAlign: 'center',
-      boxSizing: 'border-box'
+      boxSizing: 'border-box',
+      overflow: 'hidden'
     }}>
       <div style={{
         background: 'rgba(26, 26, 26, 0.95)',
