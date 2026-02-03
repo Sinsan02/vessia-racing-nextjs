@@ -1427,9 +1427,9 @@ html {
 }
 
 @media (max-width: 768px) {
-  /* Remove heavy background images on mobile - use solid gradient instead */
-  body, html, body > div, body > div > div,
-  .min-h-screen, .section, div[style*="background"], section[style*="background"] {
+  /* Remove heavy background images on mobile - use solid gradient instead on page level only */
+  body, html, body > div:first-child,
+  .min-h-screen, .section, section[style*="background"] {
     background-image: linear-gradient(180deg, #0d1f0d 0%, #1a2e1a 100%) !important;
     background-attachment: scroll !important;
     width: 100vw !important;

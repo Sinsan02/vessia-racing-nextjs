@@ -52,11 +52,12 @@ export default function RootLayout({
         className={`${orbitron.variable} ${racingSansOne.variable} ${rajdhani.variable} font-segoe bg-background-dark text-text-primary antialiased min-h-screen`}
         style={{
           display: 'flex',
-          flexDirection: 'column'
+          flexDirection: 'column',
+          minHeight: '100vh'
         }}
       >
         <Navbar />
-        <main className="pt-20 main-content" style={{ flexGrow: 1 }}>
+        <main className="pt-20 main-content" style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
           {children}
         </main>
         <footer style={{
