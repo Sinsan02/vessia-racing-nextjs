@@ -47,7 +47,6 @@ export default function MobileWarning() {
       left: 0,
       width: '100vw',
       height: '100vh',
-      minHeight: '100vh',
       minHeight: '-webkit-fill-available',
       background: 'linear-gradient(180deg, #0d1f0d 0%, #1a3e1a 20%, #1a3e1a 90%, #0d1f0d 100%)',
       display: 'flex',
