@@ -132,14 +132,16 @@ export default function Home() {
       {/* Achievements Section */}
       <section id="achievements" className="section" style={{
         backgroundImage: isMobile
-          ? 'linear-gradient(180deg, #0d1f0d 0%, #1a2e1a 100%)'
+          ? 'none'
           : `linear-gradient(rgba(10,10,10,0.7), rgba(10,10,10,0.8)), url('/images/decorative/Screenshot_2025-10-11_170801.png')`,
+        backgroundColor: isMobile ? '#0a0a0a' : undefined,
         backgroundSize: 'cover',
         backgroundPosition: 'center',
         backgroundAttachment: isMobile ? 'scroll' : 'fixed',
         backgroundRepeat: 'no-repeat',
-        minHeight: '100vh',
-        position: 'relative'
+        minHeight: isMobile ? 'auto' : '100vh',
+        position: 'relative',
+        padding: isMobile ? '20px 10px' : undefined
       }}>
         <div className="container">
           <h2 className="section-title">🏆 Our Achievements</h2>
@@ -319,7 +321,7 @@ export default function Home() {
           {achievements.length > 0 && (
             <div style={{
               textAlign: 'center',
-              marginTop: '40px'
+              marginTop: isMobile ? '20px' : '40px'
             }}>
               <Link
                 href="/achievements"
@@ -346,14 +348,16 @@ export default function Home() {
       {/* Latest Event Section */}
       <section id="results" className="section section-dark" style={{
         backgroundImage: isMobile
-          ? 'linear-gradient(180deg, #0d1f0d 0%, #1a2e1a 100%)'
+          ? 'none'
           : `linear-gradient(rgba(10,10,10,0.7), rgba(10,10,10,0.8)), url('/images/decorative/Screenshot_2025-11-15_150823.png')`,
+        backgroundColor: isMobile ? '#0a0a0a' : undefined,
         backgroundSize: 'cover',
         backgroundPosition: 'center',
         backgroundAttachment: isMobile ? 'scroll' : 'fixed',
         backgroundRepeat: 'no-repeat',
-        minHeight: '100vh',
-        position: 'relative'
+        minHeight: isMobile ? 'auto' : '100vh',
+        position: 'relative',
+        padding: isMobile ? '20px 10px' : undefined
       }}>
         <div className="container">
           <h2 className="section-title">Latest Event</h2>
@@ -361,11 +365,13 @@ export default function Home() {
             <div className="latest-event" style={{
               backgroundColor: '#1a1a1a',
               borderRadius: '15px',
-              padding: '25px',
+              padding: isMobile ? '20px 15px' : '25px',
               border: '1px solid #333',
               textAlign: 'center',
-              maxWidth: '800px',
-              margin: '0 auto'
+              maxWidth: isMobile ? '100%' : '800px',
+              margin: '0 auto',
+              width: '100%',
+              boxSizing: 'border-box'
             }}>
               {latestEvent.image_url && (
                 <div style={{
@@ -478,14 +484,16 @@ export default function Home() {
       {/* Join Our Team Section */}
       <section className="section" style={{
         backgroundImage: isMobile
-          ? 'linear-gradient(180deg, #0d1f0d 0%, #1a2e1a 100%)'
+          ? 'none'
           : `linear-gradient(rgba(10,10,10,0.7), rgba(10,10,10,0.8)), url('/images/decorative/Screenshot_2025-05-18_205724.png')`,
+        backgroundColor: isMobile ? '#0a0a0a' : undefined,
         backgroundSize: 'cover',
         backgroundPosition: 'center',
         backgroundAttachment: isMobile ? 'scroll' : 'fixed',
         backgroundRepeat: 'no-repeat',
-        minHeight: '100vh',
-        position: 'relative'
+        minHeight: isMobile ? 'auto' : '100vh',
+        position: 'relative',
+        padding: isMobile ? '20px 10px' : undefined
       }}>
         <div className="container">
           <div style={{

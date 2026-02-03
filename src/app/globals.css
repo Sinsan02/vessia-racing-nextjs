@@ -1753,23 +1753,23 @@ html {
 
 @media (max-width: 768px) {
   .section {
-    padding: 40px 0;
+    padding: 30px 0;
   }
   
   .section-title {
     font-size: 2rem;
-    margin-bottom: 2rem;
+    margin-bottom: 1rem;
   }
 }
 
 @media (max-width: 480px) {
   .section {
-    padding: 30px 0;
+    padding: 20px 0;
   }
   
   .section-title {
     font-size: 1.8rem;
-    margin-bottom: 1.5rem;
+    margin-bottom: 1rem;
   }
 }
 
