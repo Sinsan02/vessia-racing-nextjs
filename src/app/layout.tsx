@@ -57,7 +57,7 @@ export default function RootLayout({
         }}
       >
         <Navbar />
-        <main className="main-content" style={{ flex: 1, display: 'flex', flexDirection: 'column', paddingTop: '80px' }}>
+        <main className="main-content" style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
           {children}
         </main>
         <footer style={{

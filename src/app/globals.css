@@ -1558,6 +1558,10 @@ html {
   border-bottom: 1px solid #333;
 }
 
+.main-content {
+  padding-top: 80px;
+}
+
 .nav-container {
   max-width: 1200px;
   margin: 0 auto;
