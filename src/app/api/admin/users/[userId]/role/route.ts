@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { dbRun } from '@/lib/database';
+import { getDatabase } from '@/lib/database';
 import { requireAdmin } from '@/lib/auth';
 
 // Update user role (admin only)
@@ -24,10 +24,13 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
       return NextResponse.json({ success: false, error: 'You cannot remove your own admin access' }, { status: 400 });
     }
 
-    // Update user role
-    const result = await dbRun('UPDATE users SET role = $1 WHERE id = $2', [role, userId]);
+    const supabase = await getDatabase();
+    const { error } = await supabase
+      .from('users')
+      .update({ role })
+      .eq('id', userId);
     
-    if (result.changes === 0) {
+    if (error) {
       return NextResponse.json({ success: false, error: 'User not found' }, { status: 404 });
     }
     
@@ -36,8 +39,6 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
       message: `User role updated to ${role}`
     });
   } catch (error: any) {
-    console.error('Error updating user role:', error);
-    
     if (error.message === 'Authentication required' || error.message === 'Admin access required') {
       return NextResponse.json(
         { error: error.message },
