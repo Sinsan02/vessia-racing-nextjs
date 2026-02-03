@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 
 interface User {
@@ -18,6 +18,7 @@ export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+  const hasCheckedAuth = useRef(false);
   const router = useRouter();
   const pathname = usePathname();
   const isHomePage = pathname === '/';
@@ -35,11 +36,15 @@ export default function Navbar() {
   }, []);
 
   useEffect(() => {
-    // Check if user is logged in (you'll implement this later)
+    // Prevent double mounting in StrictMode
+    if (hasCheckedAuth.current) return;
+    hasCheckedAuth.current = true;
+    
+    // Check if user is logged in
     checkAuthStatus();
     
-    // Re-check auth status every 30 seconds or when page becomes visible
-    const interval = setInterval(checkAuthStatus, 30000);
+    // Re-check auth status every 5 minutes (reduced from 30s)
+    const interval = setInterval(checkAuthStatus, 300000);
     
     // Listen for profile updates
     const handleProfileUpdate = () => {

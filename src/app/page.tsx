@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
 export default function Home() {
   const [welcomeMessage, setWelcomeMessage] = useState('');
@@ -10,9 +10,14 @@ export default function Home() {
   const [achievements, setAchievements] = useState<any[]>([]);
   const [achievementsLoading, setAchievementsLoading] = useState(true);
   const [isMobile, setIsMobile] = useState(typeof window !== 'undefined' ? window.innerWidth <= 768 : false);
+  const hasFetchedData = useRef(false);
 
   
   useEffect(() => {
+    // Prevent double mounting in StrictMode
+    if (hasFetchedData.current) return;
+    hasFetchedData.current = true;
+    
     // Check screen size for mobile background
     const checkScreenSize = () => {
       setIsMobile(window.innerWidth <= 768);
