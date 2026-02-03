@@ -58,14 +58,14 @@ export default function Achievements() {
       backgroundRepeat: 'no-repeat',
       minHeight: '100vh',
       width: '100%',
-      paddingTop: '40px',
+      paddingTop: isMobile ? '0' : '40px',
       position: 'relative'
     }}>
       <div className="container" style={{
         maxWidth: '1200px',
         margin: '0 auto',
-        padding: isMobile ? '40px 15px' : '40px 20px',
-        paddingTop: '120px',
+        padding: isMobile ? '20px 15px' : '40px 20px',
+        paddingTop: isMobile ? '80px' : '120px',
         boxSizing: 'border-box',
         width: '100%'
       }}>

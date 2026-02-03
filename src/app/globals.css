@@ -576,7 +576,7 @@ html {
     display: flex !important;
     flex-direction: column !important;
     align-items: center !important;
-    padding-top: 80px !important;
+    padding-top: 60px !important;
     flex: 1 !important;
   }
   
@@ -600,12 +600,13 @@ html {
   /* Hero section styling */
   .hero {
     background: linear-gradient(180deg, rgba(62, 168, 34, 0.1) 0%, transparent 100%) !important;
-    padding: 60px 20px 40px !important;
+    padding: 20px 20px 30px !important;
     border-bottom: 2px solid rgba(62, 168, 34, 0.2) !important;
     text-align: center !important;
     display: flex !important;
     flex-direction: column !important;
     align-items: center !important;
+    margin-top: 0 !important;
   }
   
   .hero-content {
@@ -833,7 +834,7 @@ html {
 @media (max-width: 480px) {
   /* Remove heavy background images on mobile - use solid gradient instead */
   body, html, body > div, body > div > div,
-  .min-h-screen, .section, div[style*="background"], section[style*="background"] {
+  .min-h-screen, .section, section[style*="background"] {
     background-image: linear-gradient(180deg, #0d1f0d 0%, #1a2e1a 100%) !important;
     background-attachment: scroll !important;
     width: 100vw !important;
