@@ -1456,7 +1456,7 @@ html {
   
   /* Mobile main content padding adjustment */
   .main-content {
-    padding-top: 65px !important;
+    padding-top: 60px !important;
   }
 }
 
@@ -1469,7 +1469,7 @@ html {
   }
   
   .main-content {
-    padding-top: 60px !important;
+    padding-top: 55px !important;
   }
 }
 
