@@ -150,8 +150,8 @@ export default function Home() {
               display: isMobile ? 'flex' : 'grid',
               flexDirection: isMobile ? 'column' : undefined,
               gridTemplateColumns: isMobile ? undefined : 'repeat(auto-fit, minmax(320px, 1fr))',
-              gap: isMobile ? '20px' : '25px',
-              maxWidth: isMobile ? '800px' : '1200px',
+              gap: isMobile ? '15px' : '25px',
+              maxWidth: isMobile ? '100%' : '1200px',
               margin: '0 auto',
               padding: isMobile ? '0 10px' : '0',
               width: '100%',
@@ -166,8 +166,8 @@ export default function Home() {
               display: isMobile ? 'flex' : 'grid',
               flexDirection: isMobile ? 'column' : undefined,
               gridTemplateColumns: isMobile ? undefined : 'repeat(auto-fit, minmax(320px, 1fr))',
-              gap: isMobile ? '20px' : '25px',
-              maxWidth: isMobile ? '800px' : '1200px',
+              gap: isMobile ? '15px' : '25px',
+              maxWidth: isMobile ? '100%' : '1200px',
               margin: '0 auto',
               padding: isMobile ? '0 10px' : '0',
               width: '100%',
@@ -175,8 +175,8 @@ export default function Home() {
             }}>              {achievements.map((achievement, index) => (
                 <div key={achievement.id} className="achievement-card" style={{
                   backgroundColor: isMobile ? 'rgba(26, 26, 26, 0.85)' : '#1a1a1a',
-                  borderRadius: isMobile ? '15px' : '15px',
-                  padding: isMobile ? '20px 15px' : '25px',
+                  borderRadius: isMobile ? '12px' : '15px',
+                  padding: isMobile ? '15px 12px' : '25px',
                   border: '2px solid #3EA822',
                   textAlign: 'center',
                   position: 'relative',
@@ -490,12 +490,14 @@ export default function Home() {
         <div className="container">
           <div style={{
             textAlign: 'center',
-            padding: '50px 20px',
+            padding: isMobile ? '30px 15px' : '50px 20px',
             backgroundColor: '#1a1a1a',
             borderRadius: '15px',
             border: '2px solid #3EA822',
-            maxWidth: '800px',
-            margin: '0 auto'
+            maxWidth: isMobile ? '100%' : '800px',
+            margin: '0 auto',
+            boxSizing: 'border-box',
+            width: '100%'
           }}>
             <div style={{fontSize: '2.5rem', marginBottom: '15px'}}>🚀</div>
             <h3 style={{color: '#3EA822', marginBottom: '10px', fontSize: '2rem', fontWeight: 'bold'}}>

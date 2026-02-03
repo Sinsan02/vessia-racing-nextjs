@@ -64,7 +64,7 @@ export default function RootLayout({
           backgroundColor: '#0a0a0a',
           color: '#ffffff',
           textAlign: 'center',
-          padding: '30px 20px',
+          padding: '15px 20px',
           borderTop: '2px solid #3EA822',
           marginTop: 'auto',
           width: '100%'
