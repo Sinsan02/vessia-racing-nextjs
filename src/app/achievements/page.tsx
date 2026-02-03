@@ -65,7 +65,7 @@ export default function Achievements() {
         maxWidth: '1200px',
         margin: '0 auto',
         padding: isMobile ? '20px 15px' : '40px 20px',
-        paddingTop: isMobile ? '80px' : '120px',
+        paddingTop: isMobile ? '20px' : '120px',
         boxSizing: 'border-box',
         width: '100%'
       }}>
