@@ -829,9 +829,8 @@ html {
 
 @media (max-width: 480px) {
   /* Remove heavy background images on mobile - use solid gradient instead */
-  .min-h-screen,
-  .section,
-  body > div:first-child {
+  body, html, body > div, body > div > div,
+  .min-h-screen, .section, div[style*="background"], section[style*="background"] {
     background-image: linear-gradient(180deg, #0d1f0d 0%, #1a2e1a 100%) !important;
     background-attachment: scroll !important;
     width: 100vw !important;
@@ -1418,9 +1417,8 @@ html {
 
 @media (max-width: 768px) {
   /* Remove heavy background images on mobile - use solid gradient instead */
-  .min-h-screen,
-  .section,
-  body > div:first-child {
+  body, html, body > div, body > div > div,
+  .min-h-screen, .section, div[style*="background"], section[style*="background"] {
     background-image: linear-gradient(180deg, #0d1f0d 0%, #1a2e1a 100%) !important;
     background-attachment: scroll !important;
     width: 100vw !important;
