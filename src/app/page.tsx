@@ -147,11 +147,15 @@ export default function Home() {
           
           {achievementsLoading ? (
             <div className="achievements-grid" style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
-              gap: '25px',
-              maxWidth: '1200px',
-              margin: '0 auto'
+              display: isMobile ? 'flex' : 'grid',
+              flexDirection: isMobile ? 'column' : undefined,
+              gridTemplateColumns: isMobile ? undefined : 'repeat(auto-fit, minmax(320px, 1fr))',
+              gap: isMobile ? '20px' : '25px',
+              maxWidth: isMobile ? '800px' : '1200px',
+              margin: '0 auto',
+              padding: isMobile ? '0 10px' : '0',
+              width: '100%',
+              boxSizing: 'border-box'
             }}>
               {[1, 2, 3].map((i) => (
                 <div key={i} className="skeleton-card"></div>
@@ -159,38 +163,45 @@ export default function Home() {
             </div>
           ) : achievements.length > 0 ? (
             <div className="achievements-grid" style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
-              gap: '25px',
-              maxWidth: '1200px',
-              margin: '0 auto'
+              display: isMobile ? 'flex' : 'grid',
+              flexDirection: isMobile ? 'column' : undefined,
+              gridTemplateColumns: isMobile ? undefined : 'repeat(auto-fit, minmax(320px, 1fr))',
+              gap: isMobile ? '20px' : '25px',
+              maxWidth: isMobile ? '800px' : '1200px',
+              margin: '0 auto',
+              padding: isMobile ? '0 10px' : '0',
+              width: '100%',
+              boxSizing: 'border-box'
             }}>              {achievements.map((achievement, index) => (
                 <div key={achievement.id} className="achievement-card" style={{
-                  backgroundColor: '#1a1a1a',
-                  borderRadius: '15px',
-                  padding: '25px',
+                  backgroundColor: isMobile ? 'rgba(26, 26, 26, 0.85)' : '#1a1a1a',
+                  borderRadius: isMobile ? '15px' : '15px',
+                  padding: isMobile ? '20px 15px' : '25px',
                   border: '2px solid #3EA822',
                   textAlign: 'center',
                   position: 'relative',
                   overflow: 'hidden',
                   transition: 'transform 0.3s ease, box-shadow 0.3s ease',
-                  animationDelay: `${index * 0.1}s`
+                  animationDelay: `${index * 0.1}s`,
+                  maxWidth: '100%',
+                  boxSizing: 'border-box'
                 }}>
                   {/* Achievement Icon/Badge */}
                   <div style={{
-                    fontSize: '3rem',
-                    marginBottom: '15px',
+                    fontSize: isMobile ? '3rem' : '3rem',
+                    marginBottom: isMobile ? '15px' : '15px',
                     background: 'linear-gradient(135deg, #3EA822, #2d7a19)',
-                    width: '80px',
-                    height: '80px',
+                    width: isMobile ? '80px' : '80px',
+                    height: isMobile ? '80px' : '80px',
                     borderRadius: '50%',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
                     margin: '0 auto 15px',
-                    boxShadow: '0 5px 15px rgba(62, 168, 34, 0.3)',
+                    boxShadow: isMobile ? '0 8px 25px rgba(62, 168, 34, 0.4)' : '0 5px 15px rgba(62, 168, 34, 0.3)',
                     transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
-                    cursor: 'pointer'
+                    cursor: 'pointer',
+                    border: isMobile ? '3px solid rgba(62, 168, 34, 0.3)' : 'none'
                   }}
                   className="achievement-icon"
                   onMouseEnter={(e) => {
@@ -223,16 +234,18 @@ export default function Home() {
 
                   <h3 style={{
                     color: '#3EA822',
-                    fontSize: '1.4rem',
-                    marginBottom: '8px',
-                    fontWeight: 'bold'
+                    fontSize: isMobile ? '1.3rem' : '1.4rem',
+                    marginBottom: isMobile ? '10px' : '8px',
+                    fontWeight: 'bold',
+                    lineHeight: '1.3',
+                    wordWrap: 'break-word'
                   }}>
                     {achievement.title}
                   </h3>
 
                   <p style={{
                     color: '#ccc',
-                    fontSize: '1rem',
+                    fontSize: isMobile ? '0.95rem' : '1rem',
                     marginBottom: '10px',
                     fontWeight: '500'
                   }}>
