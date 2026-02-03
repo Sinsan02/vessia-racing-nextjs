@@ -64,17 +64,20 @@ export default function Achievements() {
       <div className="container" style={{
         maxWidth: '1200px',
         margin: '0 auto',
-        padding: '40px 20px',
-        paddingTop: '120px'
+        padding: isMobile ? '40px 15px' : '40px 20px',
+        paddingTop: '120px',
+        boxSizing: 'border-box',
+        width: '100%'
       }}>
       {/* Header */}
       <div style={{
         textAlign: 'center',
-        marginBottom: '50px'
+        marginBottom: '50px',
+        padding: isMobile ? '0 10px' : '0'
       }}>
         <h1 style={{
           color: '#3EA822',
-          fontSize: '3rem',
+          fontSize: isMobile ? '2.2rem' : '3rem',
           marginBottom: '15px',
           fontWeight: 'bold'
         }}>
@@ -95,10 +98,12 @@ export default function Achievements() {
         <div style={{
           textAlign: 'center',
           color: '#888',
-          padding: '80px 20px',
-          backgroundColor: isMobile ? 'transparent' : '#1a1a1a',
+          padding: isMobile ? '40px 20px' : '80px 20px',
+          backgroundColor: isMobile ? 'rgba(26, 26, 26, 0.85)' : '#1a1a1a',
           borderRadius: '15px',
-          border: isMobile ? '1px solid rgba(62, 168, 34, 0.3)' : 'none'
+          border: '1px solid rgba(62, 168, 34, 0.3)',
+          maxWidth: '100%',
+          boxSizing: 'border-box'
         }}>
           <div style={{fontSize: '5rem', marginBottom: '25px'}}>🏆</div>
           <h2 style={{color: '#ccc', marginBottom: '15px', fontSize: '1.8rem'}}>No achievements yet</h2>
@@ -147,22 +152,27 @@ export default function Achievements() {
           <div style={{
             display: 'flex',
             flexDirection: 'column',
-            gap: '25px',
+            gap: isMobile ? '20px' : '25px',
             maxWidth: '800px',
             margin: '0 auto',
-            marginBottom: '50px'
+            marginBottom: '50px',
+            width: '100%',
+            padding: isMobile ? '0 10px' : '0',
+            boxSizing: 'border-box'
           }}>
             {achievements.map((achievement, index) => (
               <div key={achievement.id} style={{
-                backgroundColor: isMobile ? 'transparent' : '#1a1a1a',
-                borderRadius: '20px',
-                padding: '30px',
+                backgroundColor: isMobile ? 'rgba(26, 26, 26, 0.85)' : '#1a1a1a',
+                borderRadius: isMobile ? '15px' : '20px',
+                padding: isMobile ? '20px 15px' : '30px',
                 border: '2px solid #3EA822',
                 textAlign: 'center',
                 position: 'relative',
                 overflow: 'hidden',
                 transition: 'all 0.3s ease',
-                cursor: 'default'
+                cursor: 'default',
+                maxWidth: '100%',
+                boxSizing: 'border-box'
               }}
               onMouseEnter={(e) => {
                 e.currentTarget.style.transform = 'translateY(-8px)';
@@ -209,11 +219,11 @@ export default function Achievements() {
 
                 {/* Achievement Icon */}
                 <div style={{
-                  fontSize: '4rem',
+                  fontSize: isMobile ? '3rem' : '4rem',
                   marginBottom: '20px',
                   background: 'linear-gradient(135deg, #3EA822, #2d7a19)',
-                  width: '100px',
-                  height: '100px',
+                  width: isMobile ? '80px' : '100px',
+                  height: isMobile ? '80px' : '100px',
                   borderRadius: '50%',
                   display: 'flex',
                   alignItems: 'center',
@@ -227,10 +237,11 @@ export default function Achievements() {
 
                 <h3 style={{
                   color: '#3EA822',
-                  fontSize: '1.6rem',
+                  fontSize: isMobile ? '1.3rem' : '1.6rem',
                   marginBottom: '12px',
                   fontWeight: 'bold',
-                  lineHeight: '1.3'
+                  lineHeight: '1.3',
+                  wordWrap: 'break-word'
                 }}>
                   {achievement.title}
                 </h3>
