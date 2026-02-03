@@ -30,22 +30,25 @@ export default function MobileWarning() {
       left: 0,
       width: '100vw',
       height: '100vh',
-      background: 'linear-gradient(180deg, #0d1f0d 0%, #1a3e1a 50%, #0d1f0d 100%)',
+      background: 'linear-gradient(180deg, #0d1f0d 0%, #1a3e1a 30%, #1a3e1a 70%, #0d1f0d 100%)',
       display: 'flex',
       flexDirection: 'column',
       alignItems: 'center',
       justifyContent: 'center',
       zIndex: 10000,
       padding: '20px',
-      textAlign: 'center'
+      textAlign: 'center',
+      boxSizing: 'border-box'
     }}>
       <div style={{
         background: 'rgba(26, 26, 26, 0.95)',
         padding: '40px 30px',
         borderRadius: '15px',
         border: '2px solid #3EA822',
-        maxWidth: '400px',
-        boxShadow: '0 10px 40px rgba(0, 0, 0, 0.5)'
+        maxWidth: '380px',
+        width: '90%',
+        boxShadow: '0 10px 40px rgba(0, 0, 0, 0.5)',
+        margin: '0 auto'
       }}>
         <div style={{
           fontSize: '4rem',
@@ -69,7 +72,7 @@ export default function MobileWarning() {
           marginBottom: '15px',
           lineHeight: '1.6'
         }}>
-          Denne websiden er kun tilgjengelig på PC.
+          This website is only available on PC.
         </p>
         
         <p style={{
@@ -77,7 +80,7 @@ export default function MobileWarning() {
           fontSize: '0.95rem',
           lineHeight: '1.5'
         }}>
-          Vennligst besøk oss fra en stasjonær eller bærbar PC for den beste opplevelsen.
+          Please visit us from a desktop or laptop computer for the best experience.
         </p>
         
         <div style={{
@@ -89,7 +92,7 @@ export default function MobileWarning() {
             color: '#888',
             fontSize: '0.85rem'
           }}>
-            Mobil versjon kommer snart
+            Mobile version coming soon
           </p>
         </div>
       </div>
