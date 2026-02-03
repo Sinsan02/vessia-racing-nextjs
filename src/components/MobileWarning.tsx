@@ -30,25 +30,26 @@ export default function MobileWarning() {
       left: 0,
       width: '100vw',
       height: '100vh',
-      background: 'linear-gradient(180deg, #0d1f0d 0%, #1a3e1a 30%, #1a3e1a 70%, #0d1f0d 100%)',
+      background: 'linear-gradient(180deg, #0d1f0d 0%, #1a3e1a 20%, #1a3e1a 80%, #0d1f0d 100%)',
       display: 'flex',
       flexDirection: 'column',
       alignItems: 'center',
       justifyContent: 'center',
       zIndex: 10000,
-      padding: '20px',
+      padding: '15px',
       textAlign: 'center',
       boxSizing: 'border-box'
     }}>
       <div style={{
         background: 'rgba(26, 26, 26, 0.95)',
-        padding: '40px 30px',
+        padding: '35px 25px',
         borderRadius: '15px',
         border: '2px solid #3EA822',
-        maxWidth: '380px',
-        width: '90%',
+        maxWidth: '340px',
+        width: '85%',
         boxShadow: '0 10px 40px rgba(0, 0, 0, 0.5)',
-        margin: '0 auto'
+        margin: '0 auto',
+        boxSizing: 'border-box'
       }}>
         <div style={{
           fontSize: '4rem',
