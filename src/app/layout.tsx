@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Orbitron, Racing_Sans_One, Rajdhani } from "next/font/google";
 import "./globals.css";
 import Navbar from '@/components/Navbar';
+import MobileWarning from '@/components/MobileWarning';
 
 const orbitron = Orbitron({
   variable: "--font-orbitron",
@@ -56,6 +57,7 @@ export default function RootLayout({
           minHeight: '100vh'
         }}
       >
+        <MobileWarning />
         <Navbar />
         <main className="main-content" style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
           {children}
