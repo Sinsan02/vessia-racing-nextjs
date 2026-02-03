@@ -482,12 +482,16 @@ html {
   html {
     overflow-x: hidden !important;
     width: 100vw !important;
+    position: fixed !important;
+    height: 100vh !important;
   }
   
   body {
     overflow-x: hidden !important;
     overflow-y: auto !important;
     width: 100vw !important;
+    height: 100vh !important;
+    position: relative !important;
     /* Grønn gradient bakgrunn over hele skjermen */
     background: linear-gradient(180deg, #0d1f0d 0%, #1a3e1a 50%, #0d1f0d 100%) !important;
     background-attachment: fixed !important;
@@ -690,6 +694,361 @@ html {
 }
 
 @media (max-width: 480px) {
+  /* Lock mobile viewport - prevent dragging outside */
+  html {
+    overflow-x: hidden !important;
+    overscroll-behavior: none !important;
+    width: 100% !important;
+    background: #0a0a0a !important;
+  }
+  
+  /* Professional gradient design for mobile - no images */
+  body {
+    overflow-x: hidden !important;
+    width: 100vw !important;
+    overscroll-behavior: none !important;
+    -webkit-overflow-scrolling: touch !important;
+    background: #0a0a0a !important;
+    min-height: 100vh !important;
+    display: flex !important;
+    flex-direction: column !important;
+  }
+  
+  /* Main content wrapper with proper scrolling */
+  body > div:first-child {
+    overflow-x: hidden !important;
+    -webkit-overflow-scrolling: touch !important;
+    overscroll-behavior-y: contain !important;
+    background: transparent !important;
+    flex: 1 !important;
+    display: flex !important;
+    flex-direction: column !important;
+  }
+  
+  /* Add subtle pattern overlay for depth */
+  body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: 
+      radial-gradient(circle at 20% 30%, rgba(62, 168, 34, 0.05) 0%, transparent 50%),
+      radial-gradient(circle at 80% 70%, rgba(62, 168, 34, 0.03) 0%, transparent 50%);
+    pointer-events: none;
+    z-index: 0;
+  }
+  
+  /* Ensure content appears above overlay */
+  body > * {
+    position: relative;
+    z-index: 1;
+  }
+  
+  /* Prevent horizontal drag and overscroll */
+  * {
+    overscroll-behavior-x: none !important;
+    -webkit-overflow-scrolling: touch;
+  }
+  
+  /* Allow only vertical scrolling */
+  body, html {
+    touch-action: pan-y !important;
+  }
+  
+  /* Lock content width */
+  body > div {
+    max-width: 100vw !important;
+    overflow-x: hidden !important;
+  }
+  
+  /* Drivers page mobile styling */
+  .drivers-list {
+    padding: 0 16px !important;
+    width: 100% !important;
+    max-width: 500px !important;
+    margin: 0 auto !important;
+  }
+  
+  .driver-card {
+    background: rgba(26, 26, 26, 0.9) !important;
+    backdrop-filter: blur(10px) !important;
+    border: 1px solid rgba(62, 168, 34, 0.3) !important;
+  }
+  
+  .drivers-header h1 {
+    text-align: center !important;
+    margin-bottom: 15px !important;
+  }
+  
+  /* Profile page mobile styling */
+  .profile-container {
+    padding: 0 16px !important;
+    max-width: 500px !important;
+    margin: 0 auto !important;
+  }
+  
+  /* General page container centering */
+  main {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    flex: 1 !important;
+  }
+  
+  /* Footer visibility on mobile */
+  footer {
+    width: 100% !important;
+    margin-top: auto !important;
+    flex-shrink: 0 !important;
+  }
+  
+  /* Clean card design for sections */
+  .section {
+    padding: 20px 15px !important;
+    min-height: auto !important;
+    width: 100vw !important;
+    background: transparent !important;
+    margin: 0 !important;
+    border-radius: 0 !important;
+  }
+  
+  /* Hero section styling */
+  .hero {
+    background: linear-gradient(180deg, rgba(62, 168, 34, 0.1) 0%, transparent 100%) !important;
+    padding: 5px 15px 15px !important;
+    border-bottom: 2px solid rgba(62, 168, 34, 0.2) !important;
+    text-align: center !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    margin-top: 0 !important;
+  }
+  
+  .hero-content {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    max-width: 500px !important;
+    margin: 0 auto !important;
+  }
+  
+  .container {
+    padding: 0 10px !important;
+    max-width: 100% !important;
+    width: 100% !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    background: transparent !important;
+  }
+  
+  /* Modern card-based achievement design */
+  .achievement-card {
+    background: rgba(26, 26, 26, 0.9) !important;
+    backdrop-filter: blur(10px) !important;
+    border: 1px solid rgba(62, 168, 34, 0.3) !important;
+    border-radius: 12px !important;
+    margin: 0 auto 20px !important;
+    padding: 20px !important;
+    min-height: 180px !important;
+    max-width: 500px !important;
+    width: 100% !important;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3) !important;
+    transition: all 0.3s ease !important;
+  }
+  
+  /* Center achievements grid */
+  .achievements-grid {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    gap: 15px !important;
+    width: 100% !important;
+    padding: 0 16px !important;
+  }
+  
+  .achievement-card:hover {
+    transform: translateY(-5px) !important;
+    box-shadow: 0 8px 30px rgba(62, 168, 34, 0.3) !important;
+    border-color: rgba(62, 168, 34, 0.6) !important;
+  }
+  
+  /* Professional button styling */
+  .btn-primary {
+    background: linear-gradient(135deg, #3EA822 0%, #2d7a19 100%) !important;
+    box-shadow: 0 4px 15px rgba(62, 168, 34, 0.3) !important;
+    border: none !important;
+    transition: all 0.3s ease !important;
+  }
+  
+  .btn-primary:hover {
+    transform: translateY(-2px) !important;
+    box-shadow: 0 6px 20px rgba(62, 168, 34, 0.4) !important;
+  }
+  
+  /* Enhanced typography for mobile */
+  .hero-content h1 {
+    font-size: 2.2rem !important;
+    margin-bottom: 18px !important;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5) !important;
+    color: #ffffff !important;
+  }
+  
+  .hero-subtitle {
+    font-size: 1.3rem !important;
+    margin-bottom: 14px !important;
+    color: #3EA822 !important;
+    text-shadow: 0 2px 8px rgba(62, 168, 34, 0.3) !important;
+  }
+  
+  .hero-description {
+    font-size: 1.05rem !important;
+    margin-bottom: 22px !important;
+    color: #cccccc !important;
+    line-height: 1.6 !important;
+  }
+  
+  .section h2 {
+    font-size: 1.9rem !important;
+    margin-bottom: 18px !important;
+    color: #ffffff !important;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5) !important;
+    border-bottom: 2px solid rgba(62, 168, 34, 0.3) !important;
+    padding-bottom: 10px !important;
+    text-align: center !important;
+  }
+  
+  .section-subtitle {
+    text-align: center !important;
+    margin-bottom: 25px !important;
+  }
+  
+  .section p {
+    font-size: 0.98rem !important;
+    line-height: 1.6 !important;
+  }
+  
+  .btn-primary {
+    font-size: 0.95rem !important;
+    padding: 11px 23px !important;
+    min-width: 130px !important;
+  }
+  
+  /* Clean navbar design like PC */
+  .navbar {
+    height: 60px !important;
+    font-size: 0.95rem !important;
+    width: 100vw !important;
+    padding: 0 15px !important;
+    display: flex !important;
+    align-items: center !important;
+  }
+  
+  .nav-container {
+    width: 100% !important;
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    padding: 0 !important;
+  }
+  
+  .nav-logo {
+    order: 1 !important;
+    display: flex !important;
+    align-items: center !important;
+  }
+  
+  .nav-logo img {
+    width: 50px !important;
+    height: auto !important;
+    max-height: 45px !important;
+  }
+  
+  /* Hamburger menu positioned properly to the left */
+  .mobile-menu-toggle {
+    order: 3 !important;
+    font-size: 1.3rem !important;
+    padding: 6px 10px !important;
+    color: #3EA822 !important;
+    background: transparent !important;
+    border: 2px solid #3EA822 !important;
+    border-radius: 5px !important;
+    position: relative !important;
+    right: auto !important;
+    left: auto !important;
+    margin: 0 !important;
+    cursor: pointer !important;
+    transition: all 0.3s ease !important;
+  }
+  
+  .mobile-menu-toggle:hover {
+    background: rgba(62, 168, 34, 0.1) !important;
+    transform: scale(1.05) !important;
+  }
+  
+  /* Clean navigation menu */
+  .nav-menu {
+    position: fixed !important;
+    top: 60px !important;
+    left: 0 !important;
+    right: 0 !important;
+    width: 100vw !important;
+    background: rgba(10, 10, 10, 0.98) !important;
+    backdrop-filter: blur(10px) !important;
+    padding: 20px 15px !important;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.5) !important;
+    display: none !important;
+    flex-direction: column !important;
+    gap: 12px !important;
+    z-index: 999 !important;
+    border-bottom: 2px solid #3EA822 !important;
+  }
+  
+  .nav-menu.active {
+    display: flex !important;
+    animation: slideDown 0.3s ease-out !important;
+  }
+  
+  .nav-link {
+    padding: 12px 15px !important;
+    text-align: left !important;
+    border-radius: 5px !important;
+    transition: all 0.3s ease !important;
+  }
+  
+  .nav-link:hover {
+    background: rgba(62, 168, 34, 0.1) !important;
+    transform: translateX(5px) !important;
+  }
+  
+  #authNavigation {
+    width: 100% !important;
+    padding-top: 10px !important;
+    border-top: 1px solid #333 !important;
+  }
+  
+  /* Achievement cards mobile layout */
+  .achievement-card {
+    margin-bottom: 20px !important;
+    padding: 22px !important;
+    min-height: 200px !important;
+  }
+  
+  .achievement-icon {
+    width: 65px !important;
+    height: 65px !important;
+    font-size: 2.3rem !important;
+  }
+  
+  /* Adjust main content for navbar */
+  .main-content {
+    padding-top: 55px !important;
+  }
+}
+
+@media (max-width: 480px) {
   /* Samme styling som 768px, bare litt mindre */
   .nav-logo img {
     width: 40px !important;
@@ -736,15 +1095,18 @@ html {
     background-position: center center !important;
   }
   
+  /* Increase height of achievement sections on large monitors */
   .section {
     min-height: 100vh !important;
     height: 100vh !important;
   }
   
+  /* Push join team section content lower on large screens */
   .section:last-of-type .container {
     padding-top: 200px !important;
   }
   
+  /* Scale up navbar and logo for large monitors */
   .navbar {
     height: 80px !important;
     font-size: 1.4rem !important;
@@ -772,6 +1134,7 @@ html {
     padding: 14px 24px !important;
   }
   
+  /* Scale content boxes bigger to match laptop experience */
   .container {
     max-width: 1400px !important;
     padding: 0 40px !important;
@@ -813,15 +1176,18 @@ html {
     background-repeat: no-repeat !important;
   }
   
+  /* Full height for ultra-wide monitors */
   .section {
     min-height: 100vh !important;
     height: 100vh !important;
   }
   
+  /* Push join team section even lower on ultra-wide screens */
   .section:last-of-type .container {
     padding-top: 250px !important;
   }
   
+  /* Even larger navbar and logo for ultra-wide */
   .navbar {
     height: 100px !important;
     font-size: 1.6rem !important;
@@ -849,6 +1215,7 @@ html {
     padding: 16px 28px !important;
   }
   
+  /* Much bigger content boxes */
   .container {
     max-width: 1600px !important;
     padding: 0 50px !important;
@@ -877,6 +1244,24 @@ html {
   .btn-primary {
     font-size: 1.5rem !important;
     padding: 18px 45px !important;
+  }
+}
+
+/* Normal desktop screens - reduce navbar height */
+@media (min-width: 769px) and (max-width: 1199px) {
+  .navbar {
+    height: 60px !important;
+    font-size: 0.95rem !important;
+  }
+  
+  .nav-logo img {
+    width: 50px !important;
+    height: auto !important;
+    max-height: 45px !important;
+  }
+  
+  .main-content {
+    padding-top: 60px !important;
   }
 }
 
@@ -925,10 +1310,12 @@ html {
     height: 90vh !important;
   }
   
+  /* Move join team section down on laptop too */
   .section:last-of-type .container {
     padding-top: 120px !important;
   }
   
+  /* Reduce navbar height on laptops */
   .navbar {
     height: 65px !important;
     font-size: 1rem !important;
@@ -942,6 +1329,7 @@ html {
     image-rendering: crisp-edges !important;
   }
   
+  /* Adjust main content padding to match smaller navbar */
   .main-content {
     padding-top: 65px !important;
   }
@@ -987,6 +1375,7 @@ html {
     align-items: center !important;
   }
   
+  /* Adjust main content padding for 27" screens */
   .main-content {
     padding-top: 70px !important;
   }
@@ -1032,6 +1421,7 @@ html {
     align-items: center !important;
   }
   
+  /* Adjust main content padding for 34" screens */
   .main-content {
     padding-top: 75px !important;
   }
@@ -1042,6 +1432,18 @@ html {
   margin: 0 auto;
   padding: 0 20px;
   width: 100%;
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 0 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .container {
+    padding: 0 8px;
+  }
 }
 
 .btn-primary {
@@ -1095,6 +1497,15 @@ html {
   padding-right: 20px;
 }
 
+@media (max-width: 768px) {
+  .hero {
+    min-height: calc(100vh - 60px);
+    padding-top: 60px;
+    padding-left: 15px;
+    padding-right: 15px;
+  }
+}
+
 .hero::before {
   content: '';
   position: absolute;
@@ -1127,6 +1538,28 @@ html {
   margin-right: auto;
 }
 
+@media (max-width: 768px) {
+  .hero-subtitle {
+    font-size: 1.2rem;
+  }
+  
+  .hero-description {
+    font-size: 1rem;
+    margin-bottom: 1.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero-subtitle {
+    font-size: 1.1rem;
+  }
+  
+  .hero-description {
+    font-size: 0.9rem;
+    padding: 0 10px;
+  }
+}
+
 /* Form Styles */
 .form-container {
   max-width: 400px;
@@ -1136,6 +1569,53 @@ html {
   border-radius: 10px;
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
   width: 90%;
+}
+
+@media (max-width: 768px) {
+  /* Remove heavy background images on mobile - use solid gradient instead on page level only */
+  body, html, body > div:first-child,
+  .min-h-screen, .section, section[style*="background"] {
+    background-image: linear-gradient(180deg, #0d1f0d 0%, #1a2e1a 100%) !important;
+    background-attachment: scroll !important;
+    width: 100vw !important;
+    min-height: 100vh !important;
+  }
+  
+  /* Ensure body and html take full width */
+  body, html {
+    width: 100vw !important;
+    overflow-x: hidden !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+  
+  .form-container {
+    margin: 90px auto 30px;
+    padding: 1.8rem;
+    width: 90%;
+    max-width: 380px;
+    background: rgba(26, 26, 26, 0.9) !important;
+    backdrop-filter: blur(10px) !important;
+    border: 1px solid rgba(62, 168, 34, 0.3) !important;
+  }
+  
+  /* Mobile main content padding adjustment */
+  .main-content {
+    padding-top: 60px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .form-container {
+    margin: 80px auto 25px;
+    padding: 1.5rem;
+    width: 85%;
+    max-width: 350px;
+  }
+  
+  .main-content {
+    padding-top: 55px !important;
+  }
 }
 
 .form-group {
@@ -1304,6 +1784,32 @@ html {
   }
 }
 
+/* Mobile specific positioning */
+@media (max-width: 768px) {
+  .nav-container {
+    justify-content: flex-start !important;
+    padding: 0 15px !important;
+  }
+  
+  .nav-logo {
+    order: 1 !important;
+    margin-right: 0 !important;
+    flex-shrink: 0 !important;
+  }
+  
+  .mobile-menu-toggle {
+    order: 3 !important;
+    margin-left: auto !important;
+    flex-shrink: 0 !important;
+  }
+  
+  .nav-menu {
+    order: 2 !important;
+    align-items: center;
+    gap: 2rem;
+  }
+}
+
 .nav-link {
   color: #ffffff;
   text-decoration: none;
@@ -1343,6 +1849,36 @@ html {
   position: relative;
 }
 
+@media (max-width: 768px) {
+  .mobile-menu-toggle {
+    display: block;
+  }
+  
+  .nav-menu {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background-color: #1a1a1a;
+    flex-direction: column;
+    gap: 0;
+    padding: 1rem 0;
+    border-top: 1px solid #333;
+  }
+  
+  .nav-menu.active {
+    display: flex;
+  }
+  
+  .nav-link {
+    padding: 1rem 2rem;
+    border-bottom: 1px solid #333;
+    width: 100%;
+    text-align: left;
+  }
+}
+
 /* Section styles */
 .section {
   padding: 60px 0;
@@ -1361,12 +1897,49 @@ html {
   font-weight: bold;
 }
 
+@media (max-width: 768px) {
+  .section {
+    padding: 30px 0;
+  }
+  
+  .section-title {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .section {
+    padding: 20px 0;
+  }
+  
+  .section-title {
+    font-size: 1.8rem;
+    margin-bottom: 1rem;
+  }
+}
+
 /* Team styles */
 .team-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   gap: 2rem;
   margin-top: 2rem;
+}
+
+@media (max-width: 768px) {
+  .team-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+    margin-top: 1.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .team-grid {
+    gap: 1rem;
+    margin-top: 1rem;
+  }
 }
 
 .team-card {
@@ -1432,6 +2005,54 @@ html {
 .achievement-card:hover {
   transform: translateY(-5px);
   box-shadow: 0 10px 30px rgba(62, 168, 34, 0.2);
+}
+
+@media (max-width: 768px) {
+  .achievements-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+    padding: 0 15px;
+  }
+  
+  .achievement-card {
+    padding: 20px;
+  }
+  
+  .section-subtitle {
+    font-size: 1rem;
+    margin-bottom: 2rem;
+    padding: 0 20px;
+  }
+}
+
+/* Achievement page specific responsive styles */
+@media (max-width: 768px) {
+  .achievements-page .container {
+    padding: 20px 10px !important;
+  }
+  
+  .achievements-page h1 {
+    font-size: 2.2rem !important;
+  }
+  
+  .achievements-page .achievements-list {
+    gap: 20px !important;
+  }
+  
+  .achievements-page .achievement-card {
+    padding: 20px !important;
+    margin: 0 5px;
+  }
+}
+
+@media (max-width: 480px) {
+  .achievements-page h1 {
+    font-size: 1.8rem !important;
+  }
+  
+  .achievements-page .achievement-card h3 {
+    font-size: 1.3rem !important;
+  }
 }
 
 /* Results styles */
@@ -1548,4 +2169,642 @@ html {
 
 .logout-btn:hover {
   background-color: #c82333;
+}
+
+/* Responsive styles */
+@media (max-width: 1024px) {
+  .nav-container {
+    padding: 0 15px;
+  }
+}
+
+@media (max-width: 768px) {
+  .hero-buttons {
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+  }
+  
+  .btn-primary, .btn-secondary {
+    width: 100%;
+    max-width: 250px;
+    text-align: center;
+  }
+  
+  .mobile-menu-toggle {
+    display: block;
+    position: relative;
+    right: 0;
+    margin-right: 0;
+  }
+  
+  .nav-container {
+    padding: 0 10px;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .nav-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    width: 100%;
+    background-color: rgba(0, 0, 0, 0.98);
+    backdrop-filter: blur(10px);
+    flex-direction: column;
+    padding: 1rem 0;
+    display: none;
+    gap: 0;
+    border-top: 1px solid #333;
+    max-width: 100vw;
+    box-sizing: border-box;
+  }
+  
+  .nav-menu.active {
+    display: flex;
+  }
+  
+  .nav-link {
+    padding: 1rem 2rem;
+    width: 100%;
+    text-align: left;
+    border-bottom: 1px solid rgba(62, 168, 34, 0.1);
+  }
+  
+  #authNavigation {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    align-items: center;
+    padding: 1rem 0;
+    border-top: 1px solid #333;
+  }
+  
+  .user-menu {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .nav-container {
+    padding: 0 8px;
+    width: 100%;
+    box-sizing: border-box;
+  }
+  
+  .nav-logo img {
+    height: 35px;
+  }
+  
+  .mobile-menu-toggle {
+    display: block !important;
+    position: static;
+    margin-left: auto;
+    margin-right: 0;
+    padding: 8px;
+    background: rgba(62, 168, 34, 0.2);
+    border: 2px solid #3EA822;
+    border-radius: 6px;
+    color: #3EA822;
+    font-size: 2.2rem;
+    cursor: pointer;
+    min-width: 32px;
+    min-height: 32px;
+    font-weight: 900;
+    line-height: 0.8;
+  }
+  
+  .nav-menu {
+    left: 0 !important;
+    right: 0 !important;
+    width: 100vw !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+  }
+  
+  .form-title {
+    font-size: 1.5rem;
+  }
+  
+  .btn-primary, .btn-secondary {
+    padding: 10px 20px;
+    font-size: 0.9rem;
+  }
+}
+
+/* Events and cards responsive styles */
+@media (max-width: 768px) {
+  .latest-event {
+    padding: 15px 10px !important;
+    margin: 0 10px !important;
+  }
+  
+  .latest-event h3 {
+    font-size: 1.3rem !important;
+  }
+  
+  .events-list {
+    padding: 0 10px !important;
+  }
+  
+  .event-card {
+    margin: 0 !important;
+  }
+  
+  .event-card .event-image {
+    height: 150px !important;
+  }
+  
+  /* Championship/Results page mobile styles */
+  .results-header h1 {
+    font-size: 1.5rem !important;
+    margin-bottom: 0.5rem !important;
+  }
+  
+  .results-header p {
+    font-size: 0.8rem !important;
+    margin-top: 5px !important;
+  }
+  
+  .league-selector {
+    margin-bottom: 15px !important;
+  }
+  
+  .league-selector label {
+    font-size: 0.9rem !important;
+    display: block !important;
+    margin-bottom: 8px !important;
+  }
+  
+  .league-selector select {
+    width: 100% !important;
+    max-width: 280px !important;
+    padding: 6px 10px !important;
+    font-size: 0.8rem !important;
+  }
+  
+  /* Driver results cards mobile */
+  .driver-results-card {
+    padding: 8px !important;
+    margin-bottom: 8px !important;
+  }
+  
+  .driver-results-card h3 {
+    font-size: 0.9rem !important;
+  }
+  
+  .driver-results-card p {
+    font-size: 0.7rem !important;
+    margin: 2px 0 !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .latest-event {
+    padding: 12px 8px !important;
+    border-radius: 10px !important;
+  }
+  
+  .latest-event h3 {
+    font-size: 1.1rem !important;
+  }
+  
+  .latest-event p {
+    font-size: 0.8rem !important;
+  }
+  
+  .events-list {
+    gap: 15px !important;
+  }
+  
+  .event-card .event-image {
+    height: 120px !important;
+  }
+  
+  .create-event-form {
+    padding: 12px !important;
+    margin: 0 8px 15px !important;
+  }
+  
+  /* Championship/Results page mobile styles */
+  .results-header {
+    margin-bottom: 20px !important;
+  }
+  
+  .results-header h1 {
+    font-size: 1.5rem !important;
+    margin-bottom: 0.5rem !important;
+  }
+  
+  .results-header p {
+    font-size: 0.8rem !important;
+    margin-top: 8px !important;
+  }
+  
+  .league-selector {
+    margin-bottom: 20px !important;
+  }
+  
+  .league-selector label {
+    font-size: 0.9rem !important;
+  }
+  
+  .league-selector select {
+    padding: 6px 10px !important;
+    font-size: 0.8rem !important;
+  }
+}
+
+/* Admin page responsive styles */
+@media (max-width: 1024px) {
+  .admin-tabs {
+    flex-wrap: wrap !important;
+    gap: 8px !important;
+  }
+  
+  .admin-tab {
+    flex: 1 1 180px !important;
+    min-width: 140px !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .admin-container,
+  [style*="padding"] .admin-section {
+    padding: 8px !important;
+  }
+  
+  .admin-section {
+    padding: 12px !important;
+    margin: 0 5px !important;
+  }
+  
+  .admin-section h2 {
+    font-size: 1.2rem !important;
+    margin-bottom: 15px !important;
+  }
+  
+  .stats-grid {
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)) !important;
+    gap: 8px !important;
+  }
+  
+  .stats-card {
+    padding: 10px !important;
+  }
+  
+  .stats-card h3 {
+    font-size: 1.5rem !important;
+  }
+  
+  .stats-card p {
+    font-size: 0.75rem !important;
+  }
+  
+  .admin-tabs {
+    flex-direction: column !important;
+    gap: 6px !important;
+  }
+  
+  .admin-tab {
+    width: 100% !important;
+    text-align: center !important;
+    padding: 6px 10px !important;
+    font-size: 0.8rem !important;
+  }
+  
+  /* Force table responsiveness */
+  .table-responsive {
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+  }
+  
+  .users-table,
+  table {
+    min-width: 100% !important;
+    width: 100% !important;
+    font-size: 0.7rem !important;
+    display: table !important;
+  }
+  
+  .users-table th,
+  .users-table td,
+  table th,
+  table td {
+    padding: 4px 6px !important;
+    font-size: 0.7rem !important;
+    white-space: nowrap !important;
+  }
+  
+  .users-table th {
+    font-size: 0.65rem !important;
+    padding: 6px 4px !important;
+  }
+  
+  .form-row {
+    flex-direction: column !important;
+    gap: 10px !important;
+  }
+  
+  .form-group {
+    width: 100% !important;
+  }
+  
+  .form-group label {
+    font-size: 0.8rem !important;
+    margin-bottom: 4px !important;
+  }
+  
+  .form-group input,
+  .form-group select {
+    padding: 6px 8px !important;
+    font-size: 0.75rem !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .admin-section {
+    padding: 8px !important;
+    margin: 0 2px 15px 2px !important;
+  }
+  
+  .admin-section h2 {
+    font-size: 1.1rem !important;
+  }
+  
+  .stats-grid {
+    grid-template-columns: 1fr !important;
+    gap: 6px !important;
+  }
+  
+  .stats-card {
+    padding: 8px !important;
+  }
+  
+  .stats-card h3 {
+    font-size: 1.3rem !important;
+  }
+  
+  .admin-tab {
+    padding: 5px 8px !important;
+    font-size: 0.75rem !important;
+  }
+  
+  /* Even more aggressive mobile table styles */
+  .users-table th,
+  .users-table td,
+  table th,
+  table td {
+    padding: 2px 4px !important;
+    font-size: 0.65rem !important;
+  }
+  
+  .users-table select {
+    font-size: 0.65rem !important;
+    padding: 2px 4px !important;
+  }
+  
+  .btn-small,
+  button {
+    padding: 2px 4px !important;
+    font-size: 0.65rem !important;
+    margin: 1px !important;
+  }
+  
+  .form-group input,
+  .form-group select {
+    padding: 4px 6px !important;
+    font-size: 0.7rem !important;
+  }
+}
+
+/* Driver cards and championship results mobile styles */
+@media (max-width: 768px) {
+  .driver-card {
+    padding: 12px !important;
+    margin-bottom: 12px !important;
+  }
+  
+  .driver-card h3 {
+    font-size: 1.1rem !important;
+  }
+  
+  .driver-card p {
+    font-size: 0.8rem !important;
+    margin: 4px 0 !important;
+  }
+  
+  .points-display {
+    font-size: 1.2rem !important;
+  }
+  
+  .position-number {
+    font-size: 1.5rem !important;
+    padding: 8px 12px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .driver-card {
+    padding: 8px !important;
+    margin-bottom: 8px !important;
+  }
+  
+  .driver-card h3 {
+    font-size: 1rem !important;
+    margin-bottom: 4px !important;
+  }
+  
+  .driver-card p {
+    font-size: 0.75rem !important;
+    margin: 2px 0 !important;
+  }
+  
+  .points-display {
+    font-size: 1rem !important;
+  }
+  
+  .position-number {
+    font-size: 1.2rem !important;
+    padding: 6px 10px !important;
+  }
+  
+  .driver-avatar {
+    width: 35px !important;
+    height: 35px !important;
+  }
+}
+
+/* Main page padding adjustments for mobile */
+@media (max-width: 768px) {
+  .min-h-screen main,
+  main {
+    padding: 20px !important;
+  }
+  
+  .min-h-screen {
+    padding-top: 100px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .min-h-screen main,
+  main {
+    padding: 15px !important;
+  }
+  
+  .min-h-screen {
+    padding-top: 90px !important;
+  }
+}
+
+/* User dropdown positioning fix for mobile */
+.user-dropdown {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  margin-top: 8px;
+  background: #1a1a1a;
+  border: 1px solid #333;
+  border-radius: 8px;
+  min-width: 200px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+}
+
+/* Enhanced Mobile Grid System for Achievement Cards */
+@media (max-width: 768px) {
+  .user-dropdown {
+    right: -30px !important;
+    min-width: 180px !important;
+  }
+  
+  /* Grid system improvements */
+  .grid {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    gap: 25px !important;
+    padding: 0 20px !important;
+  }
+  
+  /* Better achievement card mobile design */
+  [style*="display: grid"] {
+    grid-template-columns: 1fr !important;
+    gap: 25px !important;
+  }
+  
+  /* Card hover effects on mobile */
+  .achievement-card:hover {
+    transform: translateY(-8px) !important;
+    box-shadow: 0 15px 35px rgba(62, 168, 34, 0.4) !important;
+  }
+  
+  /* Hero section improvements */
+  .hero {
+    padding: 80px 0 60px !important;
+    text-align: center !important;
+  }
+  
+  .hero-content {
+    max-width: 90% !important;
+    margin: 0 auto !important;
+  }
+  
+  /* Logo scaling on mobile */
+  .hero-content img {
+    max-width: 280px !important;
+    height: auto !important;
+    margin-bottom: 25px !important;
+  }
+  
+  /* Enhanced mobile typography */
+  h1, h2, h3, h4, h5, h6 {
+    line-height: 1.3 !important;
+  }
+  
+  p {
+    line-height: 1.6 !important;
+    margin-bottom: 15px !important;
+  }
+  
+  /* Better button spacing */
+  .btn-primary {
+    margin: 10px 5px !important;
+    display: inline-block !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .grid {
+    gap: 20px !important;
+    padding: 0 16px !important;
+  }
+  
+  .hero {
+    padding: 70px 0 50px !important;
+  }
+  
+  .hero-content img {
+    max-width: 250px !important;
+    margin-bottom: 20px !important;
+  }
+  
+  .achievement-card:hover {
+    transform: translateY(-6px) !important;
+    box-shadow: 0 12px 30px rgba(62, 168, 34, 0.35) !important;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    line-height: 1.25 !important;
+  }
+  
+  p {
+    margin-bottom: 12px !important;
+  }
+  
+  .btn-primary {
+    margin: 8px 3px !important;
+  }
+}
+
+/* Mobile-specific improvements for better PC-like experience */
+@media (max-width: 768px) {
+/* Better mobile navigation menu */
+  .nav-menu {
+    background-color: rgba(26, 26, 26, 0.98) !important;
+    backdrop-filter: blur(10px) !important;
+    border-radius: 10px !important;
+    margin-top: 10px !important;
+    padding: 20px !important;
+  }
+  
+  .nav-menu.open {
+    animation: slideDown 0.3s ease-out !important;
+  }
+  
+  @keyframes slideDown {
+    from {
+      opacity: 0;
+      transform: translateY(-20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .nav-menu {
+    margin-top: 8px !important;
+    padding: 18px !important;
+  }
+  
+  .user-dropdown {
+    right: -50px !important;
+    min-width: 160px !important;
+  }
 }
