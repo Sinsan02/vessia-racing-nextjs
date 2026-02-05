@@ -10,6 +10,7 @@ export default function Home() {
   const [achievements, setAchievements] = useState<any[]>([]);
   const [achievementsLoading, setAchievementsLoading] = useState(true);
   const [isMobile, setIsMobile] = useState(typeof window !== 'undefined' ? window.innerWidth <= 768 : false);
+  const [user, setUser] = useState<any>(null);
   const hasFetchedData = useRef(false);
 
   
@@ -46,12 +47,31 @@ export default function Home() {
       }, 100);
     }
 
-    // Fetch latest event and achievements
+    // Fetch user status, latest event and achievements
+    fetchUser();
     fetchLatestEvent();
     fetchAchievements();
     
     return () => window.removeEventListener('resize', checkScreenSize);
   }, []);
+
+  const fetchUser = async () => {
+    try {
+      const response = await fetch('/api/auth/me', {
+        credentials: 'include'
+      });
+      const data = await response.json();
+      console.log('User data from API:', data);
+      if (data && data.id) {
+        setUser(data);
+        console.log('User is logged in:', data);
+      } else {
+        console.log('No user logged in');
+      }
+    } catch (error) {
+      console.error('Failed to fetch user:', error);
+    }
+  };
 
   const fetchLatestEvent = async () => {
     try {
@@ -124,7 +144,7 @@ export default function Home() {
           <p className="hero-description">Competing in Scandinavian leagues and special events with dedication, precision and teamwork</p>
           <div className="hero-buttons">
             <Link href="#achievements" className="btn-primary racing-pulse">Our Accomplishments</Link>
-            <Link href="/register" className="btn-secondary">Join Team</Link>
+            {!user && <Link href="/register" className="btn-secondary">Sign Up</Link>}
           </div>
         </div>
       </section>

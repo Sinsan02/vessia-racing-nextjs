@@ -47,7 +47,7 @@ export default function Admin() {
   const [pointsToAdd, setPointsToAdd] = useState('25');
   const [racesToAdd, setRacesToAdd] = useState('1');
 
-  // Achievement form states
+  // Accomplishment form states
   const [achievementTitle, setAchievementTitle] = useState('');
   const [achievementDescription, setAchievementDescription] = useState('');
   const [achievementRaceName, setAchievementRaceName] = useState('');
@@ -56,6 +56,7 @@ export default function Admin() {
   const [achievementPosition, setAchievementPosition] = useState('1');
   const [achievementCategory, setAchievementCategory] = useState('Race Victory');
   const [achievementIcon, setAchievementIcon] = useState('🏆');
+  const [editingAchievementId, setEditingAchievementId] = useState<number | null>(null);
 
   useEffect(() => {
     fetchUsers();
@@ -216,7 +217,7 @@ export default function Admin() {
 
       const data = await response.json();
       if (data.success) {
-        alert('Achievement created successfully!');
+        alert('Accomplishment created successfully!');
         setAchievementTitle('');
         setAchievementDescription('');
         setAchievementRaceName('');
@@ -227,11 +228,57 @@ export default function Admin() {
         setAchievementIcon('🏆');
         fetchAchievements();
       } else {
-        alert('Error creating achievement: ' + data.error);
+        alert('Error creating accomplishment: ' + data.error);
       }
     } catch (error) {
-      console.error('Error creating achievement:', error);
-      alert('Error creating achievement');
+      console.error('Error creating accomplishment:', error);
+      alert('Error creating accomplishment');
+    }
+  };
+
+  const updateAchievement = async () => {
+    if (!editingAchievementId || !achievementTitle || !achievementRaceName || !achievementDate) {
+      alert('Please fill in title, race name, and date');
+      return;
+    }
+
+    try {
+      const response = await fetch(`/api/achievements/${editingAchievementId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          title: achievementTitle,
+          description: achievementDescription,
+          race_name: achievementRaceName,
+          track_name: achievementTrackName,
+          achievement_date: achievementDate,
+          position: parseInt(achievementPosition),
+          category: achievementCategory,
+          icon: achievementIcon
+        })
+      });
+
+      const data = await response.json();
+      if (data.success) {
+        alert('Accomplishment updated successfully!');
+        setAchievementTitle('');
+        setAchievementDescription('');
+        setAchievementRaceName('');
+        setAchievementTrackName('');
+        setAchievementDate('');
+        setAchievementPosition('1');
+        setAchievementCategory('Race Victory');
+        setAchievementIcon('🏆');
+        setEditingAchievementId(null);
+        fetchAchievements();
+      } else {
+        alert('Error updating accomplishment: ' + data.error);
+      }
+    } catch (error) {
+      console.error('Error updating accomplishment:', error);
+      alert('Error updating accomplishment');
     }
   };
 
@@ -247,15 +294,41 @@ export default function Admin() {
 
       const data = await response.json();
       if (data.success) {
-        alert('Achievement deleted successfully!');
+        alert('Accomplishment deleted successfully!');
         fetchAchievements();
       } else {
-        alert('Error deleting achievement: ' + data.error);
+        alert('Error deleting accomplishment: ' + data.error);
       }
     } catch (error) {
-      console.error('Error deleting achievement:', error);
-      alert('Error deleting achievement');
+      console.error('Error deleting accomplishment:', error);
+      alert('Error deleting accomplishment');
     }
+  };
+
+  const startEditingAchievement = (achievement: any) => {
+    setEditingAchievementId(achievement.id);
+    setAchievementTitle(achievement.title);
+    setAchievementDescription(achievement.description || '');
+    setAchievementRaceName(achievement.race_name);
+    setAchievementTrackName(achievement.track_name || '');
+    setAchievementDate(achievement.achievement_date);
+    setAchievementPosition(achievement.position.toString());
+    setAchievementCategory(achievement.category);
+    setAchievementIcon(achievement.icon);
+    // Scroll to form
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const cancelEditing = () => {
+    setEditingAchievementId(null);
+    setAchievementTitle('');
+    setAchievementDescription('');
+    setAchievementRaceName('');
+    setAchievementTrackName('');
+    setAchievementDate('');
+    setAchievementPosition('1');
+    setAchievementCategory('Race Victory');
+    setAchievementIcon('🏆');
   };
 
   const toggleHomepageStatus = async (id: number, currentStatus: boolean) => {
@@ -270,7 +343,7 @@ export default function Admin() {
 
       const data = await response.json();
       if (data.success) {
-        alert(`Achievement ${!currentStatus ? 'added to' : 'removed from'} homepage successfully!`);
+        alert(`Accomplishment ${!currentStatus ? 'added to' : 'removed from'} homepage successfully!`);
         fetchAchievements();
       } else {
         alert('Error: ' + data.error);
@@ -694,7 +767,7 @@ export default function Admin() {
                 gap: '8px'
               }}
             >
-              🏆 Achievement Management
+              🏆 Accomplishment Management
             </button>
           </div>
 
@@ -1239,10 +1312,10 @@ export default function Admin() {
             </div>
           )}
 
-          {/* Achievement Management Tab */}
+          {/* Accomplishment Management Tab */}
           {activeTab === 'achievement-management' && (
             <div className="tab-content">
-              <h2 style={{color: '#3EA822', textAlign: 'center', marginBottom: '20px'}}>🏆 Achievement Management</h2>
+              <h2 style={{color: '#3EA822', textAlign: 'center', marginBottom: '20px'}}>🏆 Accomplishment Management</h2>
               
               {/* Info Box */}
               <div style={{
@@ -1254,11 +1327,11 @@ export default function Admin() {
                 textAlign: 'center'
               }}>
                 <p style={{color: '#3EA822', margin: '0', fontSize: '0.9rem', fontWeight: 'bold'}}>
-                  🏠 Homepage Control: Use the toggle buttons to select up to 3 achievements for homepage display
+                  🏠 Homepage Control: Use the toggle buttons to select up to 3 accomplishments for homepage display
                 </p>
               </div>
               
-              {/* Create Achievement Form */}
+              {/* Create/Edit Accomplishment Form */}
               <div className="form-container" style={{
                 backgroundColor: '#1a1a1a',
                 padding: '30px',
@@ -1267,11 +1340,11 @@ export default function Admin() {
                 maxWidth: '800px',
                 margin: '0 auto 30px'
               }}>
-                <h3 style={{color: '#3EA822', marginBottom: '20px'}}>Add New Achievement</h3>
+                <h3 style={{color: '#3EA822', marginBottom: '20px'}}>{editingAchievementId ? 'Edit Accomplishment' : 'Add New Accomplishment'}</h3>
                 
                 <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px', marginBottom: '20px'}}>
                   <div className="form-group">
-                    <label style={{color: '#ccc', marginBottom: '5px', display: 'block'}}>Achievement Title *</label>
+                    <label style={{color: '#ccc', marginBottom: '5px', display: 'block'}}>Accomplishment Title *</label>
                     <input
                       type="text"
                       value={achievementTitle}
@@ -1327,7 +1400,7 @@ export default function Admin() {
                   </div>
                   
                   <div className="form-group">
-                    <label style={{color: '#ccc', marginBottom: '5px', display: 'block'}}>Achievement Date *</label>
+                    <label style={{color: '#ccc', marginBottom: '5px', display: 'block'}}>Accomplishment Date *</label>
                     <input
                       type="date"
                       value={achievementDate}
@@ -1421,7 +1494,7 @@ export default function Admin() {
                   <textarea
                     value={achievementDescription}
                     onChange={(e) => setAchievementDescription(e.target.value)}
-                    placeholder="Describe this achievement..."
+                    placeholder="Describe this accomplishment..."
                     rows={3}
                     style={{
                       width: '100%',
@@ -1435,29 +1508,51 @@ export default function Admin() {
                   />
                 </div>
 
-                <button
-                  onClick={createAchievement}
-                  style={{
-                    backgroundColor: '#3EA822',
-                    color: 'white',
-                    padding: '12px 30px',
-                    border: 'none',
-                    borderRadius: '8px',
-                    fontSize: '1rem',
-                    fontWeight: 'bold',
-                    cursor: 'pointer',
-                    width: '100%',
-                    transition: 'background-color 0.3s ease'
-                  }}
-                >
-                  🏆 Create Achievement
-                </button>
+                <div style={{display: 'flex', gap: '10px'}}>
+                  <button
+                    onClick={editingAchievementId ? updateAchievement : createAchievement}
+                    style={{
+                      backgroundColor: '#3EA822',
+                      color: 'white',
+                      padding: '12px 30px',
+                      border: 'none',
+                      borderRadius: '8px',
+                      fontSize: '1rem',
+                      fontWeight: 'bold',
+                      cursor: 'pointer',
+                      flex: editingAchievementId ? '1' : 'auto',
+                      width: editingAchievementId ? 'auto' : '100%',
+                      transition: 'background-color 0.3s ease'
+                    }}
+                  >
+                    {editingAchievementId ? '✏️ Update Accomplishment' : '🏆 Create Accomplishment'}
+                  </button>
+                  {editingAchievementId && (
+                    <button
+                      onClick={cancelEditing}
+                      style={{
+                        backgroundColor: '#666',
+                        color: 'white',
+                        padding: '12px 30px',
+                        border: 'none',
+                        borderRadius: '8px',
+                        fontSize: '1rem',
+                        fontWeight: 'bold',
+                        cursor: 'pointer',
+                        flex: '1',
+                        transition: 'background-color 0.3s ease'
+                      }}
+                    >
+                      ❌ Cancel
+                    </button>
+                  )}
+                </div>
               </div>
 
-              {/* Achievements List */}
+              {/* Accomplishments List */}
               <div className="achievements-list">
                 <h3 style={{color: '#3EA822', textAlign: 'center', marginBottom: '20px'}}>
-                  Current Achievements ({achievements.length})
+                  Current Accomplishments ({achievements.length})
                 </h3>
                 
                 {achievements.length === 0 ? (
@@ -1469,8 +1564,8 @@ export default function Admin() {
                     borderRadius: '10px'
                   }}>
                     <div style={{fontSize: '4rem', marginBottom: '20px'}}>🏆</div>
-                    <h3 style={{color: '#ccc', marginBottom: '10px'}}>No achievements yet</h3>
-                    <p>Create your first achievement using the form above!</p>
+                    <h3 style={{color: '#ccc', marginBottom: '10px'}}>No accomplishments yet</h3>
+                    <p>Create your first accomplishment using the form above!</p>
                   </div>
                 ) : (
                   <div style={{
@@ -1486,6 +1581,27 @@ export default function Admin() {
                         border: '2px solid #3EA822',
                         position: 'relative'
                       }}>
+                        {/* Edit Button */}
+                        <button
+                          onClick={() => startEditingAchievement(achievement)}
+                          style={{
+                            position: 'absolute',
+                            top: '10px',
+                            right: '50px',
+                            backgroundColor: '#17a2b8',
+                            color: 'white',
+                            border: 'none',
+                            borderRadius: '50%',
+                            width: '30px',
+                            height: '30px',
+                            cursor: 'pointer',
+                            fontSize: '14px'
+                          }}
+                          title="Edit Accomplishment"
+                        >
+                          ✏️
+                        </button>
+
                         {/* Delete Button */}
                         <button
                           onClick={() => deleteAchievement(achievement.id, achievement.title)}
@@ -1502,7 +1618,7 @@ export default function Admin() {
                             cursor: 'pointer',
                             fontSize: '14px'
                           }}
-                          title="Delete Achievement"
+                          title="Delete Accomplishment"
                         >
                           ×
                         </button>
@@ -1513,7 +1629,7 @@ export default function Admin() {
                           style={{
                             position: 'absolute',
                             top: '10px',
-                            right: '50px',
+                            right: '90px',
                             backgroundColor: achievement.show_on_homepage ? '#3EA822' : '#666',
                             color: 'white',
                             border: 'none',
