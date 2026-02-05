@@ -42,7 +42,7 @@ export default function Achievements() {
         flexDirection: 'column'
       }}>
         <div style={{fontSize: '3rem', marginBottom: '20px'}}>🏆</div>
-        <p style={{color: '#888'}}>Loading achievements...</p>
+        <p style={{color: '#888'}}>Loading accomplishments...</p>
       </div>
     );
   }
@@ -81,7 +81,7 @@ export default function Achievements() {
           marginBottom: '15px',
           fontWeight: 'bold'
         }}>
-          🏆 Our Achievements
+          🏆 Our Accomplishments
         </h1>
         <p style={{
           color: '#888',
@@ -106,7 +106,7 @@ export default function Achievements() {
           boxSizing: 'border-box'
         }}>
           <div style={{fontSize: '5rem', marginBottom: '25px'}}>🏆</div>
-          <h2 style={{color: '#ccc', marginBottom: '15px', fontSize: '1.8rem'}}>No achievements yet</h2>
+          <h2 style={{color: '#ccc', marginBottom: '15px', fontSize: '1.8rem'}}>No accomplishments yet</h2>
           <p style={{fontSize: '1.1rem', marginBottom: '30px'}}>Our victories will be showcased here as we compete and win!</p>
           <Link
             href="/"

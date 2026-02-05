@@ -120,10 +120,10 @@ export default function Home() {
             style={{maxWidth: '400px', height: 'auto', marginBottom: '20px'}}
             priority
           />
-          <p className="hero-subtitle">Professional Sim Racing Team</p>
-          <p className="hero-description">Competing at the highest level in sim racing with dedication, precision and teamwork</p>
+          <p className="hero-subtitle">Norwegian sim racing team</p>
+          <p className="hero-description">Competing in Scandinavian leagues and special events with dedication, precision and teamwork</p>
           <div className="hero-buttons">
-            <Link href="#achievements" className="btn-primary racing-pulse">Our Achievements</Link>
+            <Link href="#achievements" className="btn-primary racing-pulse">Our Accomplishments</Link>
             <Link href="/register" className="btn-secondary">Join Team</Link>
           </div>
         </div>
@@ -144,7 +144,7 @@ export default function Home() {
         padding: isMobile ? '20px 10px' : undefined
       }}>
         <div className="container">
-          <h2 className="section-title">🏆 Our Achievements</h2>
+          <h2 className="section-title">🏆 Our Accomplishments</h2>
           <p className="section-subtitle">Celebrating our victories on the world's most challenging circuits</p>
           
           {achievementsLoading ? (
@@ -312,7 +312,7 @@ export default function Home() {
               padding: '60px 20px'
             }}>
               <div style={{fontSize: '4rem', marginBottom: '20px'}}>🏆</div>
-              <h3 style={{color: '#ccc', marginBottom: '10px'}}>No achievements yet</h3>
+              <h3 style={{color: '#ccc', marginBottom: '10px'}}>No accomplishments yet</h3>
               <p>Our victories will be showcased here as we compete and win!</p>
             </div>
           )}
@@ -338,7 +338,7 @@ export default function Home() {
                   fontWeight: 'bold'
                 }}
               >
-                View All Achievements
+                View All Accomplishments
               </Link>
             </div>
           )}
