@@ -13,19 +13,20 @@ export async function PUT(
     const { experience } = await request.json();
     const { userId } = await params;
 
-    // Validate experience level
-    const validExperiences = ['beginner', 'intermediate', 'advanced', 'expert'];
-    if (!validExperiences.includes(experience)) {
+    // Validate experience level (case insensitive)
+    const experienceLower = experience.toLowerCase();
+    const validExperiences = ['beginner', 'intermediate', 'advanced', 'professional', 'expert'];
+    if (!validExperiences.includes(experienceLower)) {
       return NextResponse.json(
         { success: false, error: 'Invalid experience level' },
         { status: 400 }
       );
     }
 
-    // Update user experience in database
+    // Update user experience in database (convert to lowercase)
     const { error } = await supabaseAdmin
       .from('users')
-      .update({ experience_level: experience })
+      .update({ experience_level: experienceLower })
       .eq('id', userId);
 
     if (error) {
