@@ -49,7 +49,7 @@ export default function Admin() {
 
   // Accomplishment form states
   const [achievementTitle, setAchievementTitle] = useState('');
-  const [achievementDescription, setAchievementDescription] = useState('');
+  const [achievementDrivers, setAchievementDrivers] = useState<string[]>(['']);
   const [achievementRaceName, setAchievementRaceName] = useState('');
   const [achievementTrackName, setAchievementTrackName] = useState('');
   const [achievementDate, setAchievementDate] = useState('');
@@ -205,7 +205,7 @@ export default function Admin() {
         },
         body: JSON.stringify({
           title: achievementTitle,
-          description: achievementDescription,
+          description: achievementDrivers.filter(d => d.trim()).join(', '),
           race_name: achievementRaceName,
           track_name: achievementTrackName,
           achievement_date: achievementDate,
@@ -219,7 +219,7 @@ export default function Admin() {
       if (data.success) {
         alert('Accomplishment created successfully!');
         setAchievementTitle('');
-        setAchievementDescription('');
+        setAchievementDrivers(['']);
         setAchievementRaceName('');
         setAchievementTrackName('');
         setAchievementDate('');
@@ -250,7 +250,7 @@ export default function Admin() {
         },
         body: JSON.stringify({
           title: achievementTitle,
-          description: achievementDescription,
+          description: achievementDrivers.filter(d => d.trim()).join(', '),
           race_name: achievementRaceName,
           track_name: achievementTrackName,
           achievement_date: achievementDate,
@@ -264,7 +264,7 @@ export default function Admin() {
       if (data.success) {
         alert('Accomplishment updated successfully!');
         setAchievementTitle('');
-        setAchievementDescription('');
+        setAchievementDrivers(['']);
         setAchievementRaceName('');
         setAchievementTrackName('');
         setAchievementDate('');
@@ -308,7 +308,8 @@ export default function Admin() {
   const startEditingAchievement = (achievement: any) => {
     setEditingAchievementId(achievement.id);
     setAchievementTitle(achievement.title);
-    setAchievementDescription(achievement.description || '');
+    const drivers = achievement.description ? achievement.description.split(', ').filter((d: string) => d.trim()) : [''];
+    setAchievementDrivers(drivers.length > 0 ? drivers : ['']);
     setAchievementRaceName(achievement.race_name);
     setAchievementTrackName(achievement.track_name || '');
     setAchievementDate(achievement.achievement_date);
@@ -322,13 +323,31 @@ export default function Admin() {
   const cancelEditing = () => {
     setEditingAchievementId(null);
     setAchievementTitle('');
-    setAchievementDescription('');
+    setAchievementDrivers(['']);
     setAchievementRaceName('');
     setAchievementTrackName('');
     setAchievementDate('');
     setAchievementPosition('1');
     setAchievementCategory('Race Victory');
     setAchievementIcon('🏆');
+  };
+
+  // Driver management functions
+  const addDriverField = () => {
+    setAchievementDrivers([...achievementDrivers, '']);
+  };
+
+  const removeDriverField = (index: number) => {
+    if (achievementDrivers.length > 1) {
+      const newDrivers = achievementDrivers.filter((_, i) => i !== index);
+      setAchievementDrivers(newDrivers);
+    }
+  };
+
+  const updateDriverField = (index: number, value: string) => {
+    const newDrivers = [...achievementDrivers];
+    newDrivers[index] = value;
+    setAchievementDrivers(newDrivers);
   };
 
   const toggleHomepageStatus = async (id: number, currentStatus: boolean) => {
@@ -1490,22 +1509,59 @@ export default function Admin() {
                 </div>
 
                 <div className="form-group" style={{marginBottom: '20px'}}>
-                  <label style={{color: '#ccc', marginBottom: '5px', display: 'block'}}>Description</label>
-                  <textarea
-                    value={achievementDescription}
-                    onChange={(e) => setAchievementDescription(e.target.value)}
-                    placeholder="Describe this accomplishment..."
-                    rows={3}
+                  <label style={{color: '#ccc', marginBottom: '10px', display: 'block', fontWeight: 'bold'}}>Drivers</label>
+                  {achievementDrivers.map((driver, index) => (
+                    <div key={index} style={{display: 'flex', gap: '10px', marginBottom: '10px', alignItems: 'center'}}>
+                      <input
+                        type="text"
+                        value={driver}
+                        onChange={(e) => updateDriverField(index, e.target.value)}
+                        placeholder="Driver name"
+                        style={{
+                          flex: '1',
+                          padding: '12px',
+                          borderRadius: '8px',
+                          border: '1px solid #555',
+                          backgroundColor: '#2a2a2a',
+                          color: '#fff'
+                        }}
+                      />
+                      <button
+                        type="button"
+                        onClick={() => removeDriverField(index)}
+                        disabled={achievementDrivers.length === 1}
+                        style={{
+                          backgroundColor: achievementDrivers.length === 1 ? '#555' : '#dc3545',
+                          color: 'white',
+                          padding: '12px 20px',
+                          border: 'none',
+                          borderRadius: '8px',
+                          cursor: achievementDrivers.length === 1 ? 'not-allowed' : 'pointer',
+                          fontSize: '0.9rem',
+                          fontWeight: 'bold'
+                        }}
+                      >
+                        Remove
+                      </button>
+                    </div>
+                  ))}
+                  <button
+                    type="button"
+                    onClick={addDriverField}
                     style={{
-                      width: '100%',
-                      padding: '12px',
+                      backgroundColor: '#17a2b8',
+                      color: 'white',
+                      padding: '10px 20px',
+                      border: 'none',
                       borderRadius: '8px',
-                      border: '1px solid #555',
-                      backgroundColor: '#2a2a2a',
-                      color: '#fff',
-                      resize: 'vertical'
+                      cursor: 'pointer',
+                      fontSize: '0.9rem',
+                      fontWeight: 'bold',
+                      marginTop: '5px'
                     }}
-                  />
+                  >
+                    + Add Driver
+                  </button>
                 </div>
 
                 <div style={{display: 'flex', gap: '10px'}}>
@@ -1709,15 +1765,20 @@ export default function Admin() {
                         </p>
 
                         {achievement.description && (
-                          <p style={{
+                          <div style={{
                             color: '#999',
                             fontSize: '0.85rem',
                             textAlign: 'center',
-                            lineHeight: '1.4',
-                            marginTop: '10px'
+                            lineHeight: '1.6',
+                            marginTop: '15px',
+                            marginBottom: '35px'
                           }}>
-                            {achievement.description}
-                          </p>
+                            {achievement.description.split(', ').filter((d: string) => d.trim()).map((driver: string, idx: number) => (
+                              <div key={idx} style={{marginBottom: '5px'}}>
+                                🏎️ {driver}
+                              </div>
+                            ))}
+                          </div>
                         )}
 
                         {/* Category Badge */}

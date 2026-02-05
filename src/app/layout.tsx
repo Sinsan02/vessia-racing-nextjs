@@ -25,6 +25,10 @@ const rajdhani = Rajdhani({
 export const metadata: Metadata = {
   title: "Vessia Racing",
   description: "Professional racing team and league management",
+  icons: {
+    icon: '/Vessia_Logo.png',
+    apple: '/Vessia_Logo.png',
+  },
 };
 
 export const viewport = {
@@ -44,6 +48,8 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
+        <link rel="icon" href="/Vessia_Logo.png" type="image/png" />
+        <link rel="apple-touch-icon" href="/Vessia_Logo.png" />
         <link rel="preload" as="image" href="/images/decorative/Screenshot_2025-11-23_180245.png" />
         <link rel="preload" as="image" href="/images/decorative/Screenshot_2025-10-11_170801.png" />
         <link rel="preload" as="image" href="/images/decorative/Screenshot_2025-11-15_150823.png" />

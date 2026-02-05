@@ -279,15 +279,19 @@ export default function Achievements() {
                 </p>
 
                 {achievement.description && (
-                  <p style={{
+                  <div style={{
                     color: '#999',
                     fontSize: '0.9rem',
-                    lineHeight: '1.5',
+                    lineHeight: '1.6',
                     marginBottom: '20px',
-                    fontStyle: 'italic'
+                    textAlign: 'center'
                   }}>
-                    "{achievement.description}"
-                  </p>
+                    {achievement.description.split(', ').filter((d: string) => d.trim()).map((driver: string, idx: number) => (
+                      <div key={idx} style={{marginBottom: '5px'}}>
+                        🏎️ {driver}
+                      </div>
+                    ))}
+                  </div>
                 )}
 
                 {/* Category Badge */}
