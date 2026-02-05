@@ -4,14 +4,14 @@ import { requireAdmin } from '@/lib/auth';
 
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { userId: string } }
+  { params }: { params: Promise<{ userId: string }> }
 ) {
   try {
     // Verify user is admin
     await requireAdmin(request);
 
     const { experience } = await request.json();
-    const userId = params.userId;
+    const { userId } = await params;
 
     // Validate experience level
     const validExperiences = ['beginner', 'intermediate', 'advanced', 'expert'];
