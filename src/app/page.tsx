@@ -514,8 +514,10 @@ export default function Home() {
             <p style={{color: '#888', marginBottom: '25px', fontSize: '1.1rem', maxWidth: '600px', margin: '0 auto 25px'}}>
               Be part of our racing success story and compete at the highest level in professional sim racing
             </p>
-            <Link
-              href="/register"
+            <a
+              href="https://www.instagram.com/vessiaracing/"
+              target="_blank"
+              rel="noopener noreferrer"
               className="btn-primary"
               style={{
                 backgroundColor: '#3EA822',
@@ -529,8 +531,8 @@ export default function Home() {
                 transition: 'all 0.3s ease'
               }}
             >
-              Join Team Vessia
-            </Link>
+              Contact us here
+            </a>
           </div>
         </div>
       </section>
