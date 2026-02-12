@@ -13,16 +13,9 @@ const getPlaceholderColor = (name: string) => {
 export default function Drivers() {
   const [drivers, setDrivers] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [isMobile, setIsMobile] = useState(typeof window !== 'undefined' ? window.innerWidth <= 768 : false);
 
   useEffect(() => {
-    const checkScreenSize = () => {
-      setIsMobile(window.innerWidth <= 768);
-    };
-    checkScreenSize();
-    window.addEventListener('resize', checkScreenSize);
     fetchDrivers();
-    return () => window.removeEventListener('resize', checkScreenSize);
   }, []);
 
   const fetchDrivers = async () => {
@@ -42,9 +35,7 @@ export default function Drivers() {
   return (
     <div className="min-h-screen" style={{
       paddingTop: '100px',
-      backgroundImage: isMobile
-        ? 'linear-gradient(180deg, #0d1f0d 0%, #1a2e1a 100%)'
-        : `linear-gradient(rgba(10,10,10,0.9), rgba(10,10,10,0.9)), url('/images/decorative/Screenshot_2026-01-23_201045.png')`,
+      backgroundImage: `linear-gradient(rgba(10,10,10,0.9), rgba(10,10,10,0.9)), url('/images/decorative/Screenshot_2026-01-23_201045.png')`,
       backgroundColor: '#0a0a0a',
       backgroundSize: 'cover',
       backgroundPosition: 'center',
@@ -88,10 +79,10 @@ export default function Drivers() {
                   key={driver.id} 
                   className="driver-card"
                   style={{
-                    backgroundColor: isMobile ? 'transparent' : '#1a1a1a',
+                    backgroundColor: '#1a1a1a',
                     padding: '20px',
                     borderRadius: '10px',
-                    border: isMobile ? '1px solid rgba(62, 168, 34, 0.3)' : '1px solid #333',
+                    border: '1px solid #333',
                     textAlign: 'center'
                   }}
                 >
