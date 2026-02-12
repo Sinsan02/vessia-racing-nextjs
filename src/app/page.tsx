@@ -10,6 +10,7 @@ export default function Home() {
   const [achievements, setAchievements] = useState<any[]>([]);
   const [achievementsLoading, setAchievementsLoading] = useState(true);
   const [user, setUser] = useState<any>(null);
+  const [isMobile, setIsMobile] = useState(typeof window !== 'undefined' ? window.innerWidth <= 768 : false);
   const hasFetchedData = useRef(false);
 
   
@@ -17,6 +18,14 @@ export default function Home() {
     // Prevent double mounting in StrictMode
     if (hasFetchedData.current) return;
     hasFetchedData.current = true;
+    
+    // Check screen size for mobile background
+    const checkScreenSize = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+    
+    checkScreenSize();
+    window.addEventListener('resize', checkScreenSize);
     
     // Check for welcome message from URL params
     const params = new URLSearchParams(window.location.search);
@@ -42,6 +51,8 @@ export default function Home() {
     fetchUser();
     fetchLatestEvent();
     fetchAchievements();
+    
+    return () => window.removeEventListener('resize', checkScreenSize);
   }, []);
 
   const fetchUser = async () => {
@@ -91,11 +102,13 @@ export default function Home() {
 
   return (
     <div style={{
-      backgroundImage: `url('/images/decorative/Screenshot_2025-11-23_180245.png')`,
+      backgroundImage: isMobile 
+        ? 'linear-gradient(180deg, #0d1f0d 0%, #1a3e1a 20%, #1a3e1a 90%, #0d1f0d 100%)'
+        : `url('/images/decorative/Screenshot_2025-11-23_180245.png')`,
       backgroundColor: '#0a0a0a',
       backgroundSize: 'cover',
       backgroundPosition: 'center',
-      backgroundAttachment: 'fixed',
+      backgroundAttachment: isMobile ? 'scroll' : 'fixed',
       backgroundRepeat: 'no-repeat',
       minHeight: '100vh',
       width: '100%',
@@ -147,10 +160,13 @@ export default function Home() {
 
       {/* Achievements Section */}
       <section id="achievements" className="section" style={{
-        backgroundImage: `linear-gradient(rgba(10,10,10,0.7), rgba(10,10,10,0.8)), url('/images/decorative/Screenshot_2025-10-11_170801.png')`,
+        backgroundImage: isMobile
+          ? 'none'
+          : `linear-gradient(rgba(10,10,10,0.7), rgba(10,10,10,0.8)), url('/images/decorative/Screenshot_2025-10-11_170801.png')`,
+        backgroundColor: isMobile ? 'transparent' : undefined,
         backgroundSize: 'cover',
         backgroundPosition: 'center',
-        backgroundAttachment: 'fixed',
+        backgroundAttachment: isMobile ? 'scroll' : 'fixed',
         backgroundRepeat: 'no-repeat',
         minHeight: '100vh',
         position: 'relative'
@@ -366,10 +382,13 @@ export default function Home() {
 
       {/* Upcoming Event Section */}
       <section id="results" className="section section-dark" style={{
-        backgroundImage: `linear-gradient(rgba(10,10,10,0.7), rgba(10,10,10,0.8)), url('/images/decorative/Screenshot_2025-11-15_150823.png')`,
+        backgroundImage: isMobile
+          ? 'none'
+          : `linear-gradient(rgba(10,10,10,0.7), rgba(10,10,10,0.8)), url('/images/decorative/Screenshot_2025-11-15_150823.png')`,
+        backgroundColor: isMobile ? 'transparent' : undefined,
         backgroundSize: 'cover',
         backgroundPosition: 'center',
-        backgroundAttachment: 'fixed',
+        backgroundAttachment: isMobile ? 'scroll' : 'fixed',
         backgroundRepeat: 'no-repeat',
         minHeight: '100vh',
         position: 'relative'
@@ -499,10 +518,13 @@ export default function Home() {
 
       {/* Join Our Team Section */}
       <section className="section" style={{
-        backgroundImage: `linear-gradient(rgba(10,10,10,0.7), rgba(10,10,10,0.8)), url('/images/decorative/Screenshot_2025-05-18_205724.png')`,
+        backgroundImage: isMobile
+          ? 'none'
+          : `linear-gradient(rgba(10,10,10,0.7), rgba(10,10,10,0.8)), url('/images/decorative/Screenshot_2025-05-18_205724.png')`,
+        backgroundColor: isMobile ? 'transparent' : undefined,
         backgroundSize: 'cover',
         backgroundPosition: 'center',
-        backgroundAttachment: 'fixed',
+        backgroundAttachment: isMobile ? 'scroll' : 'fixed',
         backgroundRepeat: 'no-repeat',
         minHeight: '100vh',
         position: 'relative',
