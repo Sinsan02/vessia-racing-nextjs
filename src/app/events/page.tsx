@@ -614,13 +614,6 @@ export default function Events() {
                       {event.event_time && ` at ${event.event_time.substring(0, 5)}`}
                     </p>
 
-                    {/* Track Name */}
-                    {event.track_name && (
-                      <p style={{color: '#ccc', marginBottom: '8px'}}>
-                        🏁 {event.track_name}
-                      </p>
-                    )}
-
                     {/* Description */}
                     {event.description && (
                       <p style={{color: '#888', fontSize: '0.9rem', marginBottom: '15px'}}>

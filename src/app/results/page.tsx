@@ -178,7 +178,6 @@ export default function Results() {
                         <th style={{color: '#3EA822', padding: '15px', textAlign: 'left'}}>Position</th>
                         <th style={{color: '#3EA822', padding: '15px', textAlign: 'left'}}>Driver</th>
                         <th style={{color: '#3EA822', padding: '15px', textAlign: 'center'}}>Points</th>
-                        <th style={{color: '#3EA822', padding: '15px', textAlign: 'center'}}>Races</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -262,11 +261,6 @@ export default function Results() {
                               fontWeight: 'bold'
                             }}>
                               {driver.points}
-                            </div>
-                          </td>
-                          <td style={{padding: '15px', textAlign: 'center'}}>
-                            <div style={{color: '#888', fontSize: '1rem'}}>
-                              {driver.races_completed}
                             </div>
                           </td>
                         </tr>
