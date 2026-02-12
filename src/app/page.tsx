@@ -130,7 +130,8 @@ export default function Home() {
 
       {/* Hero Section */}
       <section className="hero" style={{
-        background: 'linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.7))'
+        background: isMobile ? 'transparent' : 'linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.7))',
+        paddingBottom: isMobile ? '60px' : undefined
       }}>
         <div className="hero-content">
           <Image 
@@ -169,7 +170,9 @@ export default function Home() {
         backgroundAttachment: isMobile ? 'scroll' : 'fixed',
         backgroundRepeat: 'no-repeat',
         minHeight: '100vh',
-        position: 'relative'
+        position: 'relative',
+        paddingTop: isMobile ? '60px' : undefined,
+        paddingBottom: isMobile ? '60px' : undefined
       }}>
         <div className="container">
           <h2 className="section-title">🏆 Our Accomplishments</h2>
@@ -391,7 +394,9 @@ export default function Home() {
         backgroundAttachment: isMobile ? 'scroll' : 'fixed',
         backgroundRepeat: 'no-repeat',
         minHeight: '100vh',
-        position: 'relative'
+        position: 'relative',
+        paddingTop: isMobile ? '60px' : undefined,
+        paddingBottom: isMobile ? '60px' : undefined
       }}>
         <div className="container">
           <h2 className="section-title">Upcoming Event</h2>
@@ -530,7 +535,9 @@ export default function Home() {
         position: 'relative',
         display: 'flex',
         alignItems: 'center',
-        justifyContent: 'center'
+        justifyContent: 'center',
+        paddingTop: isMobile ? '60px' : undefined,
+        paddingBottom: isMobile ? '60px' : undefined
       }}>
         <div className="container" style={{
           display: 'flex',
