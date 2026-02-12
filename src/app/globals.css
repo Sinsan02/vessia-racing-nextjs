@@ -525,20 +525,20 @@ html {
   }
   
   .achievement-card {
-    width: calc(100% - 70px) !important;
     max-width: 500px !important;
-    margin: 0 50px 0 20px !important;
+    margin: 0 auto !important;
   }
   
   .latest-event {
-    width: calc(100% - 80px) !important;
-    margin: 0 50px 0 30px !important;
+    max-width: 600px !important;
+    margin: 0 auto !important;
   }
   
   .results-table-container {
     width: 100% !important;
-    padding: 0 30px 0 10px !important;
+    padding: 0 20px !important;
     box-sizing: border-box !important;
+    margin: 0 auto !important;
   }
   
   /* Adjust section padding for mobile */
@@ -823,25 +823,29 @@ html {
     padding-right: 12px !important;
   }
   .achievement-card {
-    width: calc(100% - 50px) !important;
-    margin: 0 40px 0 10px !important;
+    max-width: 500px !important;
+    margin: 0 auto !important;
     padding: 18px 20px !important;
   }
   
   .latest-event {
-    width: calc(100% - 60px) !important;
-    margin: 0 40px 0 20px !important;
+    max-width: 600px !important;
+    margin: 0 auto !important;
     padding: 18px 20px !important;
   }
   
   .join-team-box {
-    width: calc(100% - 60px) !important;
-    margin: 0 40px 0 20px !important;
+    max-width: 600px !important;
+    margin: 0 auto !important;
     padding: 45px 25px !important;
   }
   
   .results-table-container {
-    padding: 0 20px 0 10px !important;
+    padding: 0 15px !important;
+  }
+  
+  .container {
+    padding: 0 15px !important;
   }
 
   .container {
@@ -875,25 +879,29 @@ html {
     padding-right: 14px !important;
   }
   .achievement-card {
-    width: calc(100% - 65px) !important;
-    margin: 0 45px 0 20px !important;
+    max-width: 500px !important;
+    margin: 0 auto !important;
     padding: 20px 22px !important;
   }
   
   .latest-event {
-    width: calc(100% - 75px) !important;
-    margin: 0 45px 0 30px !important;
+    max-width: 600px !important;
+    margin: 0 auto !important;
     padding: 20px 22px !important;
   }
   
   .join-team-box {
-    width: calc(100% - 75px) !important;
-    margin: 0 45px 0 30px !important;
+    max-width: 600px !important;
+    margin: 0 auto !important;
     padding: 48px 26px !important;
   }
   
   .results-table-container {
-    padding: 0 25px 0 10px !important;
+    padding: 0 18px !important;
+  }
+  
+  .container {
+    padding: 0 18px !important;
   }
 }
 
@@ -923,25 +931,29 @@ html {
     padding-right: 15px !important;
   }
   .achievement-card {
-    width: calc(100% - 70px) !important;
-    margin: 0 50px 0 20px !important;
+    max-width: 500px !important;
+    margin: 0 auto !important;
     padding: 20px 25px !important;
   }
   
   .latest-event {
-    width: calc(100% - 80px) !important;
-    margin: 0 50px 0 30px !important;
+    max-width: 600px !important;
+    margin: 0 auto !important;
     padding: 20px 25px !important;
   }
   
   .join-team-box {
-    width: calc(100% - 80px) !important;
-    margin: 0 50px 0 30px !important;
+    max-width: 600px !important;
+    margin: 0 auto !important;
     padding: 50px 30px !important;
   }
   
   .results-table-container {
-    padding: 0 30px 0 10px !important;
+    padding: 0 20px !important;
+  }
+  
+  .container {
+    padding: 0 20px !important;
   }
 }
 
@@ -967,25 +979,29 @@ html {
     padding-right: 18px !important;
   }
   .achievement-card {
-    width: calc(100% - 80px) !important;
-    margin: 0 55px 0 25px !important;
+    max-width: 500px !important;
+    margin: 0 auto !important;
     padding: 22px 28px !important;
   }
   
   .latest-event {
-    width: calc(100% - 90px) !important;
-    margin: 0 55px 0 35px !important;
+    max-width: 600px !important;
+    margin: 0 auto !important;
     padding: 22px 28px !important;
   }
   
   .join-team-box {
-    width: calc(100% - 90px) !important;
-    margin: 0 55px 0 35px !important;
+    max-width: 600px !important;
+    margin: 0 auto !important;
     padding: 52px 32px !important;
   }
   
   .results-table-container {
-    padding: 0 35px 0 15px !important;
+    padding: 0 25px !important;
+  }
+  
+  .container {
+    padding: 0 25px !important;
   }
 
   .container {
