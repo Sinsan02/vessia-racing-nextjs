@@ -182,7 +182,7 @@ export default function Home() {
               gap: '25px',
               maxWidth: '1000px',
               margin: '0 auto',
-              padding: '0 20px',
+              padding: isMobile ? '0 20px' : '0 20px',
               width: '100%',
               boxSizing: 'border-box',
               justifyItems: 'center'
@@ -198,7 +198,7 @@ export default function Home() {
               gap: '25px',
               maxWidth: '1000px',
               margin: '0 auto',
-              padding: '0 20px',
+              padding: isMobile ? '0 20px' : '0 20px',
               width: '100%',
               boxSizing: 'border-box',
               justifyItems: 'center'
@@ -403,8 +403,8 @@ export default function Home() {
               border: '1px solid #333',
               textAlign: 'center',
               maxWidth: '600px',
-              margin: '0 auto',
-              width: 'calc(100% - 40px)',
+              margin: isMobile ? '0 20px' : '0 auto',
+              width: isMobile ? 'calc(100% - 40px)' : 'calc(100% - 40px)',
               boxSizing: 'border-box'
             }}>
               {latestEvent.image_url && (
@@ -545,9 +545,9 @@ export default function Home() {
             borderRadius: '15px',
             border: '2px solid #3EA822',
             maxWidth: '600px',
-            margin: '0 auto',
+            margin: isMobile ? '0 20px' : '0 auto',
             boxSizing: 'border-box',
-            width: 'calc(100% - 40px)'
+            width: isMobile ? 'calc(100% - 40px)' : 'calc(100% - 40px)'
           }}>
             <div style={{fontSize: '2.5rem', marginBottom: '15px'}}>🚀</div>
             <h3 style={{color: '#3EA822', marginBottom: '10px', fontSize: '2rem', fontWeight: 'bold'}}>

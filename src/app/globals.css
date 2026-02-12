@@ -519,13 +519,24 @@ html {
   .achievements-grid {
     grid-template-columns: 1fr !important;
     gap: 20px !important;
-    padding: 0 15px !important;
+    padding: 0 20px !important;
     justify-items: center !important;
   }
   
   .achievement-card {
-    width: 100% !important;
+    width: calc(100% - 40px) !important;
     max-width: 500px !important;
+    margin: 0 20px !important;
+  }
+  
+  .latest-event {
+    width: calc(100% - 40px) !important;
+    margin: 0 20px !important;
+  }
+  
+  .results-table-container {
+    width: calc(100% - 40px) !important;
+    margin: 0 20px !important;
   }
   
   /* Adjust section padding for mobile */
