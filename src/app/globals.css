@@ -579,15 +579,25 @@ html {
     text-align: center !important;
   }
   
-  /* Section titles */
+  /* Section titles and text */
   .section-title {
     font-size: 2rem !important;
     margin-bottom: 20px !important;
+    padding: 0 20px !important;
+    text-align: center !important;
   }
   
   .section-subtitle {
     font-size: 1rem !important;
     margin-bottom: 30px !important;
+    padding: 0 25px !important;
+    text-align: center !important;
+  }
+  
+  /* Ensure all paragraph text has breathing room */
+  p {
+    padding-left: 15px !important;
+    padding-right: 15px !important;
   }
   
   /* Achievement cards */
@@ -596,11 +606,26 @@ html {
     background-color: #1a1a1a !important;
     border: 2px solid #3EA822 !important;
   }
+
+  /* Achievement card text elements */
+  .achievement-card h3,
+  .achievement-card p,
+  .achievement-card div {
+    padding-left: 10px !important;
+    padding-right: 10px !important;
+  }
   
   /* Latest event card */
   .latest-event {
     padding: 20px 25px !important;
     background-color: #1a1a1a !important;
+  }
+
+  /* Latest event text elements */
+  .latest-event h3,
+  .latest-event p {
+    padding-left: 10px !important;
+    padding-right: 10px !important;
   }
   
   /* Team cards */
@@ -748,6 +773,21 @@ html {
     margin: 100px auto 30px !important;
     padding: 1.5rem !important;
   }
+
+  /* Headers on all pages */
+  .drivers-header,
+  .results-header,
+  div[style*="textAlign: 'center'"][style*="marginBottom"] {
+    padding: 0 20px !important;
+  }
+
+  .drivers-header h1,
+  .results-header h1,
+  .drivers-header p,
+  .results-header p {
+    padding-left: 15px !important;
+    padding-right: 15px !important;
+  }
   
   /* Buttons - keep them large and accessible */
   .btn-primary,
@@ -766,6 +806,11 @@ html {
   
   .section-title {
     font-size: 1.6rem !important;
+    padding: 0 15px !important;
+  }
+  
+  .section-subtitle {
+    padding: 0 20px !important;
   }
   
   .nav-logo img {
@@ -773,6 +818,10 @@ html {
   }
 
   /* Tighter spacing for small screens */
+  p {
+    padding-left: 12px !important;
+    padding-right: 12px !important;
+  }
   .achievement-card {
     width: calc(100% - 50px) !important;
     margin: 0 40px 0 10px !important;
@@ -809,6 +858,11 @@ html {
   
   .section-title {
     font-size: 1.8rem !important;
+    padding: 0 18px !important;
+  }
+  
+  .section-subtitle {
+    padding: 0 22px !important;
   }
   
   .nav-logo img {
@@ -816,6 +870,10 @@ html {
   }
 
   /* Medium spacing for medium screens */
+  p {
+    padding-left: 14px !important;
+    padding-right: 14px !important;
+  }
   .achievement-card {
     width: calc(100% - 65px) !important;
     margin: 0 45px 0 20px !important;
@@ -848,6 +906,11 @@ html {
   
   .section-title {
     font-size: 1.9rem !important;
+    padding: 0 20px !important;
+  }
+  
+  .section-subtitle {
+    padding: 0 25px !important;
   }
   
   .nav-logo img {
@@ -855,6 +918,10 @@ html {
   }
 
   /* More breathing room for larger screens */
+  p {
+    padding-left: 15px !important;
+    padding-right: 15px !important;
+  }
   .achievement-card {
     width: calc(100% - 70px) !important;
     margin: 0 50px 0 20px !important;
@@ -887,9 +954,18 @@ html {
   
   .section-title {
     font-size: 2rem !important;
+    padding: 0 25px !important;
+  }
+  
+  .section-subtitle {
+    padding: 0 30px !important;
   }
 
   /* Maximum spacing for largest mobile screens */
+  p {
+    padding-left: 18px !important;
+    padding-right: 18px !important;
+  }
   .achievement-card {
     width: calc(100% - 80px) !important;
     margin: 0 55px 0 25px !important;
