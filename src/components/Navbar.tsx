@@ -32,8 +32,18 @@ export default function Navbar() {
     checkScreenSize();
     window.addEventListener('resize', checkScreenSize);
     
-    return () => window.removeEventListener('resize', checkScreenSize);
-  }, []);
+    // Prevent body scroll when mobile menu is open
+    if (isMenuOpen && isMobile) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    
+    return () => {
+      window.removeEventListener('resize', checkScreenSize);
+      document.body.style.overflow = '';
+    };
+  }, [isMenuOpen, isMobile]);
 
   useEffect(() => {
     // Prevent double mounting in StrictMode
@@ -65,6 +75,11 @@ export default function Navbar() {
       if (isDropdownOpen && !(event.target as Element)?.closest('.user-menu')) {
         setIsDropdownOpen(false);
       }
+      
+      // Close mobile menu when clicking outside
+      if (isMenuOpen && !(event.target as Element)?.closest('.nav-menu') && !(event.target as Element)?.closest('.mobile-menu-toggle')) {
+        setIsMenuOpen(false);
+      }
     };
     
     document.addEventListener('mousedown', handleClickOutside);
@@ -75,7 +90,7 @@ export default function Navbar() {
       window.removeEventListener('profileUpdated', handleProfileUpdate);
       document.removeEventListener('mousedown', handleClickOutside);
     };
-  }, [isDropdownOpen]);
+  }, [isDropdownOpen, isMenuOpen]);
 
   const checkAuthStatus = async () => {
     try {
@@ -111,6 +126,23 @@ export default function Navbar() {
 
   return (
     <nav className="navbar">
+        {/* Overlay for mobile menu */}
+        {isMenuOpen && isMobile && (
+          <div 
+            style={{
+              position: 'fixed',
+              top: 0,
+              left: 0,
+              width: '100vw',
+              height: '100vh',
+              background: 'rgba(0, 0, 0, 0.7)',
+              zIndex: 999,
+              animation: 'fadeIn 0.3s ease'
+            }}
+            onClick={() => setIsMenuOpen(false)}
+          />
+        )}
+        
         <div className="nav-container">
           <div className="nav-logo">
             <Link href="/">
@@ -129,8 +161,9 @@ export default function Navbar() {
           <button 
             className="mobile-menu-toggle"
             onClick={() => setIsMenuOpen(!isMenuOpen)}
+            aria-label="Toggle menu"
           >
-            ☰
+            {isMenuOpen ? '✕' : '☰'}
           </button>
           
           <div className={`nav-menu ${isMenuOpen ? 'active' : ''}`}>

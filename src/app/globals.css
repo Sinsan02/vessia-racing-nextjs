@@ -70,6 +70,15 @@ p, .body-text {
   100% { transform: translateX(0px); }
 }
 
+@keyframes fadeIn {
+  0% { 
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
 @keyframes fadeInUp {
   0% { 
     opacity: 0;
@@ -238,6 +247,7 @@ p, .body-text {
 
 /* Mobile Menu Toggle Animation */
 .mobile-menu-toggle {
+  display: none;
   transition: all 0.3s ease;
 }
 
@@ -567,6 +577,120 @@ html {
   
   .nav-container {
     padding: 0 15px !important;
+    position: relative !important;
+  }
+  
+  /* Show hamburger menu on mobile */
+  .mobile-menu-toggle {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    background-color: transparent !important;
+    color: #3EA822 !important;
+    font-size: 1.8rem !important;
+    cursor: pointer !important;
+    border: 2px solid #3EA822 !important;
+    border-radius: 5px !important;
+    padding: 8px 12px !important;
+    transition: all 0.3s ease !important;
+    z-index: 1001 !important;
+  }
+  
+  .mobile-menu-toggle:hover {
+    background-color: #3EA822 !important;
+    color: white !important;
+    transform: scale(1.05) !important;
+  }
+  
+  /* Hide desktop menu, show mobile dropdown menu */
+  .nav-menu {
+    position: fixed !important;
+    top: 0 !important;
+    right: -100% !important;
+    height: 100vh !important;
+    width: 280px !important;
+    background: linear-gradient(180deg, #0a0a0a 0%, #1a1a1a 100%) !important;
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    padding: 80px 20px 20px !important;
+    gap: 0 !important;
+    margin: 0 !important;
+    box-shadow: -5px 0 25px rgba(0, 0, 0, 0.8) !important;
+    transition: right 0.4s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    z-index: 1000 !important;
+    overflow-y: auto !important;
+    border-left: 2px solid #3EA822 !important;
+  }
+  
+  /* Show menu when active */
+  .nav-menu.active {
+    right: 0 !important;
+  }
+  
+  /* Style mobile menu links */
+  .nav-menu .nav-link {
+    width: 100% !important;
+    padding: 15px 20px !important;
+    margin-bottom: 5px !important;
+    border-bottom: 1px solid #2a2a2a !important;
+    text-align: left !important;
+    font-size: 1.1rem !important;
+    transition: all 0.3s ease !important;
+  }
+  
+  .nav-menu .nav-link:hover {
+    background-color: rgba(62, 168, 34, 0.1) !important;
+    border-left: 3px solid #3EA822 !important;
+    padding-left: 23px !important;
+  }
+  
+  /* Auth navigation in mobile menu */
+  .nav-menu #authNavigation {
+    width: 100% !important;
+    margin-top: 10px !important;
+    padding-top: 15px !important;
+    border-top: 2px solid #2a2a2a !important;
+  }
+  
+  .nav-menu #authNavigation .nav-link,
+  .nav-menu #authNavigation .user-menu {
+    width: 100% !important;
+  }
+  
+  .nav-menu #authNavigation .login-btn {
+    width: 100% !important;
+    text-align: center !important;
+    padding: 15px 20px !important;
+    font-size: 1.1rem !important;
+  }
+  
+  /* User profile button in mobile */
+  .nav-menu .user-profile-btn {
+    width: 100% !important;
+    justify-content: flex-start !important;
+    padding: 12px 20px !important;
+    border-radius: 5px !important;
+  }
+  
+  /* User dropdown in mobile menu */
+  .nav-menu .user-dropdown {
+    position: static !important;
+    width: 100% !important;
+    margin-top: 10px !important;
+    box-shadow: none !important;
+    border-radius: 5px !important;
+  }
+  
+  /* Overlay when menu is open */
+  .nav-menu.active::before {
+    content: '' !important;
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    background: rgba(0, 0, 0, 0.7) !important;
+    z-index: -1 !important;
   }
   
   /* Forms */
@@ -601,6 +725,19 @@ html {
 
 /* Tablet devices */
 @media (min-width: 769px) and (max-width: 1024px) {
+  /* Keep desktop menu even on tablets */
+  .mobile-menu-toggle {
+    display: none !important;
+  }
+  
+  .nav-menu {
+    position: static !important;
+    height: auto !important;
+    width: auto !important;
+    background: none !important;
+    flex-direction: row !important;
+  }
+  
   .container {
     max-width: 100% !important;
     padding: 0 30px !important;
@@ -1160,6 +1297,39 @@ html {
 
 /* Navbar positioning for all screen sizes */
 @media (min-width: 769px) {
+  /* Hide hamburger menu on desktop */
+  .mobile-menu-toggle {
+    display: none !important;
+  }
+  
+  /* Show normal horizontal menu on desktop */
+  .nav-menu {
+    position: static !important;
+    height: auto !important;
+    width: auto !important;
+    background: none !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    padding: 0 !important;
+    box-shadow: none !important;
+    border: none !important;
+  }
+  
+  .nav-menu .nav-link {
+    width: auto !important;
+    padding: 8px 16px !important;
+    margin-bottom: 0 !important;
+    border: none !important;
+    font-size: 1rem !important;
+  }
+  
+  .nav-menu #authNavigation {
+    width: auto !important;
+    margin-top: 0 !important;
+    padding-top: 0 !important;
+    border-top: none !important;
+  }
+  
   .nav-container {
     justify-content: flex-start !important;
     padding: 0 15px !important;
