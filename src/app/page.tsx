@@ -9,7 +9,6 @@ export default function Home() {
   const [latestEvent, setLatestEvent] = useState<any>(null);
   const [achievements, setAchievements] = useState<any[]>([]);
   const [achievementsLoading, setAchievementsLoading] = useState(true);
-  const [isMobile, setIsMobile] = useState(typeof window !== 'undefined' ? window.innerWidth <= 768 : false);
   const [user, setUser] = useState<any>(null);
   const hasFetchedData = useRef(false);
 
@@ -18,14 +17,6 @@ export default function Home() {
     // Prevent double mounting in StrictMode
     if (hasFetchedData.current) return;
     hasFetchedData.current = true;
-    
-    // Check screen size for mobile background
-    const checkScreenSize = () => {
-      setIsMobile(window.innerWidth <= 768);
-    };
-    
-    checkScreenSize();
-    window.addEventListener('resize', checkScreenSize);
     
     // Check for welcome message from URL params
     const params = new URLSearchParams(window.location.search);
@@ -51,8 +42,6 @@ export default function Home() {
     fetchUser();
     fetchLatestEvent();
     fetchAchievements();
-    
-    return () => window.removeEventListener('resize', checkScreenSize);
   }, []);
 
   const fetchUser = async () => {
@@ -102,13 +91,11 @@ export default function Home() {
 
   return (
     <div style={{
-      backgroundImage: isMobile 
-        ? 'linear-gradient(180deg, #0d1f0d 0%, #1a2e1a 100%)'
-        : `url('/images/decorative/Screenshot_2025-11-23_180245.png')`,
+      backgroundImage: `url('/images/decorative/Screenshot_2025-11-23_180245.png')`,
       backgroundColor: '#0a0a0a',
       backgroundSize: 'cover',
       backgroundPosition: 'center',
-      backgroundAttachment: isMobile ? 'scroll' : 'fixed',
+      backgroundAttachment: 'fixed',
       backgroundRepeat: 'no-repeat',
       minHeight: '100vh',
       width: '100%',
@@ -151,17 +138,13 @@ export default function Home() {
 
       {/* Achievements Section */}
       <section id="achievements" className="section" style={{
-        backgroundImage: isMobile
-          ? 'none'
-          : `linear-gradient(rgba(10,10,10,0.7), rgba(10,10,10,0.8)), url('/images/decorative/Screenshot_2025-10-11_170801.png')`,
-        backgroundColor: isMobile ? '#0a0a0a' : undefined,
+        backgroundImage: `linear-gradient(rgba(10,10,10,0.7), rgba(10,10,10,0.8)), url('/images/decorative/Screenshot_2025-10-11_170801.png')`,
         backgroundSize: 'cover',
         backgroundPosition: 'center',
-        backgroundAttachment: isMobile ? 'scroll' : 'fixed',
+        backgroundAttachment: 'fixed',
         backgroundRepeat: 'no-repeat',
-        minHeight: isMobile ? 'auto' : '100vh',
-        position: 'relative',
-        padding: isMobile ? '20px 10px' : undefined
+        minHeight: '100vh',
+        position: 'relative'
       }}>
         <div className="container">
           <h2 className="section-title">🏆 Our Accomplishments</h2>
@@ -169,13 +152,12 @@ export default function Home() {
           
           {achievementsLoading ? (
             <div className="achievements-grid" style={{
-              display: isMobile ? 'flex' : 'grid',
-              flexDirection: isMobile ? 'column' : undefined,
-              gridTemplateColumns: isMobile ? undefined : 'repeat(auto-fit, minmax(320px, 1fr))',
-              gap: isMobile ? '15px' : '25px',
-              maxWidth: isMobile ? '100%' : '1200px',
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
+              gap: '25px',
+              maxWidth: '1200px',
               margin: '0 auto',
-              padding: isMobile ? '0 10px' : '0',
+              padding: '0',
               width: '100%',
               boxSizing: 'border-box'
             }}>
@@ -185,20 +167,19 @@ export default function Home() {
             </div>
           ) : achievements.length > 0 ? (
             <div className="achievements-grid" style={{
-              display: isMobile ? 'flex' : 'grid',
-              flexDirection: isMobile ? 'column' : undefined,
-              gridTemplateColumns: isMobile ? undefined : 'repeat(auto-fit, minmax(320px, 1fr))',
-              gap: isMobile ? '15px' : '25px',
-              maxWidth: isMobile ? '100%' : '1200px',
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
+              gap: '25px',
+              maxWidth: '1200px',
               margin: '0 auto',
-              padding: isMobile ? '0 10px' : '0',
+              padding: '0',
               width: '100%',
               boxSizing: 'border-box'
             }}>              {achievements.map((achievement, index) => (
                 <div key={achievement.id} className="achievement-card" style={{
-                  backgroundColor: isMobile ? 'rgba(26, 26, 26, 0.85)' : '#1a1a1a',
-                  borderRadius: isMobile ? '12px' : '15px',
-                  padding: isMobile ? '15px 12px' : '25px',
+                  backgroundColor: '#1a1a1a',
+                  borderRadius: '15px',
+                  padding: '25px',
                   border: '2px solid #3EA822',
                   textAlign: 'center',
                   position: 'relative',
@@ -210,20 +191,19 @@ export default function Home() {
                 }}>
                   {/* Achievement Icon/Badge */}
                   <div style={{
-                    fontSize: isMobile ? '3rem' : '3rem',
-                    marginBottom: isMobile ? '15px' : '15px',
+                    fontSize: '3rem',
+                    marginBottom: '15px',
                     background: 'linear-gradient(135deg, #3EA822, #2d7a19)',
-                    width: isMobile ? '80px' : '80px',
-                    height: isMobile ? '80px' : '80px',
+                    width: '80px',
+                    height: '80px',
                     borderRadius: '50%',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
                     margin: '0 auto 15px',
-                    boxShadow: isMobile ? '0 8px 25px rgba(62, 168, 34, 0.4)' : '0 5px 15px rgba(62, 168, 34, 0.3)',
+                    boxShadow: '0 5px 15px rgba(62, 168, 34, 0.3)',
                     transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
-                    cursor: 'pointer',
-                    border: isMobile ? '3px solid rgba(62, 168, 34, 0.3)' : 'none'
+                    cursor: 'pointer'
                   }}
                   className="achievement-icon"
                   onMouseEnter={(e) => {
@@ -256,8 +236,8 @@ export default function Home() {
 
                   <h3 style={{
                     color: '#3EA822',
-                    fontSize: isMobile ? '1.3rem' : '1.4rem',
-                    marginBottom: isMobile ? '10px' : '8px',
+                    fontSize: '1.4rem',
+                    marginBottom: '8px',
                     fontWeight: 'bold',
                     lineHeight: '1.3',
                     wordWrap: 'break-word'
@@ -267,7 +247,7 @@ export default function Home() {
 
                   <p style={{
                     color: '#ccc',
-                    fontSize: isMobile ? '0.95rem' : '1rem',
+                    fontSize: '1rem',
                     marginBottom: '10px',
                     fontWeight: '500'
                   }}>
@@ -346,7 +326,7 @@ export default function Home() {
           {achievements.length > 0 && (
             <div style={{
               textAlign: 'center',
-              marginTop: isMobile ? '20px' : '40px'
+              marginTop: '40px'
             }}>
               <Link
                 href="/achievements"
@@ -372,17 +352,13 @@ export default function Home() {
 
       {/* Upcoming Event Section */}
       <section id="results" className="section section-dark" style={{
-        backgroundImage: isMobile
-          ? 'none'
-          : `linear-gradient(rgba(10,10,10,0.7), rgba(10,10,10,0.8)), url('/images/decorative/Screenshot_2025-11-15_150823.png')`,
-        backgroundColor: isMobile ? '#0a0a0a' : undefined,
+        backgroundImage: `linear-gradient(rgba(10,10,10,0.7), rgba(10,10,10,0.8)), url('/images/decorative/Screenshot_2025-11-15_150823.png')`,
         backgroundSize: 'cover',
         backgroundPosition: 'center',
-        backgroundAttachment: isMobile ? 'scroll' : 'fixed',
+        backgroundAttachment: 'fixed',
         backgroundRepeat: 'no-repeat',
-        minHeight: isMobile ? 'auto' : '100vh',
-        position: 'relative',
-        padding: isMobile ? '20px 10px' : undefined
+        minHeight: '100vh',
+        position: 'relative'
       }}>
         <div className="container">
           <h2 className="section-title">Upcoming Event</h2>
@@ -390,10 +366,10 @@ export default function Home() {
             <div className="latest-event" style={{
               backgroundColor: '#1a1a1a',
               borderRadius: '15px',
-              padding: isMobile ? '20px 15px' : '25px',
+              padding: '25px',
               border: '1px solid #333',
               textAlign: 'center',
-              maxWidth: isMobile ? '100%' : '800px',
+              maxWidth: '800px',
               margin: '0 auto',
               width: '100%',
               boxSizing: 'border-box'
@@ -509,26 +485,22 @@ export default function Home() {
 
       {/* Join Our Team Section */}
       <section className="section" style={{
-        backgroundImage: isMobile
-          ? 'none'
-          : `linear-gradient(rgba(10,10,10,0.7), rgba(10,10,10,0.8)), url('/images/decorative/Screenshot_2025-05-18_205724.png')`,
-        backgroundColor: isMobile ? '#0a0a0a' : undefined,
+        backgroundImage: `linear-gradient(rgba(10,10,10,0.7), rgba(10,10,10,0.8)), url('/images/decorative/Screenshot_2025-05-18_205724.png')`,
         backgroundSize: 'cover',
         backgroundPosition: 'center',
-        backgroundAttachment: isMobile ? 'scroll' : 'fixed',
+        backgroundAttachment: 'fixed',
         backgroundRepeat: 'no-repeat',
-        minHeight: isMobile ? 'auto' : '100vh',
-        position: 'relative',
-        padding: isMobile ? '20px 10px' : undefined
+        minHeight: '100vh',
+        position: 'relative'
       }}>
         <div className="container">
           <div style={{
             textAlign: 'center',
-            padding: isMobile ? '30px 15px' : '50px 20px',
+            padding: '50px 20px',
             backgroundColor: '#1a1a1a',
             borderRadius: '15px',
             border: '2px solid #3EA822',
-            maxWidth: isMobile ? '100%' : '800px',
+            maxWidth: '800px',
             margin: '0 auto',
             boxSizing: 'border-box',
             width: '100%'

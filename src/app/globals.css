@@ -481,8 +481,135 @@ html {
 }
 
 /* ============================================
-   MOBIL CSS - FJERNET (Viser varsel til PC)
+   MOBILE CSS - Optimized for responsive design
    ============================================ */
+
+/* Mobile devices - make layout responsive while keeping desktop aesthetics */
+@media (max-width: 768px) {
+  /* Enable scrolling backgrounds on mobile for better performance */
+  body > div:first-child[style*="backgroundAttachment"],
+  .section[style*="backgroundAttachment"] {
+    background-attachment: scroll !important;
+  }
+  
+  /* Adjust container padding for mobile */
+  .container {
+    padding: 0 15px !important;
+  }
+  
+  /* Make achievements grid stack nicely on mobile */
+  .achievements-grid {
+    grid-template-columns: 1fr !important;
+    gap: 20px !important;
+    padding: 0 15px !important;
+  }
+  
+  /* Adjust section padding for mobile */
+  .section {
+    padding: 40px 0 !important;
+  }
+  
+  /* Hero section adjustments */
+  .hero {
+    padding: 20px 15px !important;
+    min-height: 100vh !important;
+  }
+  
+  .hero-content h1,
+  .hero-title {
+    font-size: 2.5rem !important;
+  }
+  
+  .hero-subtitle {
+    font-size: 1.2rem !important;
+  }
+  
+  .hero-description {
+    font-size: 1rem !important;
+  }
+  
+  .hero-buttons {
+    flex-direction: column !important;
+    gap: 15px !important;
+  }
+  
+  .hero-buttons .btn-primary,
+  .hero-buttons .btn-secondary {
+    width: 100% !important;
+    max-width: 300px !important;
+  }
+  
+  /* Section titles */
+  .section-title {
+    font-size: 2rem !important;
+    margin-bottom: 20px !important;
+  }
+  
+  .section-subtitle {
+    font-size: 1rem !important;
+    margin-bottom: 30px !important;
+  }
+  
+  /* Achievement cards */
+  .achievement-card {
+    padding: 20px 15px !important;
+  }
+  
+  /* Latest event card */
+  .latest-event {
+    padding: 20px 15px !important;
+  }
+  
+  /* Navbar adjustments */
+  .navbar {
+    padding: 0.75rem 0 !important;
+  }
+  
+  .nav-container {
+    padding: 0 15px !important;
+  }
+  
+  /* Forms */
+  .form-container {
+    margin: 100px auto 30px !important;
+    padding: 1.5rem !important;
+  }
+  
+  /* Buttons - keep them large and accessible */
+  .btn-primary,
+  .btn-secondary {
+    padding: 14px 28px !important;
+    font-size: 1rem !important;
+  }
+}
+
+/* Very small mobile devices */
+@media (max-width: 480px) {
+  .hero-content h1,
+  .hero-title {
+    font-size: 2rem !important;
+  }
+  
+  .section-title {
+    font-size: 1.8rem !important;
+  }
+  
+  .nav-logo img {
+    width: 40px !important;
+  }
+}
+
+/* Tablet devices */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .container {
+    max-width: 100% !important;
+    padding: 0 30px !important;
+  }
+  
+  .achievements-grid {
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)) !important;
+  }
+}
 
 /* Large desktop monitors (27" and larger) - 1920px and above */
 @media (min-width: 1920px) {
