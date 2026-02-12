@@ -545,7 +545,7 @@ export default function Home() {
           alignItems: 'center',
           width: '100%'
         }}>
-          <div style={{
+          <div className="join-team-box" style={{
             textAlign: 'center',
             padding: isMobile ? '50px 30px' : '50px 20px',
             backgroundColor: '#1a1a1a',
