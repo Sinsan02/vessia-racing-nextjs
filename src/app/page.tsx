@@ -216,6 +216,7 @@ export default function Home() {
                   backgroundColor: '#1a1a1a',
                   borderRadius: '15px',
                   padding: '25px',
+                  paddingBottom: '30px',
                   border: '2px solid #3EA822',
                   textAlign: 'center',
                   position: 'relative',
@@ -318,6 +319,7 @@ export default function Home() {
                       fontSize: '0.85rem',
                       lineHeight: '1.6',
                       marginTop: '15px',
+                      marginBottom: '20px',
                       textAlign: 'center'
                     }}>
                       {achievement.description.split(', ').filter((d: string) => d.trim()).map((driver: string, idx: number) => (
@@ -330,16 +332,15 @@ export default function Home() {
 
                   {/* Category Badge */}
                   <div style={{
-                    position: 'absolute',
-                    bottom: '15px',
-                    left: '15px',
                     backgroundColor: 'rgba(62, 168, 34, 0.2)',
                     color: '#3EA822',
-                    padding: '4px 8px',
+                    padding: '6px 12px',
                     borderRadius: '10px',
-                    fontSize: '0.7rem',
+                    fontSize: '0.75rem',
                     fontWeight: 'bold',
-                    border: '1px solid #3EA822'
+                    border: '1px solid #3EA822',
+                    display: 'inline-block',
+                    marginTop: '10px'
                   }}>
                     {achievement.category}
                   </div>
