@@ -129,7 +129,15 @@ export default function Home() {
           />
           <p className="hero-subtitle">Norwegian sim racing team</p>
           <p className="hero-description">Competing in Scandinavian leagues and special events with dedication, precision and teamwork</p>
-          <div className="hero-buttons">
+          <div className="hero-buttons" style={{
+            display: 'flex',
+            gap: '1rem',
+            justifyContent: 'center',
+            alignItems: 'center',
+            flexWrap: 'wrap',
+            width: '100%',
+            margin: '0 auto'
+          }}>
             <Link href="#achievements" className="btn-primary racing-pulse">Our Accomplishments</Link>
             {!user && <Link href="/register" className="btn-secondary">Sign Up</Link>}
           </div>
@@ -157,9 +165,10 @@ export default function Home() {
               gap: '25px',
               maxWidth: '1200px',
               margin: '0 auto',
-              padding: '0',
+              padding: '0 20px',
               width: '100%',
-              boxSizing: 'border-box'
+              boxSizing: 'border-box',
+              justifyItems: 'center'
             }}>
               {[1, 2, 3].map((i) => (
                 <div key={i} className="skeleton-card"></div>
@@ -172,9 +181,10 @@ export default function Home() {
               gap: '25px',
               maxWidth: '1200px',
               margin: '0 auto',
-              padding: '0',
+              padding: '0 20px',
               width: '100%',
-              boxSizing: 'border-box'
+              boxSizing: 'border-box',
+              justifyItems: 'center'
             }}>              {achievements.map((achievement, index) => (
                 <div key={achievement.id} className="achievement-card" style={{
                   backgroundColor: '#1a1a1a',
@@ -326,7 +336,10 @@ export default function Home() {
           {achievements.length > 0 && (
             <div style={{
               textAlign: 'center',
-              marginTop: '40px'
+              marginTop: '40px',
+              display: 'flex',
+              justifyContent: 'center',
+              width: '100%'
             }}>
               <Link
                 href="/achievements"
@@ -491,9 +504,17 @@ export default function Home() {
         backgroundAttachment: 'fixed',
         backgroundRepeat: 'no-repeat',
         minHeight: '100vh',
-        position: 'relative'
+        position: 'relative',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center'
       }}>
-        <div className="container">
+        <div className="container" style={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          width: '100%'
+        }}>
           <div style={{
             textAlign: 'center',
             padding: '50px 20px',
