@@ -500,6 +500,11 @@ html {
 
 /* Mobile devices - make layout responsive while keeping desktop aesthetics */
 @media (max-width: 768px) {
+  /* Prevent white background on overscroll (iOS bounce) - mobile only */
+  html, body {
+    overscroll-behavior-y: none !important;
+  }
+  
   /* Enable scrolling backgrounds on mobile for better performance */
   body > div:first-child[style*="backgroundAttachment"],
   .section[style*="backgroundAttachment"] {
