@@ -99,7 +99,8 @@ export default function Home() {
       backgroundRepeat: 'no-repeat',
       minHeight: '100vh',
       width: '100%',
-      position: 'relative'
+      position: 'relative',
+      overflowX: 'hidden'
     }}>
       {/* Welcome Message */}
       {welcomeMessage && (

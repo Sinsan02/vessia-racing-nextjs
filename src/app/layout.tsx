@@ -45,7 +45,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" style={{ backgroundColor: '#0a0a0a', minHeight: '100%' }}>
       <head>
         <link rel="icon" href="/viper_scull.png" type="image/png" />
         <link rel="apple-touch-icon" href="/viper_scull.png" />
@@ -59,7 +59,8 @@ export default function RootLayout({
         style={{
           display: 'flex',
           flexDirection: 'column',
-          minHeight: '100vh'
+          minHeight: '100vh',
+          backgroundColor: '#0a0a0a'
         }}
       >
         <Navbar />
