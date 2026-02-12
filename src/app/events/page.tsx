@@ -257,10 +257,16 @@ export default function Events() {
       minHeight: '100vh',
       position: 'relative'
     }}>
-      <main style={{padding: '20px'}}>
-        <div className="container">
+      <main style={{padding: isMobile ? '20px 15px' : '20px'}}>
+        <div className="container" style={{
+          maxWidth: '1200px',
+          margin: '0 auto',
+          padding: isMobile ? '20px 15px' : '40px 20px',
+          boxSizing: 'border-box',
+          width: '100%'
+        }}>
           {/* Header */}
-          <div className="events-header" style={{textAlign: 'center', marginBottom: '30px'}}>
+          <div className="events-header" style={{textAlign: 'center', marginBottom: '30px', padding: isMobile ? '0 10px' : '0'}}>
             <h1 style={{color: '#3EA822', fontSize: '2.5rem', marginBottom: '1rem'}}>
               🏁 Racing Events
             </h1>
