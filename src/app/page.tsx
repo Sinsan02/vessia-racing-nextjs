@@ -174,7 +174,13 @@ export default function Home() {
         paddingTop: isMobile ? '15px' : undefined,
         paddingBottom: isMobile ? '15px' : undefined
       }}>
-        <div className="container">
+        <div className="container" style={{
+          maxWidth: '1200px',
+          margin: '0 auto',
+          padding: isMobile ? '20px 15px' : '40px 20px',
+          boxSizing: 'border-box',
+          width: '100%'
+        }}>
           <h2 className="section-title">🏆 Our Accomplishments</h2>
           <p className="section-subtitle">Celebrating our victories on the world's most challenging circuits</p>
           
@@ -398,7 +404,13 @@ export default function Home() {
         paddingTop: isMobile ? '15px' : undefined,
         paddingBottom: isMobile ? '15px' : undefined
       }}>
-        <div className="container">
+        <div className="container" style={{
+          maxWidth: '1200px',
+          margin: '0 auto',
+          padding: isMobile ? '20px 15px' : '40px 20px',
+          boxSizing: 'border-box',
+          width: '100%'
+        }}>
           <h2 className="section-title">Upcoming Event</h2>
           {latestEvent ? (
             <div className="latest-event" style={{
@@ -539,10 +551,14 @@ export default function Home() {
         paddingBottom: isMobile ? '15px' : undefined
       }}>
         <div className="container" style={{
+          maxWidth: '1200px',
+          margin: '0 auto',
+          padding: isMobile ? '20px 15px' : '40px 20px',
+          boxSizing: 'border-box',
+          width: '100%',
           display: 'flex',
           justifyContent: 'center',
-          alignItems: 'center',
-          width: '100%'
+          alignItems: 'center'
         }}>
           <div className="join-team-box" style={{
             textAlign: 'center',

@@ -159,7 +159,7 @@ export default function Results() {
             <div className="results-table-container" style={{
               maxWidth: '900px',
               margin: '0 auto',
-              padding: isMobile ? '0 30px 0 10px' : '0 40px',
+              padding: isMobile ? '0 15px' : '0 40px',
               width: '100%',
               boxSizing: 'border-box'
             }}>
