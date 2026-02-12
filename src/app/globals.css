@@ -593,7 +593,7 @@ html {
   }
   
   .nav-container {
-    padding: 0 15px !important;
+    padding: 0 10px !important;
     position: relative !important;
   }
   
@@ -609,6 +609,7 @@ html {
     border: 2px solid #3EA822 !important;
     border-radius: 5px !important;
     padding: 8px 12px !important;
+    margin-right: 10px !important;
     transition: all 0.3s ease !important;
     z-index: 1001 !important;
   }
