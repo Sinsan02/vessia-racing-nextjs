@@ -10,7 +10,7 @@ export default function Home() {
   const [achievements, setAchievements] = useState<any[]>([]);
   const [achievementsLoading, setAchievementsLoading] = useState(true);
   const [user, setUser] = useState<any>(null);
-  const [isMobile, setIsMobile] = useState(typeof window !== 'undefined' ? window.innerWidth <= 768 : false);
+  const [isMobile, setIsMobile] = useState(true);
   const hasFetchedData = useRef(false);
 
   
@@ -178,9 +178,9 @@ export default function Home() {
           {achievementsLoading ? (
             <div className="achievements-grid" style={{
               display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
               gap: '25px',
-              maxWidth: '1200px',
+              maxWidth: '1000px',
               margin: '0 auto',
               padding: '0 20px',
               width: '100%',
@@ -194,9 +194,9 @@ export default function Home() {
           ) : achievements.length > 0 ? (
             <div className="achievements-grid" style={{
               display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
               gap: '25px',
-              maxWidth: '1200px',
+              maxWidth: '1000px',
               margin: '0 auto',
               padding: '0 20px',
               width: '100%',
@@ -402,7 +402,7 @@ export default function Home() {
               padding: '25px',
               border: '1px solid #333',
               textAlign: 'center',
-              maxWidth: '800px',
+              maxWidth: '600px',
               margin: '0 auto',
               width: '100%',
               boxSizing: 'border-box'
@@ -544,7 +544,7 @@ export default function Home() {
             backgroundColor: '#1a1a1a',
             borderRadius: '15px',
             border: '2px solid #3EA822',
-            maxWidth: '800px',
+            maxWidth: '600px',
             margin: '0 auto',
             boxSizing: 'border-box',
             width: '100%'
