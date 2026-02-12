@@ -19,8 +19,6 @@ html {
   width: 100%;
   min-height: 100%;
   background-color: var(--background-dark);
-  /* Prevent white background on overscroll (iOS bounce) */
-  overscroll-behavior-y: none;
 }
 
 body {
@@ -34,8 +32,6 @@ body {
   overflow-x: hidden;
   width: 100%;
   min-height: 100vh;
-  /* Prevent white background on overscroll */
-  overscroll-behavior-y: none;
   position: relative;
 }
 
