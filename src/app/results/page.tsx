@@ -153,7 +153,7 @@ export default function Results() {
             <div className="results-table-container" style={{
               maxWidth: '900px',
               margin: '0 auto',
-              width: 'calc(100% - 40px)'
+              width: 'calc(100% - 80px)'
             }}>
               <h2 style={{color: '#3EA822', fontSize: '1.5rem', marginBottom: '20px', textAlign: 'center'}}>
                 Standings - {leagues.find(l => l.id === selectedLeague)?.name}

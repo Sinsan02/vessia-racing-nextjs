@@ -530,13 +530,13 @@ html {
   }
   
   .latest-event {
-    width: calc(100% - 40px) !important;
-    margin: 0 20px !important;
+    width: calc(100% - 80px) !important;
+    margin: 0 40px !important;
   }
   
   .results-table-container {
-    width: calc(100% - 40px) !important;
-    margin: 0 20px !important;
+    width: calc(100% - 80px) !important;
+    margin: 0 40px !important;
   }
   
   /* Adjust section padding for mobile */
