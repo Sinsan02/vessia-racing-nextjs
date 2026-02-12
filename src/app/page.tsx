@@ -404,7 +404,7 @@ export default function Home() {
               textAlign: 'center',
               maxWidth: '600px',
               margin: '0 auto',
-              width: '100%',
+              width: 'calc(100% - 40px)',
               boxSizing: 'border-box'
             }}>
               {latestEvent.image_url && (
@@ -547,7 +547,7 @@ export default function Home() {
             maxWidth: '600px',
             margin: '0 auto',
             boxSizing: 'border-box',
-            width: '100%'
+            width: 'calc(100% - 40px)'
           }}>
             <div style={{fontSize: '2.5rem', marginBottom: '15px'}}>🚀</div>
             <h3 style={{color: '#3EA822', marginBottom: '10px', fontSize: '2rem', fontWeight: 'bold'}}>
