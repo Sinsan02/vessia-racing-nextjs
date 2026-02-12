@@ -12,6 +12,7 @@ export async function GET() {
         name,
         description,
         event_date,
+        event_time,
         image_url,
         track_name,
         created_at,
@@ -42,7 +43,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ success: false, error: adminCheck.error }, { status: adminCheck.status });
     }
 
-    const { name, description, event_date, image_url, track_name } = await request.json();
+    const { name, description, event_date, event_time, image_url, track_name } = await request.json();
     
     if (!name || !name.trim()) {
       return NextResponse.json({ success: false, error: 'Event name is required' }, { status: 400 });
@@ -59,6 +60,7 @@ export async function POST(request: NextRequest) {
         name: name.trim(),
         description: description || '',
         event_date,
+        event_time: event_time || null,
         image_url: image_url || null,
         track_name: track_name || '',
         created_by: adminCheck.user.userId

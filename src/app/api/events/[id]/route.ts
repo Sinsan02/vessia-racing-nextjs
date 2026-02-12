@@ -11,7 +11,7 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
     }
 
     const { id } = await params;
-    const { name, description, event_date, image_url, track_name } = await request.json();
+    const { name, description, event_date, event_time, image_url, track_name } = await request.json();
     
     if (!name || !name.trim()) {
       return NextResponse.json({ success: false, error: 'Event name is required' }, { status: 400 });
@@ -28,6 +28,7 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
         name: name.trim(),
         description: description || '',
         event_date,
+        event_time: event_time || null,
         image_url: image_url || null,
         track_name: track_name || '',
         updated_at: new Date().toISOString()

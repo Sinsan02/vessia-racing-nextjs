@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { supabaseAdmin } from '@/lib/supabase';
 
-// Get latest event (for homepage)
+// Get upcoming event (for homepage)
 export async function GET() {
   try {
     const { data: event, error } = await supabaseAdmin
@@ -11,6 +11,7 @@ export async function GET() {
         name,
         description,
         event_date,
+        event_time,
         image_url,
         track_name,
         created_at,
@@ -19,8 +20,8 @@ export async function GET() {
           full_name
         )
       `)
-      .lte('event_date', new Date().toISOString().split('T')[0]) // Events that have already happened
-      .order('event_date', { ascending: false })
+      .gte('event_date', new Date().toISOString().split('T')[0]) // Events in the future or today
+      .order('event_date', { ascending: true })
       .limit(1)
       .single();
 
@@ -29,13 +30,13 @@ export async function GET() {
       if (error.code === 'PGRST116') {
         return NextResponse.json({ success: true, event: null });
       }
-      console.error('Supabase error fetching latest event:', error);
+      console.error('Supabase error fetching upcoming event:', error);
       throw error;
     }
     
     return NextResponse.json({ success: true, event });
   } catch (error) {
-    console.error('Error fetching latest event:', error);
-    return NextResponse.json({ success: false, error: 'Failed to fetch latest event' }, { status: 500 });
+    console.error('Error fetching upcoming event:', error);
+    return NextResponse.json({ success: false, error: 'Failed to fetch upcoming event' }, { status: 500 });
   }
 }

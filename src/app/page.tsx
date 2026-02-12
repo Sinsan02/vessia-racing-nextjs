@@ -47,7 +47,7 @@ export default function Home() {
       }, 100);
     }
 
-    // Fetch user status, latest event and achievements
+    // Fetch user status, upcoming event and achievements
     fetchUser();
     fetchLatestEvent();
     fetchAchievements();
@@ -81,7 +81,7 @@ export default function Home() {
         setLatestEvent(data.event);
       }
     } catch (error) {
-      console.error('Failed to fetch latest event:', error);
+      console.error('Failed to fetch upcoming event:', error);
     }
   };
 
@@ -370,7 +370,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Latest Event Section */}
+      {/* Upcoming Event Section */}
       <section id="results" className="section section-dark" style={{
         backgroundImage: isMobile
           ? 'none'
@@ -385,7 +385,7 @@ export default function Home() {
         padding: isMobile ? '20px 10px' : undefined
       }}>
         <div className="container">
-          <h2 className="section-title">Latest Event</h2>
+          <h2 className="section-title">Upcoming Event</h2>
           {latestEvent ? (
             <div className="latest-event" style={{
               backgroundColor: '#1a1a1a',
@@ -439,6 +439,7 @@ export default function Home() {
                   month: 'long',
                   day: 'numeric'
                 })}
+                {latestEvent.event_time && ` at ${latestEvent.event_time}`}
               </p>
               {latestEvent.track_name && (
                 <p style={{

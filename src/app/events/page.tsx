@@ -8,6 +8,7 @@ interface Event {
   name: string;
   description?: string;
   event_date: string;
+  event_time?: string;
   image_url?: string;
   track_name?: string;
   created_at: string;
@@ -40,6 +41,7 @@ export default function Events() {
     name: '',
     description: '',
     event_date: '',
+    event_time: '',
     image_url: '',
     track_name: ''
   });
@@ -171,6 +173,7 @@ export default function Events() {
       name: event.name,
       description: event.description || '',
       event_date: event.event_date,
+      event_time: event.event_time || '',
       image_url: event.image_url || '',
       track_name: event.track_name || ''
     });
@@ -211,6 +214,7 @@ export default function Events() {
       name: '',
       description: '',
       event_date: '',
+      event_time: '',
       image_url: '',
       track_name: ''
     });
@@ -224,8 +228,19 @@ export default function Events() {
     });
   };
 
-  const isEventPast = (dateString: string) => {
-    return new Date(dateString) < new Date();
+  const isEventPast = (dateString: string, timeString?: string) => {
+    const eventDate = new Date(dateString);
+    
+    if (timeString) {
+      // If we have a time, combine date and time for accurate comparison
+      const [hours, minutes] = timeString.split(':');
+      eventDate.setHours(parseInt(hours), parseInt(minutes), 0, 0);
+    } else {
+      // If no time specified, consider it past only after the full day has passed
+      eventDate.setHours(23, 59, 59, 999);
+    }
+    
+    return eventDate < new Date();
   };
 
   return (
@@ -320,6 +335,23 @@ export default function Events() {
                       value={formData.event_date}
                       onChange={(e) => setFormData({...formData, event_date: e.target.value})}
                       required
+                      style={{
+                        width: '100%',
+                        padding: '10px',
+                        border: '1px solid #555',
+                        backgroundColor: '#2a2a2a',
+                        color: '#fff',
+                        borderRadius: '5px'
+                      }}
+                    />
+                  </div>
+                  
+                  <div>
+                    <label style={{display: 'block', marginBottom: '8px', color: '#ccc'}}>Event Time</label>
+                    <input
+                      type="time"
+                      value={formData.event_time}
+                      onChange={(e) => setFormData({...formData, event_time: e.target.value})}
                       style={{
                         width: '100%',
                         padding: '10px',
@@ -564,10 +596,10 @@ export default function Events() {
                         borderRadius: '20px',
                         fontSize: '0.8rem',
                         fontWeight: 'bold',
-                        backgroundColor: isEventPast(event.event_date) ? '#dc3545' : '#3EA822',
+                        backgroundColor: isEventPast(event.event_date, event.event_time) ? '#dc3545' : '#3EA822',
                         color: 'white'
                       }}>
-                        {isEventPast(event.event_date) ? '✅ Completed' : '📅 Upcoming'}
+                        {isEventPast(event.event_date, event.event_time) ? '✅ Completed' : '📅 Upcoming'}
                       </span>
                     </div>
 
