@@ -525,19 +525,19 @@ html {
   }
   
   .achievement-card {
-    width: calc(100% - 80px) !important;
+    width: calc(100% - 70px) !important;
     max-width: 500px !important;
-    margin: 0 60px 0 20px !important;
+    margin: 0 50px 0 20px !important;
   }
   
   .latest-event {
-    width: calc(100% - 90px) !important;
-    margin: 0 60px 0 30px !important;
+    width: calc(100% - 80px) !important;
+    margin: 0 50px 0 30px !important;
   }
   
   .results-table-container {
     width: 100% !important;
-    padding: 0 40px 0 10px !important;
+    padding: 0 30px 0 10px !important;
     box-sizing: border-box !important;
   }
   
@@ -592,14 +592,14 @@ html {
   
   /* Achievement cards */
   .achievement-card {
-    padding: 20px 15px !important;
+    padding: 20px 25px !important;
     background-color: #1a1a1a !important;
     border: 2px solid #3EA822 !important;
   }
   
   /* Latest event card */
   .latest-event {
-    padding: 20px 15px !important;
+    padding: 20px 25px !important;
     background-color: #1a1a1a !important;
   }
   

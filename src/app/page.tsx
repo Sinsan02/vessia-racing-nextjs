@@ -404,12 +404,12 @@ export default function Home() {
             <div className="latest-event" style={{
               backgroundColor: '#1a1a1a',
               borderRadius: '15px',
-              padding: '25px',
+              padding: isMobile ? '25px 30px' : '25px',
               border: '1px solid #333',
               textAlign: 'center',
               maxWidth: '600px',
-              margin: isMobile ? '0 60px 0 30px' : '0 auto',
-              width: isMobile ? 'calc(100% - 90px)' : 'calc(100% - 80px)',
+              margin: isMobile ? '0 50px 0 30px' : '0 auto',
+              width: isMobile ? 'calc(100% - 80px)' : 'calc(100% - 80px)',
               boxSizing: 'border-box'
             }}>
               {latestEvent.image_url && (
@@ -547,14 +547,14 @@ export default function Home() {
         }}>
           <div style={{
             textAlign: 'center',
-            padding: '50px 20px',
+            padding: isMobile ? '50px 30px' : '50px 20px',
             backgroundColor: '#1a1a1a',
             borderRadius: '15px',
             border: '2px solid #3EA822',
             maxWidth: '600px',
-            margin: isMobile ? '0 60px 0 30px' : '0 auto',
+            margin: isMobile ? '0 50px 0 30px' : '0 auto',
             boxSizing: 'border-box',
-            width: isMobile ? 'calc(100% - 90px)' : 'calc(100% - 80px)'
+            width: isMobile ? 'calc(100% - 80px)' : 'calc(100% - 80px)'
           }}>
             <div style={{fontSize: '2.5rem', marginBottom: '15px'}}>🚀</div>
             <h3 style={{color: '#3EA822', marginBottom: '10px', fontSize: '2rem', fontWeight: 'bold'}}>
