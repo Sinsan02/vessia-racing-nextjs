@@ -525,14 +525,14 @@ html {
   }
   
   .achievement-card {
-    width: calc(100% - 40px) !important;
+    width: calc(100% - 70px) !important;
     max-width: 500px !important;
-    margin: 0 20px !important;
+    margin: 0 50px 0 20px !important;
   }
   
   .latest-event {
     width: calc(100% - 80px) !important;
-    margin: 0 40px !important;
+    margin: 0 50px 0 30px !important;
   }
   
   .results-table-container {

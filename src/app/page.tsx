@@ -408,7 +408,7 @@ export default function Home() {
               border: '1px solid #333',
               textAlign: 'center',
               maxWidth: '600px',
-              margin: isMobile ? '0 40px' : '0 auto',
+              margin: isMobile ? '0 50px 0 30px' : '0 auto',
               width: isMobile ? 'calc(100% - 80px)' : 'calc(100% - 80px)',
               boxSizing: 'border-box'
             }}>
@@ -552,7 +552,7 @@ export default function Home() {
             borderRadius: '15px',
             border: '2px solid #3EA822',
             maxWidth: '600px',
-            margin: isMobile ? '0 40px' : '0 auto',
+            margin: isMobile ? '0 50px 0 30px' : '0 auto',
             boxSizing: 'border-box',
             width: isMobile ? 'calc(100% - 80px)' : 'calc(100% - 80px)'
           }}>
