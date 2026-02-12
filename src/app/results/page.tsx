@@ -150,7 +150,11 @@ export default function Results() {
 
           {/* Results Table */}
           {selectedLeague ? (
-            <div className="results-table-container">
+            <div className="results-table-container" style={{
+              maxWidth: '900px',
+              margin: '0 auto',
+              width: '100%'
+            }}>
               <h2 style={{color: '#3EA822', fontSize: '1.5rem', marginBottom: '20px', textAlign: 'center'}}>
                 Standings - {leagues.find(l => l.id === selectedLeague)?.name}
               </h2>
@@ -165,7 +169,7 @@ export default function Results() {
                   <p>No results available for this league yet.</p>
                 </div>
               ) : (
-                <div className="standings-table" style={{overflowX: 'auto'}}>
+                <div className="standings-table">
                   <table style={{
                     width: '100%',
                     backgroundColor: isMobile ? 'transparent' : '#1a1a1a',
