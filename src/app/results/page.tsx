@@ -171,7 +171,7 @@ export default function Results() {
                   <p>No results available for this league yet.</p>
                 </div>
               ) : (
-                <div className="standings-table" style={{overflowX: 'auto'}}>
+                <div className="standings-table">
                   <table style={{
                     width: '100%',
                     backgroundColor: isMobile ? 'transparent' : '#1a1a1a',
