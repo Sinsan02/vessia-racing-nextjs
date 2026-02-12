@@ -439,7 +439,7 @@ export default function Home() {
                   month: 'long',
                   day: 'numeric'
                 })}
-                {latestEvent.event_time && ` at ${latestEvent.event_time}`}
+                {latestEvent.event_time && ` at ${latestEvent.event_time.substring(0, 5)}`}
               </p>
               {latestEvent.track_name && (
                 <p style={{

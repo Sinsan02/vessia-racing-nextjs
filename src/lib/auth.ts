@@ -3,12 +3,12 @@ import bcrypt from 'bcryptjs';
 import { NextRequest } from 'next/server';
 import { supabaseAdmin } from './supabase';
 
-const JWT_SECRET = process.env.JWT_SECRET || 'vessia-racing-secret-key';
-
-// Ensure JWT_SECRET is available in production
-if (process.env.NODE_ENV === 'production' && !process.env.JWT_SECRET) {
-  throw new Error('JWT_SECRET environment variable is required in production');
+// Require JWT_SECRET to be set in environment variables
+if (!process.env.JWT_SECRET) {
+  throw new Error('JWT_SECRET environment variable is required');
 }
+
+const JWT_SECRET = process.env.JWT_SECRET;
 
 export interface User {
   id: number;
