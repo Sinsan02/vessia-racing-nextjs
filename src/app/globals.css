@@ -580,11 +580,30 @@ html {
   /* Achievement cards */
   .achievement-card {
     padding: 20px 15px !important;
+    background-color: #1a1a1a !important;
+    border: 2px solid #3EA822 !important;
   }
   
   /* Latest event card */
   .latest-event {
     padding: 20px 15px !important;
+    background-color: #1a1a1a !important;
+  }
+  
+  /* Team cards */
+  .team-card {
+    background-color: #1a1a1a !important;
+  }
+  
+  /* Result cards */
+  .result-card {
+    background-color: #0a0a0a !important;
+  }
+  
+  /* All general cards with box styling */
+  .form-container,
+  div[style*="backgroundColor: '#1a1a1a'"] {
+    background-color: #1a1a1a !important;
   }
   
   /* Navbar adjustments */
