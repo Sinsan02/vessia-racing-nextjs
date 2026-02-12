@@ -611,6 +611,7 @@ export default function Events() {
                     {/* Event Date */}
                     <p style={{color: '#ccc', marginBottom: '8px'}}>
                       📅 {formatDate(event.event_date)}
+                      {event.event_time && ` at ${event.event_time.substring(0, 5)}`}
                     </p>
 
                     {/* Track Name */}
