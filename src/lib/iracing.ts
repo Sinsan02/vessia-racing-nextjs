@@ -51,6 +51,8 @@ class IRacingService {
         body: JSON.stringify({ email, password }),
       });
 
+      console.log(`📡 Auth response status: ${response.status}`);
+
       if (!response.ok) {
         console.error(`❌ iRacing authentication failed with status ${response.status}`);
         const errorText = await response.text().catch(() => 'No error details');
@@ -58,8 +60,14 @@ class IRacingService {
         return false;
       }
 
+      // Check if response body contains error
+      const authResult = await response.json().catch(() => ({})) as IRacingAuthResponse;
+      console.log('📦 Auth response:', JSON.stringify(authResult));
+
       // Get auth cookie from response
       const setCookie = response.headers.get('set-cookie');
+      console.log('🍪 Set-Cookie header:', setCookie ? 'Present' : 'Missing');
+      
       if (setCookie) {
         this.authCookie = setCookie;
         // Set expiry to 1 hour from now
@@ -69,6 +77,7 @@ class IRacingService {
       }
 
       console.error('❌ No auth cookie received from iRacing');
+      console.error('Response headers:', Array.from(response.headers.entries()));
       return false;
     } catch (error) {
       console.error('❌ iRacing authentication error:', error);
@@ -103,8 +112,12 @@ class IRacingService {
       },
     });
 
+    console.log(`📊 API response status: ${response.status} for ${endpoint}`);
+
     if (!response.ok) {
       console.error(`❌ iRacing API request failed with status ${response.status}`);
+      const errorBody = await response.text().catch(() => 'No error body');
+      console.error('Error body:', errorBody);
       throw new Error(`iRacing API error: ${response.status}`);
     }
 
