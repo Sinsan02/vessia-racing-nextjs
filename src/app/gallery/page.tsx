@@ -8,9 +8,7 @@ export default function GalleryPage() {
   const [categories, setCategories] = useState<any[]>([]);
   const [isAdmin, setIsAdmin] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
-  const [selectedFile, setSelectedFile] = useState<File | null>(null);
-  const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
+  const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
   const [category, setCategory] = useState("General");
   const [newCategoryName, setNewCategoryName] = useState("");
   const [newCategoryDesc, setNewCategoryDesc] = useState("");
@@ -40,7 +38,7 @@ export default function GalleryPage() {
       const data = await res.json();
       setImages(data.images || []);
     } catch (err) {
-      setError("Kunne ikke hente bilder.");
+      setError("Could not fetch images.");
     }
   };
 
@@ -65,53 +63,56 @@ export default function GalleryPage() {
   };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
-      setSelectedFile(e.target.files[0]);
+    if (e.target.files && e.target.files.length > 0) {
+      setSelectedFiles(Array.from(e.target.files));
       setError("");
     }
   };
 
   const handleUpload = async () => {
-    if (!selectedFile) return;
+    if (selectedFiles.length === 0) return;
     setUploading(true);
     setError("");
     setSuccess("");
     
-    const formData = new FormData();
-    formData.append("image", selectedFile);
-    formData.append("title", title);
-    formData.append("description", description);
-    formData.append("category", category);
-    
     try {
-      const res = await fetch("/api/gallery/upload", {
-        method: "POST",
-        body: formData,
-        credentials: "include"
-      });
-      const data = await res.json();
+      let uploadedCount = 0;
       
-      if (!res.ok) throw new Error(data.error || "Feil ved opplasting");
+      for (const file of selectedFiles) {
+        const formData = new FormData();
+        formData.append("image", file);
+        formData.append("title", "");
+        formData.append("description", "");
+        formData.append("category", category);
+        
+        const res = await fetch("/api/gallery/upload", {
+          method: "POST",
+          body: formData,
+          credentials: "include"
+        });
+        const data = await res.json();
+        
+        if (!res.ok) throw new Error(data.error || "Upload failed");
+        uploadedCount++;
+      }
       
-      setSelectedFile(null);
-      setTitle("");
-      setDescription("");
+      setSelectedFiles([]);
       setCategory("General");
-      setSuccess("Bilde lastet opp!");
+      setSuccess(`${uploadedCount} ${uploadedCount === 1 ? 'image' : 'images'} uploaded!`);
       fetchImages();
       
       // Clear file input
       const fileInput = document.getElementById('file-input') as HTMLInputElement;
       if (fileInput) fileInput.value = '';
     } catch (err: any) {
-      setError(err.message || "Feil ved opplasting av bilde.");
+      setError(err.message || "Error uploading images.");
     } finally {
       setUploading(false);
     }
   };
 
   const handleDelete = async (id: number) => {
-    if (!confirm("Er du sikker på at du vil slette dette bildet?")) return;
+    if (!confirm("Are you sure you want to delete this image?")) return;
     
     try {
       const res = await fetch(`/api/gallery/${id}`, {
@@ -119,18 +120,18 @@ export default function GalleryPage() {
         credentials: "include"
       });
       
-      if (!res.ok) throw new Error("Feil ved sletting");
+      if (!res.ok) throw new Error("Delete failed");
       
-      setSuccess("Bilde slettet!");
+      setSuccess("Image deleted!");
       fetchImages();
     } catch (err) {
-      setError("Feil ved sletting av bilde.");
+      setError("Error deleting image.");
     }
   };
 
   const handleCreateCategory = async () => {
     if (!newCategoryName.trim()) {
-      setError("Kategorinavn er påkrevd");
+      setError("Category name is required");
       return;
     }
 
@@ -150,14 +151,14 @@ export default function GalleryPage() {
 
       const data = await res.json();
 
-      if (!res.ok) throw new Error(data.error || "Feil ved opprettelse av kategori");
+      if (!res.ok) throw new Error(data.error || "Failed to create category");
 
-      setSuccess("Kategori opprettet!");
+      setSuccess("Category created!");
       setNewCategoryName("");
       setNewCategoryDesc("");
       fetchCategories();
     } catch (err: any) {
-      setError(err.message || "Feil ved opprettelse av kategori.");
+      setError(err.message || "Error creating category.");
     }
   };
 
@@ -210,7 +211,7 @@ export default function GalleryPage() {
                 e.currentTarget.style.backgroundColor = isEditMode ? "#c00" : "#3EA822";
               }}
             >
-              {isEditMode ? "✕ Lukk redigering" : "✏️ Rediger galleri"}
+              {isEditMode ? "✕ Close Edit" : "✏️ Edit Gallery"}
             </button>
           </div>
         )}
@@ -224,50 +225,11 @@ export default function GalleryPage() {
             border: "2px solid #3EA822"
           }}>
             <h2 style={{ fontSize: isMobile ? "1.2rem" : "1.5rem", marginBottom: "16px", color: "#3EA822" }}>
-              Last opp nytt bilde
+              Upload Images
             </h2>
             
             <div style={{ marginBottom: "12px" }}>
-              <label style={{ display: "block", marginBottom: "8px", fontSize: "0.9rem" }}>Tittel (valgfritt)</label>
-              <input
-                type="text"
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
-                placeholder="Bildetittel..."
-                style={{
-                  width: "100%",
-                  padding: "10px",
-                  backgroundColor: "#1a1a1a",
-                  border: "1px solid #333",
-                  borderRadius: "6px",
-                  color: "#fff",
-                  fontSize: "1rem"
-                }}
-              />
-            </div>
-
-            <div style={{ marginBottom: "12px" }}>
-              <label style={{ display: "block", marginBottom: "8px", fontSize: "0.9rem" }}>Beskrivelse (valgfritt)</label>
-              <textarea
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
-                placeholder="Bildebeskrivelse..."
-                rows={3}
-                style={{
-                  width: "100%",
-                  padding: "10px",
-                  backgroundColor: "#1a1a1a",
-                  border: "1px solid #333",
-                  borderRadius: "6px",
-                  color: "#fff",
-                  fontSize: "1rem",
-                  resize: "vertical"
-                }}
-              />
-            </div>
-
-            <div style={{ marginBottom: "12px" }}>
-              <label style={{ display: "block", marginBottom: "8px", fontSize: "0.9rem" }}>Kategori</label>
+              <label style={{ display: "block", marginBottom: "8px", fontSize: "0.9rem" }}>Category</label>
               <select
                 value={category}
                 onChange={(e) => setCategory(e.target.value)}
@@ -289,11 +251,12 @@ export default function GalleryPage() {
             </div>
 
             <div style={{ marginBottom: "12px" }}>
-              <label style={{ display: "block", marginBottom: "8px", fontSize: "0.9rem" }}>Velg bilde</label>
+              <label style={{ display: "block", marginBottom: "8px", fontSize: "0.9rem" }}>Select Images</label>
               <input
                 id="file-input"
                 type="file"
                 accept="image/*"
+                multiple
                 onChange={handleFileChange}
                 style={{
                   width: "100%",
@@ -305,29 +268,30 @@ export default function GalleryPage() {
                   cursor: "pointer"
                 }}
               />
-              {selectedFile && (
+              {selectedFiles.length > 0 && (
                 <div style={{ marginTop: "8px", fontSize: "0.85rem", color: "#888" }}>
-                  Valgt: {selectedFile.name} ({(selectedFile.size / 1024 / 1024).toFixed(2)} MB)
+                  Selected: {selectedFiles.length} {selectedFiles.length === 1 ? 'image' : 'images'}
+                  {selectedFiles.length === 1 && ` (${(selectedFiles[0].size / 1024 / 1024).toFixed(2)} MB)`}
                 </div>
               )}
             </div>
 
             <button
               onClick={handleUpload}
-              disabled={uploading || !selectedFile}
+              disabled={uploading || selectedFiles.length === 0}
               style={{
                 padding: isMobile ? "10px 20px" : "12px 24px",
-                backgroundColor: selectedFile && !uploading ? "#3EA822" : "#555",
+                backgroundColor: selectedFiles.length > 0 && !uploading ? "#3EA822" : "#555",
                 color: "#fff",
                 border: "none",
                 borderRadius: "6px",
                 fontSize: "1rem",
                 fontWeight: "bold",
-                cursor: selectedFile && !uploading ? "pointer" : "not-allowed",
+                cursor: selectedFiles.length > 0 && !uploading ? "pointer" : "not-allowed",
                 transition: "all 0.3s ease"
               }}
             >
-              {uploading ? "Laster opp..." : "Last opp bilde"}
+              {uploading ? "Uploading..." : selectedFiles.length > 1 ? `Upload ${selectedFiles.length} Images` : "Upload Image"}
             </button>
 
             {error && (
@@ -375,18 +339,18 @@ export default function GalleryPage() {
               color: "#3EA822",
               fontWeight: "bold"
             }}>
-              Opprett ny kategori
+              Create New Category
             </h3>
             
             <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
               <label style={{ fontSize: "0.95rem", color: "#ccc" }}>
-                Kategorinavn *
+                Category Name *
               </label>
               <input
                 type="text"
                 value={newCategoryName}
                 onChange={(e) => setNewCategoryName(e.target.value)}
-                placeholder="F.eks. 12 Timer Spa Race"
+                placeholder="e.g. 12 Hour Spa Race"
                 style={{
                   padding: "10px",
                   backgroundColor: "#1a1a1a",
@@ -400,12 +364,12 @@ export default function GalleryPage() {
 
             <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
               <label style={{ fontSize: "0.95rem", color: "#ccc" }}>
-                Beskrivelse (valgfritt)
+                Description (optional)
               </label>
               <textarea
                 value={newCategoryDesc}
                 onChange={(e) => setNewCategoryDesc(e.target.value)}
-                placeholder="Kort beskrivelse av kategorien..."
+                placeholder="Brief category description..."
                 rows={3}
                 style={{
                   padding: "10px",
@@ -434,7 +398,7 @@ export default function GalleryPage() {
                 transition: "all 0.3s ease"
               }}
             >
-              Opprett kategori
+              Create Category
             </button>
           </div>
         )}
@@ -448,7 +412,7 @@ export default function GalleryPage() {
             fontSize: "1.2rem",
             color: "#888"
           }}>
-            Ingen bilder enda.
+            No images yet.
           </div>
         ) : (
           <>
@@ -468,7 +432,7 @@ export default function GalleryPage() {
                   }}>
                     {cat.name}
                     <span style={{ fontSize: "0.8rem", color: "#888", marginLeft: "12px" }}>
-                      ({categoryImages.length} {categoryImages.length === 1 ? 'bilde' : 'bilder'})
+                      ({categoryImages.length} {categoryImages.length === 1 ? 'image' : 'images'})
                     </span>
                   </h2>
                   {cat.description && (
@@ -550,7 +514,7 @@ export default function GalleryPage() {
                                 onMouseEnter={(e) => e.currentTarget.style.backgroundColor = "#f44"}
                                 onMouseLeave={(e) => e.currentTarget.style.backgroundColor = "#c00"}
                               >
-                                Slett bilde
+                                Delete Image
                               </button>
                             )}
                           </div>
