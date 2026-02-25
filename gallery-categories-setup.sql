@@ -16,10 +16,10 @@ CREATE TABLE IF NOT EXISTS public.gallery_categories (
 
 -- Insert default categories
 INSERT INTO public.gallery_categories (name, description, display_order) VALUES
-  ('General', 'Diverse bilder', 1),
-  ('Race Events', 'Bilder fra race-events', 2),
-  ('Team', 'Team bilder', 3),
-  ('Behind the Scenes', 'Bak kulissene', 4)
+  ('General', 'Miscellaneous images', 1),
+  ('Race Events', 'Images from race events', 2),
+  ('Team', 'Team photos', 3),
+  ('Behind the Scenes', 'Behind the scenes', 4)
 ON CONFLICT (name) DO NOTHING;
 
 -- Create index
