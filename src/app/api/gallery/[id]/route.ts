@@ -6,7 +6,7 @@ export const dynamic = 'force-dynamic';
 
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     // Check if user is admin
@@ -15,7 +15,7 @@ export async function DELETE(
       return NextResponse.json({ success: false, error: adminCheck.error }, { status: adminCheck.status });
     }
 
-    const id = params.id;
+    const { id } = await params;
 
     if (!id) {
       return NextResponse.json({ success: false, error: 'Image ID is required' }, { status: 400 });
