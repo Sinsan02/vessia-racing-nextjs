@@ -129,19 +129,20 @@ export default function Home() {
       {/* Hero Section */}
       <section className="hero" style={{
         background: isMobile ? 'linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.5))' : 'linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.7))',
-        paddingBottom: isMobile ? '15px' : undefined
+        paddingBottom: isMobile ? '10px' : undefined,
+        paddingTop: isMobile ? '10px' : undefined
       }}>
         <div className="hero-content">
           <Image 
             src="/Vessia_Logo.png" 
             alt="Vessia Racing" 
-            width={400} 
-            height={400} 
-            style={{maxWidth: '400px', height: 'auto', marginBottom: '20px'}}
+            width={isMobile ? 250 : 400} 
+            height={isMobile ? 250 : 400} 
+            style={{maxWidth: isMobile ? '250px' : '400px', height: 'auto', marginBottom: isMobile ? '10px' : '20px'}}
             priority
           />
-          <p className="hero-subtitle">Norwegian sim racing team</p>
-          <p className="hero-description">Competing in Scandinavian leagues and special events with dedication, precision and teamwork</p>
+          <p className="hero-subtitle" style={{fontSize: isMobile ? '1.1rem' : undefined, marginBottom: isMobile ? '0.5rem' : undefined}}>Norwegian sim racing team</p>
+          <p className="hero-description" style={{fontSize: isMobile ? '0.9rem' : undefined, marginBottom: isMobile ? '1rem' : undefined}}>Competing in Scandinavian leagues and special events with dedication, precision and teamwork</p>
           <div className="hero-buttons" style={{
             display: 'flex',
             gap: '1rem',
@@ -174,21 +175,21 @@ export default function Home() {
         <div className="container" style={{
           maxWidth: '1200px',
           margin: '0 auto',
-          padding: isMobile ? '20px 15px' : '40px 20px',
+          padding: isMobile ? '10px 15px' : '40px 20px',
           boxSizing: 'border-box',
           width: '100%'
         }}>
-          <h2 className="section-title">🏆 Our Accomplishments</h2>
-          <p className="section-subtitle">Celebrating our victories on the world's most challenging circuits</p>
+          <h2 className="section-title" style={{fontSize: isMobile ? '1.6rem' : undefined, marginBottom: isMobile ? '10px' : undefined}}>🏆 Our Accomplishments</h2>
+          <p className="section-subtitle" style={{fontSize: isMobile ? '0.9rem' : undefined, marginBottom: isMobile ? '15px' : undefined}}>Celebrating our victories on the world's most challenging circuits</p>
           
           {achievementsLoading ? (
             <div className="achievements-grid" style={{
               display: 'grid',
               gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
-              gap: '25px',
+              gap: isMobile ? '15px' : '25px',
               maxWidth: '1000px',
               margin: '0 auto',
-              padding: isMobile ? '0 20px' : '0 20px',
+              padding: isMobile ? '0 10px' : '0 20px',
               width: '100%',
               boxSizing: 'border-box',
               justifyItems: 'center'
@@ -201,19 +202,19 @@ export default function Home() {
             <div className="achievements-grid" style={{
               display: 'grid',
               gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
-              gap: '25px',
+              gap: isMobile ? '15px' : '25px',
               maxWidth: '1000px',
               margin: '0 auto',
-              padding: isMobile ? '0 20px' : '0 20px',
+              padding: isMobile ? '0 10px' : '0 20px',
               width: '100%',
               boxSizing: 'border-box',
               justifyItems: 'center'
             }}>              {achievements.map((achievement, index) => (
                 <div key={achievement.id} className="achievement-card" style={{
                   backgroundColor: '#1a1a1a',
-                  borderRadius: '15px',
-                  padding: '25px',
-                  paddingBottom: '30px',
+                  borderRadius: isMobile ? '12px' : '15px',
+                  padding: isMobile ? '15px' : '25px',
+                  paddingBottom: isMobile ? '20px' : '30px',
                   border: '2px solid #3EA822',
                   textAlign: 'center',
                   position: 'relative',
@@ -225,16 +226,16 @@ export default function Home() {
                 }}>
                   {/* Achievement Icon/Badge */}
                   <div style={{
-                    fontSize: '3rem',
-                    marginBottom: '15px',
+                    fontSize: isMobile ? '2rem' : '3rem',
+                    marginBottom: isMobile ? '10px' : '15px',
                     background: 'linear-gradient(135deg, #3EA822, #2d7a19)',
-                    width: '80px',
-                    height: '80px',
+                    width: isMobile ? '60px' : '80px',
+                    height: isMobile ? '60px' : '80px',
                     borderRadius: '50%',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    margin: '0 auto 15px',
+                    margin: isMobile ? '0 auto 10px' : '0 auto 15px',
                     boxShadow: '0 5px 15px rgba(62, 168, 34, 0.3)',
                     transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
                     cursor: 'pointer'
@@ -251,17 +252,16 @@ export default function Home() {
                     {achievement.icon}
                   </div>
 
-                  {/* Position Badge */}
                   {achievement.position <= 3 && (
                     <div style={{
                       position: 'absolute',
-                      top: '15px',
-                      right: '15px',
+                      top: isMobile ? '10px' : '15px',
+                      right: isMobile ? '10px' : '15px',
                       backgroundColor: achievement.position === 1 ? '#FFD700' : achievement.position === 2 ? '#C0C0C0' : '#CD7F32',
                       color: '#000',
-                      padding: '5px 10px',
-                      borderRadius: '15px',
-                      fontSize: '0.8rem',
+                      padding: isMobile ? '3px 8px' : '5px 10px',
+                      borderRadius: isMobile ? '12px' : '15px',
+                      fontSize: isMobile ? '0.7rem' : '0.8rem',
                       fontWeight: 'bold'
                     }}>
                       {achievement.position === 1 ? '1st' : achievement.position === 2 ? '2nd' : '3rd'} Place
@@ -270,8 +270,8 @@ export default function Home() {
 
                   <h3 style={{
                     color: '#3EA822',
-                    fontSize: '1.4rem',
-                    marginBottom: '8px',
+                    fontSize: isMobile ? '1.1rem' : '1.4rem',
+                    marginBottom: isMobile ? '6px' : '8px',
                     fontWeight: 'bold',
                     lineHeight: '1.3',
                     wordWrap: 'break-word'
@@ -281,8 +281,8 @@ export default function Home() {
 
                   <p style={{
                     color: '#ccc',
-                    fontSize: '1rem',
-                    marginBottom: '10px',
+                    fontSize: isMobile ? '0.85rem' : '1rem',
+                    marginBottom: isMobile ? '6px' : '10px',
                     fontWeight: '500'
                   }}>
                     🏁 {achievement.race_name}
@@ -291,8 +291,8 @@ export default function Home() {
                   {achievement.track_name && (
                     <p style={{
                       color: '#888',
-                      fontSize: '0.9rem',
-                      marginBottom: '10px'
+                      fontSize: isMobile ? '0.8rem' : '0.9rem',
+                      marginBottom: isMobile ? '6px' : '10px'
                     }}>
                       📍 {achievement.track_name}
                     </p>
@@ -300,8 +300,8 @@ export default function Home() {
 
                   <p style={{
                     color: '#888',
-                    fontSize: '0.9rem',
-                    marginBottom: '15px'
+                    fontSize: isMobile ? '0.75rem' : '0.9rem',
+                    marginBottom: isMobile ? '10px' : '15px'
                   }}>
                     📅 {new Date(achievement.achievement_date).toLocaleDateString('en-US', {
                       year: 'numeric',
@@ -403,29 +403,29 @@ export default function Home() {
         <div className="container" style={{
           maxWidth: '1200px',
           margin: '0 auto',
-          padding: isMobile ? '20px 15px' : '40px 20px',
+          padding: isMobile ? '10px 15px' : '40px 20px',
           boxSizing: 'border-box',
           width: '100%'
         }}>
-          <h2 className="section-title">Upcoming Event</h2>
+          <h2 className="section-title" style={{fontSize: isMobile ? '1.6rem' : undefined, marginBottom: isMobile ? '15px' : undefined}}>Upcoming Event</h2>
           {latestEvent ? (
             <div className="latest-event" style={{
               backgroundColor: '#1a1a1a',
-              borderRadius: '15px',
-              padding: isMobile ? '25px 30px' : '25px',
+              borderRadius: isMobile ? '12px' : '15px',
+              padding: isMobile ? '15px 20px' : '25px',
               border: '1px solid #333',
               textAlign: 'center',
-              maxWidth: '600px',
+              maxWidth: isMobile ? '100%' : '600px',
               margin: '0 auto',
               boxSizing: 'border-box'
             }}>
               {latestEvent.image_url && (
                 <div style={{
                   position: 'relative',
-                  height: '200px',
+                  height: isMobile ? '150px' : '200px',
                   width: '100%',
-                  marginBottom: '20px',
-                  borderRadius: '10px',
+                  marginBottom: isMobile ? '12px' : '20px',
+                  borderRadius: isMobile ? '8px' : '10px',
                   overflow: 'hidden'
                 }}>
                   <Image
@@ -445,15 +445,15 @@ export default function Home() {
               )}
               <h3 style={{
                 color: '#3EA822',
-                fontSize: '1.8rem',
-                marginBottom: '10px'
+                fontSize: isMobile ? '1.4rem' : '1.8rem',
+                marginBottom: isMobile ? '8px' : '10px'
               }}>
                 🏁 {latestEvent.name}
               </h3>
               <p style={{
                 color: '#ccc',
-                fontSize: '1.1rem',
-                marginBottom: '8px'
+                fontSize: isMobile ? '0.9rem' : '1.1rem',
+                marginBottom: isMobile ? '6px' : '8px'
               }}>
                 📅 {new Date(latestEvent.event_date).toLocaleDateString('en-US', {
                   year: 'numeric',
@@ -465,8 +465,8 @@ export default function Home() {
               {latestEvent.track_name && (
                 <p style={{
                   color: '#ccc',
-                  fontSize: '1rem',
-                  marginBottom: '15px'
+                  fontSize: isMobile ? '0.85rem' : '1rem',
+                  marginBottom: isMobile ? '10px' : '15px'
                 }}>
                   🏁 {latestEvent.track_name}
                 </p>
@@ -474,26 +474,27 @@ export default function Home() {
               {latestEvent.description && (
                 <p style={{
                   color: '#888',
-                  fontSize: '0.95rem',
-                  marginBottom: '20px',
+                  fontSize: isMobile ? '0.8rem' : '0.95rem',
+                  marginBottom: isMobile ? '12px' : '20px',
                   maxWidth: '600px',
-                  margin: '0 auto 20px'
+                  margin: isMobile ? '0 auto 12px' : '0 auto 20px'
                 }}>
                   {latestEvent.description}
                 </p>
               )}
-              <div style={{marginTop: '20px'}}>
+              <div style={{marginTop: isMobile ? '12px' : '20px'}}>
                 <Link
                   href="/events"
                   className="btn-primary"
                   style={{
                     backgroundColor: '#3EA822',
                     color: 'white',
-                    padding: '12px 24px',
-                    borderRadius: '8px',
+                    padding: isMobile ? '10px 20px' : '12px 24px',
+                    borderRadius: isMobile ? '6px' : '8px',
                     textDecoration: 'none',
                     display: 'inline-block',
-                    transition: 'background-color 0.3s ease'
+                    transition: 'background-color 0.3s ease',
+                    fontSize: isMobile ? '0.9rem' : undefined
                   }}
                 >
                   View All Events
@@ -547,7 +548,7 @@ export default function Home() {
         <div className="container" style={{
           maxWidth: '1200px',
           margin: '0 auto',
-          padding: isMobile ? '20px 15px' : '40px 20px',
+          padding: isMobile ? '10px 15px' : '40px 20px',
           boxSizing: 'border-box',
           width: '100%',
           display: 'flex',
@@ -556,19 +557,19 @@ export default function Home() {
         }}>
           <div className="join-team-box" style={{
             textAlign: 'center',
-            padding: isMobile ? '50px 30px' : '50px 20px',
+            padding: isMobile ? '25px 20px' : '50px 20px',
             backgroundColor: '#1a1a1a',
-            borderRadius: '15px',
+            borderRadius: isMobile ? '12px' : '15px',
             border: '2px solid #3EA822',
-            maxWidth: '600px',
+            maxWidth: isMobile ? '100%' : '600px',
             margin: '0 auto',
             boxSizing: 'border-box'
           }}>
-            <div style={{fontSize: '2.5rem', marginBottom: '15px'}}>🚀</div>
-            <h3 style={{color: '#3EA822', marginBottom: '10px', fontSize: '2rem', fontWeight: 'bold'}}>
+            <div style={{fontSize: isMobile ? '2rem' : '2.5rem', marginBottom: isMobile ? '10px' : '15px'}}>🚀</div>
+            <h3 style={{color: '#3EA822', marginBottom: isMobile ? '8px' : '10px', fontSize: isMobile ? '1.4rem' : '2rem', fontWeight: 'bold'}}>
               Want to join our winning team?
             </h3>
-            <p style={{color: '#888', marginBottom: '25px', fontSize: '1.1rem', maxWidth: '600px', margin: '0 auto 25px'}}>
+            <p style={{color: '#888', marginBottom: isMobile ? '15px' : '25px', fontSize: isMobile ? '0.9rem' : '1.1rem', maxWidth: '600px', margin: isMobile ? '0 auto 15px' : '0 auto 25px'}}>
               Be part of our racing success story and compete at the highest level in professional sim racing
             </p>
             <a
@@ -579,11 +580,11 @@ export default function Home() {
               style={{
                 backgroundColor: '#3EA822',
                 color: 'white',
-                padding: '15px 35px',
-                borderRadius: '8px',
+                padding: isMobile ? '12px 25px' : '15px 35px',
+                borderRadius: isMobile ? '6px' : '8px',
                 textDecoration: 'none',
                 display: 'inline-block',
-                fontSize: '1.1rem',
+                fontSize: isMobile ? '0.95rem' : '1.1rem',
                 fontWeight: 'bold',
                 transition: 'all 0.3s ease'
               }}

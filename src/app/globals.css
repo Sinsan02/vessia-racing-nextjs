@@ -519,14 +519,15 @@ html {
   /* Make achievements grid stack nicely on mobile */
   .achievements-grid {
     grid-template-columns: 1fr !important;
-    gap: 20px !important;
-    padding: 0 20px !important;
+    gap: 15px !important;
+    padding: 0 10px !important;
     justify-items: center !important;
   }
   
   .achievement-card {
     max-width: 500px !important;
     margin: 0 auto !important;
+    padding: 15px !important;
   }
   
   .latest-event {
@@ -543,31 +544,31 @@ html {
   
   /* Adjust section padding for mobile */
   .section {
-    padding: 40px 0 !important;
+    padding: 20px 0 !important;
   }
   
   /* Hero section adjustments */
   .hero {
-    padding: 20px 15px !important;
+    padding: 15px 10px !important;
     min-height: 100vh !important;
   }
   
   .hero-content h1,
   .hero-title {
-    font-size: 2.5rem !important;
+    font-size: 2rem !important;
   }
   
   .hero-subtitle {
-    font-size: 1.2rem !important;
+    font-size: 1.1rem !important;
   }
   
   .hero-description {
-    font-size: 1rem !important;
+    font-size: 0.9rem !important;
   }
   
   .hero-buttons {
     flex-direction: column !important;
-    gap: 15px !important;
+    gap: 10px !important;
     padding: 0 !important;
     align-items: center !important;
   }
@@ -575,22 +576,24 @@ html {
   .hero-buttons .btn-primary,
   .hero-buttons .btn-secondary {
     width: 100% !important;
-    max-width: 300px !important;
+    max-width: 280px !important;
     text-align: center !important;
+    padding: 10px 20px !important;
+    font-size: 0.95rem !important;
   }
   
   /* Section titles and text */
   .section-title {
-    font-size: 2rem !important;
-    margin-bottom: 20px !important;
-    padding: 0 20px !important;
+    font-size: 1.6rem !important;
+    margin-bottom: 10px !important;
+    padding: 0 15px !important;
     text-align: center !important;
   }
   
   .section-subtitle {
-    font-size: 1rem !important;
-    margin-bottom: 30px !important;
-    padding: 0 25px !important;
+    font-size: 0.9rem !important;
+    margin-bottom: 15px !important;
+    padding: 0 20px !important;
     text-align: center !important;
   }
   
