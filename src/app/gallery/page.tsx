@@ -12,6 +12,8 @@ export default function GalleryPage() {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [category, setCategory] = useState("General");
+  const [newCategoryName, setNewCategoryName] = useState("");
+  const [newCategoryDesc, setNewCategoryDesc] = useState("");
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
@@ -123,6 +125,39 @@ export default function GalleryPage() {
       fetchImages();
     } catch (err) {
       setError("Feil ved sletting av bilde.");
+    }
+  };
+
+  const handleCreateCategory = async () => {
+    if (!newCategoryName.trim()) {
+      setError("Kategorinavn er påkrevd");
+      return;
+    }
+
+    setError("");
+    setSuccess("");
+
+    try {
+      const res = await fetch('/api/gallery/categories/create', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({
+          name: newCategoryName,
+          description: newCategoryDesc
+        })
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) throw new Error(data.error || "Feil ved opprettelse av kategori");
+
+      setSuccess("Kategori opprettet!");
+      setNewCategoryName("");
+      setNewCategoryDesc("");
+      fetchCategories();
+    } catch (err: any) {
+      setError(err.message || "Feil ved opprettelse av kategori.");
     }
   };
 
@@ -319,6 +354,88 @@ export default function GalleryPage() {
                 {success}
               </div>
             )}
+          </div>
+        )}
+
+        {/* Category Creation Form */}
+        {isAdmin && isEditMode && (
+          <div style={{
+            marginTop: "40px",
+            padding: isMobile ? "20px" : "30px",
+            backgroundColor: "rgba(26, 26, 26, 0.9)",
+            borderRadius: "12px",
+            display: "flex",
+            flexDirection: "column",
+            gap: "16px",
+            maxWidth: "600px"
+          }}>
+            <h3 style={{
+              margin: "0 0 10px 0",
+              fontSize: "1.3rem",
+              color: "#3EA822",
+              fontWeight: "bold"
+            }}>
+              Opprett ny kategori
+            </h3>
+            
+            <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+              <label style={{ fontSize: "0.95rem", color: "#ccc" }}>
+                Kategorinavn *
+              </label>
+              <input
+                type="text"
+                value={newCategoryName}
+                onChange={(e) => setNewCategoryName(e.target.value)}
+                placeholder="F.eks. 12 Timer Spa Race"
+                style={{
+                  padding: "10px",
+                  backgroundColor: "#1a1a1a",
+                  border: "1px solid #333",
+                  borderRadius: "6px",
+                  color: "#fff",
+                  fontSize: "1rem"
+                }}
+              />
+            </div>
+
+            <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+              <label style={{ fontSize: "0.95rem", color: "#ccc" }}>
+                Beskrivelse (valgfritt)
+              </label>
+              <textarea
+                value={newCategoryDesc}
+                onChange={(e) => setNewCategoryDesc(e.target.value)}
+                placeholder="Kort beskrivelse av kategorien..."
+                rows={3}
+                style={{
+                  padding: "10px",
+                  backgroundColor: "#1a1a1a",
+                  border: "1px solid #333",
+                  borderRadius: "6px",
+                  color: "#fff",
+                  fontSize: "1rem",
+                  resize: "vertical"
+                }}
+              />
+            </div>
+
+            <button
+              onClick={handleCreateCategory}
+              disabled={!newCategoryName.trim()}
+              style={{
+                padding: isMobile ? "10px 20px" : "12px 24px",
+                backgroundColor: newCategoryName.trim() ? "#3EA822" : "#555",
+                color: "#fff",
+                border: "none",
+                borderRadius: "6px",
+                fontSize: "1rem",
+                fontWeight: "bold",
+                cursor: newCategoryName.trim() ? "pointer" : "not-allowed",
+                transition: "all 0.3s ease"
+              }}
+            >
+              Opprett kategori
+            </button>
           </div>
         )}
 
