@@ -38,10 +38,11 @@ class IRacingService {
       const password = process.env.IRACING_PASSWORD;
 
       if (!email || !password) {
-        console.error('iRacing credentials not configured');
+        console.error('❌ iRacing credentials not configured. Please set IRACING_EMAIL and IRACING_PASSWORD environment variables.');
         return false;
       }
 
+      console.log('🔄 Attempting iRacing authentication...');
       const response = await fetch(`${this.baseUrl}/auth`, {
         method: 'POST',
         headers: {
@@ -51,7 +52,9 @@ class IRacingService {
       });
 
       if (!response.ok) {
-        console.error('iRacing authentication failed:', response.status);
+        console.error(`❌ iRacing authentication failed with status ${response.status}`);
+        const errorText = await response.text().catch(() => 'No error details');
+        console.error('Error details:', errorText);
         return false;
       }
 
@@ -61,12 +64,14 @@ class IRacingService {
         this.authCookie = setCookie;
         // Set expiry to 1 hour from now
         this.authExpiry = Date.now() + (60 * 60 * 1000);
+        console.log('✅ iRacing authentication successful');
         return true;
       }
 
+      console.error('❌ No auth cookie received from iRacing');
       return false;
     } catch (error) {
-      console.error('iRacing authentication error:', error);
+      console.error('❌ iRacing authentication error:', error);
       return false;
     }
   }
@@ -84,12 +89,14 @@ class IRacingService {
   private async makeRequest(endpoint: string): Promise<any> {
     // Check if we need to authenticate
     if (!this.isAuthValid()) {
+      console.log('🔑 Auth token expired or missing, re-authenticating...');
       const authenticated = await this.authenticate();
       if (!authenticated) {
-        throw new Error('Failed to authenticate with iRacing');
+        throw new Error('Failed to authenticate with iRacing API. Check credentials.');
       }
     }
 
+    console.log(`📡 Making iRacing API request: ${endpoint}`);
     const response = await fetch(`${this.baseUrl}${endpoint}`, {
       headers: {
         Cookie: this.authCookie || '',
@@ -97,6 +104,7 @@ class IRacingService {
     });
 
     if (!response.ok) {
+      console.error(`❌ iRacing API request failed with status ${response.status}`);
       throw new Error(`iRacing API error: ${response.status}`);
     }
 
@@ -110,17 +118,18 @@ class IRacingService {
     irating: number;
     safety_rating: string;
     license_class: string;
-    license_level: number;
-  } | null> {
-    try {
+    liconsole.log(`🔍 Fetching iRacing stats for customer ID: ${customerId}`);
+      
       // Fetch member stats
       const statsData = await this.makeRequest(`/data/member/info?cust_ids=${customerId}`);
       
       if (!statsData || !statsData.members || statsData.members.length === 0) {
+        console.error(`❌ No member data found for customer ID: ${customerId}`);
         return null;
       }
 
       const member = statsData.members[0];
+      console.log(`✅ Member data retrieved for: ${member.display_name || 'Unknown'}`);
 
       // Fetch career stats for more detailed info
       const careerData = await this.makeRequest(`/data/stats/member_career?cust_id=${customerId}`);
@@ -144,11 +153,17 @@ class IRacingService {
         }
       }
 
-      return {
+      const result = {
         irating: member.irating || 0,
         safety_rating: safetyRating,
         license_class: licenseClass,
         license_level: licenseLevel,
+      };
+
+      console.log('✅ iRacing stats retrieved successfully:', result);
+      return result;
+    } catch (error) {
+      console.error('❌ : licenseLevel,
       };
     } catch (error) {
       console.error('Error fetching iRacing stats:', error);

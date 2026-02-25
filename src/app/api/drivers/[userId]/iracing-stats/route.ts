@@ -41,8 +41,12 @@ export async function POST(
     const stats = await iRacingService.getDriverStats(driver.iracing_customer_id);
 
     if (!stats) {
+      console.error(`Failed to fetch iRacing stats for customer ID: ${driver.iracing_customer_id}`);
       return NextResponse.json(
-        { error: 'Failed to fetch iRacing stats. Check API credentials and customer ID.' },
+        { 
+          error: 'Failed to fetch iRacing stats. Please check:\n1. Your Customer ID is correct\n2. Server logs for authentication errors',
+          details: 'Check Vercel logs for detailed error messages'
+        },
         { status: 500 }
       );
     }

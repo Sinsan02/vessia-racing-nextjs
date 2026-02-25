@@ -16,11 +16,14 @@ export async function GET(
       .single();
 
     if (error || !driver) {
+      console.error('Driver not found:', userId, error);
       return NextResponse.json(
         { error: 'Driver not found' },
         { status: 404 }
       );
     }
+
+    console.log(`✅ Driver profile loaded: ${driver.full_name}, Picture: ${driver.profile_picture || 'No picture'}`);
 
     return NextResponse.json({
       success: true,
