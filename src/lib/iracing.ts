@@ -43,15 +43,41 @@ class IRacingService {
       }
 
       console.log('🔄 Attempting iRacing authentication...');
-      const response = await fetch(`${this.baseUrl}/auth`, {
+      console.log(`📧 Using email: ${email?.substring(0, 3)}***`);
+      
+      // Method 1: Try /data/auth endpoint
+      console.log('🔍 Trying /data/auth endpoint...');
+      let response = await fetch(`${this.baseUrl}/data/auth`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({ 
+          email: email.toLowerCase(),
+          password: password
+        }),
       });
 
-      console.log(`📡 Auth response status: ${response.status}`);
+      console.log(`📡 /data/auth response status: ${response.status}`);
+
+      // If that fails, try the original /auth endpoint with GET
+      if (response.status === 405 || response.status === 404) {
+        console.log('🔍 Trying /auth endpoint with different method...');
+        
+        // Create Basic Auth header
+        const authString = Buffer.from(`${email}:${password}`).toString('base64');
+        
+        response = await fetch(`${this.baseUrl}/auth`, {
+          method: 'GET',
+          headers: {
+            'Authorization': `Basic ${authString}`,
+          },
+        });
+        
+        console.log(`📡 /auth (GET) response status: ${response.status}`);
+      }
+
+      console.log(`📡 Final auth response status: ${response.status}`);
 
       if (!response.ok) {
         console.error(`❌ iRacing authentication failed with status ${response.status}`);
@@ -60,16 +86,20 @@ class IRacingService {
         return false;
       }
 
-      // Check if response body contains error
-      const authResult = await response.json().catch(() => ({})) as IRacingAuthResponse;
-      console.log('📦 Auth response:', JSON.stringify(authResult));
-
-      // Get auth cookie from response
-      const setCookie = response.headers.get('set-cookie');
-      console.log('🍪 Set-Cookie header:', setCookie ? 'Present' : 'Missing');
+      // Get auth cookie from response headers
+      const setCookieHeader = response.headers.get('set-cookie');
+      console.log('🍪 Set-Cookie header:', setCookieHeader ? `Present (${setCookieHeader.substring(0, 50)}...)` : 'Missing');
       
-      if (setCookie) {
-        this.authCookie = setCookie;
+      // Also check all headers
+      const allHeaders = Array.from(response.headers.entries());
+      console.log('📋 All response headers:', allHeaders.map(([k, v]) => `${k}: ${v.substring(0, 30)}...`));
+
+      // Try to read response body
+      const textBody = await response.text().catch(() => '');
+      console.log('📄 Response body length:', textBody.length);
+      
+      if (setCookieHeader) {
+        this.authCookie = setCookieHeader;
         // Set expiry to 1 hour from now
         this.authExpiry = Date.now() + (60 * 60 * 1000);
         console.log('✅ iRacing authentication successful');
@@ -77,7 +107,6 @@ class IRacingService {
       }
 
       console.error('❌ No auth cookie received from iRacing');
-      console.error('Response headers:', Array.from(response.headers.entries()));
       return false;
     } catch (error) {
       console.error('❌ iRacing authentication error:', error);
