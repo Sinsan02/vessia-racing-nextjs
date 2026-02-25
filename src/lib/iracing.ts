@@ -7,8 +7,10 @@
  *    IRACING_EMAIL=your_iracing_email
  *    IRACING_PASSWORD=your_iracing_password
  * 
- * Note: iRacing API uses cookie-based authentication
+ * Note: iRacing API uses cookie-based authentication with SHA-256 hashed passwords
  */
+
+import crypto from 'crypto';
 
 interface IRacingAuthResponse {
   authcode?: string;
@@ -45,39 +47,24 @@ class IRacingService {
       console.log('🔄 Attempting iRacing authentication...');
       console.log(`📧 Using email: ${email?.substring(0, 3)}***`);
       
-      // Method 1: Try /data/auth endpoint
-      console.log('🔍 Trying /data/auth endpoint...');
-      let response = await fetch(`${this.baseUrl}/data/auth`, {
+      // iRacing requires credentials in a specific format
+      // Hash the password with SHA-256 combined with lowercase email
+      const hashInput = `${password}${email.toLowerCase()}`;
+      const hashedPassword = crypto.createHash('sha256').update(hashInput, 'utf8').digest('base64');
+      
+      console.log('🔍 Sending authentication request to iRacing...');
+      const response = await fetch(`${this.baseUrl}/data/auth`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ 
           email: email.toLowerCase(),
-          password: password
+          password: hashedPassword
         }),
       });
 
-      console.log(`📡 /data/auth response status: ${response.status}`);
-
-      // If that fails, try the original /auth endpoint with GET
-      if (response.status === 405 || response.status === 404) {
-        console.log('🔍 Trying /auth endpoint with different method...');
-        
-        // Create Basic Auth header
-        const authString = Buffer.from(`${email}:${password}`).toString('base64');
-        
-        response = await fetch(`${this.baseUrl}/auth`, {
-          method: 'GET',
-          headers: {
-            'Authorization': `Basic ${authString}`,
-          },
-        });
-        
-        console.log(`📡 /auth (GET) response status: ${response.status}`);
-      }
-
-      console.log(`📡 Final auth response status: ${response.status}`);
+      console.log(`📡 Auth response status: ${response.status}`);
 
       if (!response.ok) {
         console.error(`❌ iRacing authentication failed with status ${response.status}`);
