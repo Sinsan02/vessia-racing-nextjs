@@ -519,20 +519,21 @@ html {
   /* Make achievements grid stack nicely on mobile */
   .achievements-grid {
     grid-template-columns: 1fr !important;
-    gap: 15px !important;
-    padding: 0 10px !important;
+    gap: 10px !important;
+    padding: 0 8px !important;
     justify-items: center !important;
   }
   
   .achievement-card {
     max-width: 500px !important;
     margin: 0 auto !important;
-    padding: 15px !important;
+    padding: 10px !important;
   }
   
   .latest-event {
     max-width: 600px !important;
     margin: 0 auto !important;
+    padding: 10px 12px !important;
   }
   
   .results-table-container {
@@ -544,31 +545,31 @@ html {
   
   /* Adjust section padding for mobile */
   .section {
-    padding: 20px 0 !important;
+    padding: 10px 0 !important;
   }
   
   /* Hero section adjustments */
   .hero {
-    padding: 15px 10px !important;
-    min-height: 100vh !important;
+    padding: 8px 8px !important;
+    min-height: auto !important;
   }
   
   .hero-content h1,
   .hero-title {
-    font-size: 2rem !important;
+    font-size: 1.5rem !important;
   }
   
   .hero-subtitle {
-    font-size: 1.1rem !important;
+    font-size: 0.95rem !important;
   }
   
   .hero-description {
-    font-size: 0.9rem !important;
+    font-size: 0.8rem !important;
   }
   
   .hero-buttons {
     flex-direction: column !important;
-    gap: 10px !important;
+    gap: 8px !important;
     padding: 0 !important;
     align-items: center !important;
   }
@@ -576,24 +577,24 @@ html {
   .hero-buttons .btn-primary,
   .hero-buttons .btn-secondary {
     width: 100% !important;
-    max-width: 280px !important;
+    max-width: 240px !important;
     text-align: center !important;
-    padding: 10px 20px !important;
-    font-size: 0.95rem !important;
+    padding: 8px 16px !important;
+    font-size: 0.85rem !important;
   }
   
   /* Section titles and text */
   .section-title {
-    font-size: 1.6rem !important;
-    margin-bottom: 10px !important;
-    padding: 0 15px !important;
+    font-size: 1.3rem !important;
+    margin-bottom: 6px !important;
+    padding: 0 10px !important;
     text-align: center !important;
   }
   
   .section-subtitle {
-    font-size: 0.9rem !important;
-    margin-bottom: 15px !important;
-    padding: 0 20px !important;
+    font-size: 0.8rem !important;
+    margin-bottom: 10px !important;
+    padding: 0 15px !important;
     text-align: center !important;
   }
   
