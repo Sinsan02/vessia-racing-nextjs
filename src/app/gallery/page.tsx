@@ -162,6 +162,25 @@ export default function GalleryPage() {
     }
   };
 
+  const handleReorderCategory = async (categoryId: number, direction: 'up' | 'down') => {
+    try {
+      const res = await fetch('/api/gallery/categories/reorder', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({ categoryId, direction })
+      });
+
+      if (!res.ok) throw new Error('Failed to reorder');
+
+      fetchCategories();
+      // Also refresh images to see the new order
+      fetchImages();
+    } catch (err) {
+      setError('Error reordering category.');
+    }
+  };
+
   return (
     <div style={{
       minHeight: "100vh",
@@ -428,12 +447,55 @@ export default function GalleryPage() {
                     marginBottom: isMobile ? "16px" : "24px",
                     fontWeight: "bold",
                     borderBottom: "2px solid #3EA822",
-                    paddingBottom: "8px"
+                    paddingBottom: "8px",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "space-between"
                   }}>
-                    {cat.name}
-                    <span style={{ fontSize: "0.8rem", color: "#888", marginLeft: "12px" }}>
-                      ({categoryImages.length} {categoryImages.length === 1 ? 'image' : 'images'})
-                    </span>
+                    <div>
+                      {cat.name}
+                      <span style={{ fontSize: "0.8rem", color: "#888", marginLeft: "12px" }}>
+                        ({categoryImages.length} {categoryImages.length === 1 ? 'image' : 'images'})
+                      </span>
+                    </div>
+                    {isAdmin && isEditMode && (
+                      <div style={{ display: "flex", gap: "8px" }}>
+                        <button
+                          onClick={() => handleReorderCategory(cat.id, 'up')}
+                          style={{
+                            padding: "6px 12px",
+                            backgroundColor: "#3EA822",
+                            color: "#fff",
+                            border: "none",
+                            borderRadius: "6px",
+                            fontSize: "0.9rem",
+                            cursor: "pointer",
+                            transition: "background-color 0.3s ease"
+                          }}
+                          onMouseEnter={(e) => e.currentTarget.style.backgroundColor = "#4db82e"}
+                          onMouseLeave={(e) => e.currentTarget.style.backgroundColor = "#3EA822"}
+                        >
+                          ▲
+                        </button>
+                        <button
+                          onClick={() => handleReorderCategory(cat.id, 'down')}
+                          style={{
+                            padding: "6px 12px",
+                            backgroundColor: "#3EA822",
+                            color: "#fff",
+                            border: "none",
+                            borderRadius: "6px",
+                            fontSize: "0.9rem",
+                            cursor: "pointer",
+                            transition: "background-color 0.3s ease"
+                          }}
+                          onMouseEnter={(e) => e.currentTarget.style.backgroundColor = "#4db82e"}
+                          onMouseLeave={(e) => e.currentTarget.style.backgroundColor = "#3EA822"}
+                        >
+                          ▼
+                        </button>
+                      </div>
+                    )}
                   </h2>
                   {cat.description && (
                     <p style={{ color: "#888", marginBottom: "16px", fontSize: "0.95rem" }}>
