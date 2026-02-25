@@ -5,7 +5,9 @@ import { supabaseAdmin } from '@/lib/supabase';
 export async function POST(request: NextRequest) {
   try {
     const adminCheck = await requireAdmin(request);
-    if (adminCheck) return adminCheck;
+    if (!adminCheck.success) {
+      return NextResponse.json({ error: adminCheck.error }, { status: adminCheck.status });
+    }
 
     const { categoryId, direction } = await request.json();
 
