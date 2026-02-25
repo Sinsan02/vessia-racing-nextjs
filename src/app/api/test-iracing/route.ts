@@ -11,7 +11,11 @@ export async function GET(request: NextRequest) {
     // Only admins can test
     const adminCheck = await requireAdmin(request);
     if (!adminCheck.success) {
-      return NextResponse.json({ error: adminCheck.error }, { status: adminCheck.status });
+      return NextResponse.json({ 
+        error: 'Admin access required',
+        message: 'You need to be logged in as admin to use this test endpoint',
+        adminCheck: adminCheck
+      }, { status: 401 });
     }
 
     console.log('🧪 Testing iRacing API credentials...');
@@ -20,12 +24,14 @@ export async function GET(request: NextRequest) {
     const hasEmail = !!process.env.IRACING_EMAIL;
     const hasPassword = !!process.env.IRACING_PASSWORD;
     
-    console.log('Environment check:', {
+    const envCheck = {
       IRACING_EMAIL: hasEmail,
       IRACING_PASSWORD: hasPassword,
       emailLength: process.env.IRACING_EMAIL?.length || 0,
       passwordLength: process.env.IRACING_PASSWORD?.length || 0
-    });
+    };
+    
+    console.log('Environment check:', envCheck);
 
     if (!hasEmail || !hasPassword) {
       return NextResponse.json({
@@ -34,7 +40,8 @@ export async function GET(request: NextRequest) {
         details: {
           IRACING_EMAIL: hasEmail ? '✅ Set' : '❌ Missing',
           IRACING_PASSWORD: hasPassword ? '✅ Set' : '❌ Missing',
-        }
+        },
+        debug: envCheck
       }, { status: 500 });
     }
 
