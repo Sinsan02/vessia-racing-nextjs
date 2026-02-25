@@ -171,8 +171,7 @@ export default function Navbar() {
             <Link href="/achievements" className="nav-link" onClick={() => setIsMenuOpen(false)}>Accomplishments</Link>
             <Link href="/drivers" className="nav-link" onClick={() => setIsMenuOpen(false)}>Drivers</Link>
             <Link href="/results" className="nav-link" onClick={() => setIsMenuOpen(false)}>Championship</Link>
-            <Link href="/events" className="nav-link" onClick={() => setIsMenuOpen(false)}>Events</Link>
-            
+            <Link href="/events" className="nav-link" onClick={() => setIsMenuOpen(false)}>Events</Link>            <Link href="/gallery" className="nav-link" onClick={() => setIsMenuOpen(false)}>Gallery</Link>            
             <div id="authNavigation">
               {user ? (
                 <div className="user-menu">
