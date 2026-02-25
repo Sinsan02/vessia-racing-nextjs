@@ -331,49 +331,51 @@ export default function GalleryPage() {
                   />
                 </div>
                 
-                <div style={{ padding: "16px" }}>
-                  {img.title && (
-                    <h3 style={{ 
-                      fontSize: "1.1rem", 
-                      marginBottom: "8px", 
-                      color: "#3EA822",
-                      fontWeight: "bold"
-                    }}>
-                      {img.title}
-                    </h3>
-                  )}
-                  {img.description && (
-                    <p style={{ 
-                      fontSize: "0.9rem", 
-                      color: "#aaa", 
-                      marginBottom: "8px",
-                      lineHeight: "1.4"
-                    }}>
-                      {img.description}
-                    </p>
-                  )}
+                {(img.title || img.description || (isAdmin && isEditMode)) && (
+                  <div style={{ padding: "16px" }}>
+                    {img.title && (
+                      <h3 style={{ 
+                        fontSize: "1.1rem", 
+                        marginBottom: "8px", 
+                        color: "#3EA822",
+                        fontWeight: "bold"
+                      }}>
+                        {img.title}
+                      </h3>
+                    )}
+                    {img.description && (
+                      <p style={{ 
+                        fontSize: "0.9rem", 
+                        color: "#aaa", 
+                        marginBottom: "8px",
+                        lineHeight: "1.4"
+                      }}>
+                        {img.description}
+                      </p>
+                    )}
 
-                  {isAdmin && isEditMode && (
-                    <button
-                      onClick={() => handleDelete(img.id)}
-                      style={{
-                        marginTop: "12px",
-                        padding: "8px 16px",
-                        backgroundColor: "#c00",
-                        color: "#fff",
-                        border: "none",
-                        borderRadius: "6px",
-                        fontSize: "0.9rem",
-                        cursor: "pointer",
-                        transition: "background-color 0.3s ease"
-                      }}
-                      onMouseEnter={(e) => e.currentTarget.style.backgroundColor = "#f44"}
-                      onMouseLeave={(e) => e.currentTarget.style.backgroundColor = "#c00"}
-                    >
-                      Slett bilde
-                    </button>
-                  )}
-                </div>
+                    {isAdmin && isEditMode && (
+                      <button
+                        onClick={() => handleDelete(img.id)}
+                        style={{
+                          marginTop: img.title || img.description ? "12px" : "0",
+                          padding: "8px 16px",
+                          backgroundColor: "#c00",
+                          color: "#fff",
+                          border: "none",
+                          borderRadius: "6px",
+                          fontSize: "0.9rem",
+                          cursor: "pointer",
+                          transition: "background-color 0.3s ease"
+                        }}
+                        onMouseEnter={(e) => e.currentTarget.style.backgroundColor = "#f44"}
+                        onMouseLeave={(e) => e.currentTarget.style.backgroundColor = "#c00"}
+                      >
+                        Slett bilde
+                      </button>
+                    )}
+                  </div>
+                )}
               </div>
             ))}
           </div>
