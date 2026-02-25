@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 
 const getPlaceholderColor = (name: string) => {
   const colors = [
@@ -11,6 +12,7 @@ const getPlaceholderColor = (name: string) => {
 };
 
 export default function Drivers() {
+  const router = useRouter();
   const [drivers, setDrivers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [isMobile, setIsMobile] = useState(typeof window !== 'undefined' ? window.innerWidth <= 768 : false);
@@ -156,13 +158,30 @@ export default function Drivers() {
                 <div 
                   key={driver.id} 
                   className="driver-card"
+                  onClick={() => !isEditMode && router.push(`/drivers/${driver.id}`)}
                   style={{
                     backgroundColor: '#1a1a1a',
                     padding: '20px',
                     borderRadius: '10px',
                     border: '1px solid #333',
                     textAlign: 'center',
-                    position: 'relative'
+                    position: 'relative',
+                    cursor: isEditMode ? 'default' : 'pointer',
+                    transition: 'all 0.3s ease'
+                  }}
+                  onMouseEnter={(e) => {
+                    if (!isEditMode) {
+                      e.currentTarget.style.transform = 'translateY(-5px)';
+                      e.currentTarget.style.borderColor = '#3EA822';
+                      e.currentTarget.style.boxShadow = '0 8px 20px rgba(62, 168, 34, 0.3)';
+                    }
+                  }}
+                  onMouseLeave={(e) => {
+                    if (!isEditMode) {
+                      e.currentTarget.style.transform = 'translateY(0)';
+                      e.currentTarget.style.borderColor = '#333';
+                      e.currentTarget.style.boxShadow = 'none';
+                    }
                   }}
                 >
                   {isAdmin && isEditMode && (
