@@ -67,9 +67,7 @@ export default function Login() {
 
   return (
     <div className="min-h-screen" style={{
-      backgroundImage: isMobile
-        ? 'linear-gradient(180deg, #0d1f0d 0%, #1a3e1a 20%, #1a3e1a 90%, #0d1f0d 100%)'
-        : `linear-gradient(rgba(10,10,10,0.85), rgba(10,10,10,0.85)), url('/images/decorative/ChatGPT Image 30. jan. 2026, 22_05_23.png')`,
+      backgroundImage: `linear-gradient(rgba(10,10,10,${isMobile ? '0.75' : '0.85'}), rgba(10,10,10,${isMobile ? '0.75' : '0.85'})), url('/images/decorative/ChatGPT Image 30. jan. 2026, 22_05_23.png')`,
       backgroundColor: '#0a0a0a',
       backgroundSize: 'cover',
       backgroundPosition: 'center',

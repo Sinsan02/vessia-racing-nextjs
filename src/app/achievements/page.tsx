@@ -49,9 +49,7 @@ export default function Achievements() {
 
   return (
     <div style={{
-      backgroundImage: isMobile
-        ? 'linear-gradient(180deg, #0d1f0d 0%, #1a3e1a 20%, #1a3e1a 90%, #0d1f0d 100%)'
-        : `linear-gradient(rgba(10,10,10,0.75), rgba(10,10,10,0.75)), url('/images/decorative/Screenshot_2025-10-11_170713.png')`,
+      backgroundImage: `linear-gradient(rgba(10,10,10,${isMobile ? '0.65' : '0.75'}), rgba(10,10,10,${isMobile ? '0.65' : '0.75'})), url('/images/decorative/Screenshot_2025-10-11_170713.png')`,
       backgroundSize: 'cover',
       backgroundPosition: 'center',
       backgroundAttachment: 'scroll',

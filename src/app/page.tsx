@@ -102,9 +102,7 @@ export default function Home() {
 
   return (
     <div style={{
-      backgroundImage: isMobile 
-        ? 'linear-gradient(180deg, #0d1f0d 0%, #1a3e1a 20%, #1a3e1a 90%, #0d1f0d 100%)'
-        : `url('/images/decorative/Screenshot_2025-11-23_180245.png')`,
+      backgroundImage: `linear-gradient(rgba(10,10,10,${isMobile ? '0.5' : '0.3'}), rgba(10,10,10,${isMobile ? '0.5' : '0.3'})), url('/images/decorative/Screenshot_2025-11-23_180245.png')`,
       backgroundColor: '#0a0a0a',
       backgroundSize: 'cover',
       backgroundPosition: 'center',
@@ -130,7 +128,7 @@ export default function Home() {
 
       {/* Hero Section */}
       <section className="hero" style={{
-        background: isMobile ? 'transparent' : 'linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.7))',
+        background: isMobile ? 'linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.5))' : 'linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.7))',
         paddingBottom: isMobile ? '15px' : undefined
       }}>
         <div className="hero-content">
@@ -161,10 +159,8 @@ export default function Home() {
 
       {/* Achievements Section */}
       <section id="achievements" className="section" style={{
-        backgroundImage: isMobile
-          ? 'none'
-          : `linear-gradient(rgba(10,10,10,0.7), rgba(10,10,10,0.8)), url('/images/decorative/Screenshot_2025-10-11_170801.png')`,
-        backgroundColor: isMobile ? 'transparent' : undefined,
+        backgroundImage: `linear-gradient(rgba(10,10,10,${isMobile ? '0.6' : '0.7'}), rgba(10,10,10,${isMobile ? '0.7' : '0.8'})), url('/images/decorative/Screenshot_2025-10-11_170801.png')`,
+        backgroundColor: 'transparent',
         backgroundSize: 'cover',
         backgroundPosition: 'center',
         backgroundAttachment: isMobile ? 'scroll' : 'fixed',
@@ -392,10 +388,8 @@ export default function Home() {
 
       {/* Upcoming Event Section */}
       <section id="results" className="section section-dark" style={{
-        backgroundImage: isMobile
-          ? 'none'
-          : `linear-gradient(rgba(10,10,10,0.7), rgba(10,10,10,0.8)), url('/images/decorative/Screenshot_2025-11-15_150823.png')`,
-        backgroundColor: isMobile ? 'transparent' : undefined,
+        backgroundImage: `linear-gradient(rgba(10,10,10,${isMobile ? '0.6' : '0.7'}), rgba(10,10,10,${isMobile ? '0.7' : '0.8'})), url('/images/decorative/Screenshot_2025-11-15_150823.png')`,
+        backgroundColor: 'transparent',
         backgroundSize: 'cover',
         backgroundPosition: 'center',
         backgroundAttachment: isMobile ? 'scroll' : 'fixed',
@@ -535,10 +529,8 @@ export default function Home() {
 
       {/* Join Our Team Section */}
       <section className="section" style={{
-        backgroundImage: isMobile
-          ? 'none'
-          : `linear-gradient(rgba(10,10,10,0.7), rgba(10,10,10,0.8)), url('/images/decorative/Screenshot_2025-05-18_205724.png')`,
-        backgroundColor: isMobile ? 'transparent' : undefined,
+        backgroundImage: `linear-gradient(rgba(10,10,10,${isMobile ? '0.6' : '0.7'}), rgba(10,10,10,${isMobile ? '0.7' : '0.8'})), url('/images/decorative/Screenshot_2025-05-18_205724.png')`,
+        backgroundColor: 'transparent',
         backgroundSize: 'cover',
         backgroundPosition: 'center',
         backgroundAttachment: isMobile ? 'scroll' : 'fixed',
