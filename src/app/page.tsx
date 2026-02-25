@@ -104,8 +104,8 @@ export default function Home() {
     <div style={{
       backgroundImage: `linear-gradient(rgba(10,10,10,${isMobile ? '0.5' : '0.3'}), rgba(10,10,10,${isMobile ? '0.5' : '0.3'})), url('/images/decorative/Screenshot_2025-11-23_180245.png')`,
       backgroundColor: '#0a0a0a',
-      backgroundSize: 'cover',
-      backgroundPosition: 'center',
+      backgroundSize: isMobile ? 'contain' : 'cover',
+      backgroundPosition: 'center top',
       backgroundAttachment: isMobile ? 'scroll' : 'fixed',
       backgroundRepeat: 'no-repeat',
       minHeight: '100vh',
@@ -160,9 +160,9 @@ export default function Home() {
       {/* Achievements Section */}
       <section id="achievements" className="section" style={{
         backgroundImage: `linear-gradient(rgba(10,10,10,${isMobile ? '0.6' : '0.7'}), rgba(10,10,10,${isMobile ? '0.7' : '0.8'})), url('/images/decorative/Screenshot_2025-10-11_170801.png')`,
-        backgroundColor: 'transparent',
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
+        backgroundColor: '#0a0a0a',
+        backgroundSize: isMobile ? 'contain' : 'cover',
+        backgroundPosition: 'center top',
         backgroundAttachment: isMobile ? 'scroll' : 'fixed',
         backgroundRepeat: 'no-repeat',
         minHeight: '100vh',
@@ -170,6 +170,7 @@ export default function Home() {
         paddingTop: isMobile ? '15px' : undefined,
         paddingBottom: isMobile ? '15px' : undefined
       }}>
+
         <div className="container" style={{
           maxWidth: '1200px',
           margin: '0 auto',
@@ -389,9 +390,9 @@ export default function Home() {
       {/* Upcoming Event Section */}
       <section id="results" className="section section-dark" style={{
         backgroundImage: `linear-gradient(rgba(10,10,10,${isMobile ? '0.6' : '0.7'}), rgba(10,10,10,${isMobile ? '0.7' : '0.8'})), url('/images/decorative/Screenshot_2025-11-15_150823.png')`,
-        backgroundColor: 'transparent',
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
+        backgroundColor: '#0a0a0a',
+        backgroundSize: isMobile ? 'contain' : 'cover',
+        backgroundPosition: 'center top',
         backgroundAttachment: isMobile ? 'scroll' : 'fixed',
         backgroundRepeat: 'no-repeat',
         minHeight: '100vh',
@@ -530,9 +531,9 @@ export default function Home() {
       {/* Join Our Team Section */}
       <section className="section" style={{
         backgroundImage: `linear-gradient(rgba(10,10,10,${isMobile ? '0.6' : '0.7'}), rgba(10,10,10,${isMobile ? '0.7' : '0.8'})), url('/images/decorative/Screenshot_2025-05-18_205724.png')`,
-        backgroundColor: 'transparent',
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
+        backgroundColor: '#0a0a0a',
+        backgroundSize: isMobile ? 'contain' : 'cover',
+        backgroundPosition: 'center top',
         backgroundAttachment: isMobile ? 'scroll' : 'fixed',
         backgroundRepeat: 'no-repeat',
         minHeight: '100vh',
