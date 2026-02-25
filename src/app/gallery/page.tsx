@@ -454,9 +454,6 @@ export default function GalleryPage() {
                   }}>
                     <div>
                       {cat.name}
-                      <span style={{ fontSize: "0.8rem", color: "#888", marginLeft: "12px" }}>
-                        ({categoryImages.length} {categoryImages.length === 1 ? 'image' : 'images'})
-                      </span>
                     </div>
                     {isAdmin && isEditMode && (
                       <div style={{ display: "flex", gap: "8px" }}>
