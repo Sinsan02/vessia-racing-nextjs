@@ -10,7 +10,7 @@ export default function Home() {
   const [achievements, setAchievements] = useState<any[]>([]);
   const [achievementsLoading, setAchievementsLoading] = useState(true);
   const [user, setUser] = useState<any>(null);
-  const [isMobile, setIsMobile] = useState(true);
+  const [isMobile, setIsMobile] = useState(typeof window !== 'undefined' ? window.innerWidth <= 768 : false);
   const hasFetchedData = useRef(false);
 
   
@@ -104,11 +104,11 @@ export default function Home() {
     <div style={{
       backgroundImage: `linear-gradient(rgba(10,10,10,${isMobile ? '0.5' : '0.3'}), rgba(10,10,10,${isMobile ? '0.5' : '0.3'})), url('/images/decorative/Screenshot_2025-11-23_180245.png')`,
       backgroundColor: '#0a0a0a',
-      backgroundSize: isMobile ? 'contain' : 'cover',
-      backgroundPosition: 'center top',
+      backgroundSize: 'cover',
+      backgroundPosition: 'center',
       backgroundAttachment: isMobile ? 'scroll' : 'fixed',
       backgroundRepeat: 'no-repeat',
-      minHeight: isMobile ? 'auto' : '100vh',
+      minHeight: '100vh',
       width: '100%',
       position: 'relative',
       overflowX: 'hidden'
@@ -163,11 +163,11 @@ export default function Home() {
       <section id="achievements" className="section" style={{
         backgroundImage: `linear-gradient(rgba(10,10,10,${isMobile ? '0.6' : '0.7'}), rgba(10,10,10,${isMobile ? '0.7' : '0.8'})), url('/images/decorative/Screenshot_2025-10-11_170801.png')`,
         backgroundColor: '#0a0a0a',
-        backgroundSize: isMobile ? 'contain' : 'cover',
-        backgroundPosition: 'center top',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
         backgroundAttachment: isMobile ? 'scroll' : 'fixed',
         backgroundRepeat: 'no-repeat',
-        minHeight: isMobile ? 'auto' : '100vh',
+        minHeight: '100vh',
         position: 'relative',
         paddingTop: isMobile ? '5px' : undefined,
         paddingBottom: isMobile ? '5px' : undefined
@@ -392,11 +392,11 @@ export default function Home() {
       <section id="results" className="section section-dark" style={{
         backgroundImage: `linear-gradient(rgba(10,10,10,${isMobile ? '0.6' : '0.7'}), rgba(10,10,10,${isMobile ? '0.7' : '0.8'})), url('/images/decorative/Screenshot_2025-11-15_150823.png')`,
         backgroundColor: '#0a0a0a',
-        backgroundSize: isMobile ? 'contain' : 'cover',
-        backgroundPosition: 'center top',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
         backgroundAttachment: isMobile ? 'scroll' : 'fixed',
         backgroundRepeat: 'no-repeat',
-        minHeight: isMobile ? 'auto' : '100vh',
+        minHeight: '100vh',
         position: 'relative',
         paddingTop: isMobile ? '5px' : undefined,
         paddingBottom: isMobile ? '5px' : undefined
@@ -534,11 +534,11 @@ export default function Home() {
       <section className="section" style={{
         backgroundImage: `linear-gradient(rgba(10,10,10,${isMobile ? '0.6' : '0.7'}), rgba(10,10,10,${isMobile ? '0.7' : '0.8'})), url('/images/decorative/Screenshot_2025-05-18_205724.png')`,
         backgroundColor: '#0a0a0a',
-        backgroundSize: isMobile ? 'contain' : 'cover',
-        backgroundPosition: 'center top',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
         backgroundAttachment: isMobile ? 'scroll' : 'fixed',
         backgroundRepeat: 'no-repeat',
-        minHeight: isMobile ? 'auto' : '100vh',
+        minHeight: '100vh',
         position: 'relative',
         display: 'flex',
         alignItems: 'center',

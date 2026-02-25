@@ -109,8 +109,8 @@ export default function Register() {
     <div className="min-h-screen" style={{
       backgroundImage: `linear-gradient(rgba(10,10,10,${isMobile ? '0.75' : '0.85'}), rgba(10,10,10,${isMobile ? '0.75' : '0.85'})), url('/images/decorative/Image 30. jan. 2026, 22_05_23.png')`,
       backgroundColor: '#0a0a0a',
-      backgroundSize: isMobile ? 'contain' : 'cover',
-      backgroundPosition: 'center top',
+      backgroundSize: 'cover',
+      backgroundPosition: 'center',
       backgroundAttachment: 'scroll',
       backgroundRepeat: 'no-repeat',
       minHeight: '100vh',
