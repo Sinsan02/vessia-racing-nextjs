@@ -14,6 +14,8 @@ export default function Drivers() {
   const [drivers, setDrivers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [isMobile, setIsMobile] = useState(typeof window !== 'undefined' ? window.innerWidth <= 768 : false);
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [isEditMode, setIsEditMode] = useState(false);
 
   useEffect(() => {
     const checkScreenSize = () => {
@@ -22,8 +24,19 @@ export default function Drivers() {
     checkScreenSize();
     window.addEventListener('resize', checkScreenSize);
     fetchDrivers();
+    checkAdmin();
     return () => window.removeEventListener('resize', checkScreenSize);
   }, []);
+
+  const checkAdmin = async () => {
+    try {
+      const res = await fetch("/api/auth/me", { credentials: "include" });
+      const data = await res.json();
+      setIsAdmin(data?.role === "admin");
+    } catch {
+      setIsAdmin(false);
+    }
+  };
 
   const fetchDrivers = async () => {
     try {
@@ -36,6 +49,26 @@ export default function Drivers() {
       console.error('Failed to fetch drivers:', error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleReorder = async (driverId: number, direction: 'up' | 'down') => {
+    try {
+      const res = await fetch('/api/drivers/reorder', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({ driverId, direction })
+      });
+      
+      if (res.ok) {
+        fetchDrivers(); // Refresh list
+      } else {
+        const data = await res.json();
+        console.error('Failed to reorder:', data.error);
+      }
+    } catch (error) {
+      console.error('Error reordering drivers:', error);
     }
   };
 
@@ -61,13 +94,43 @@ export default function Drivers() {
         }}>
           {/* Header */}
           <div className="drivers-header" style={{textAlign: 'center', marginBottom: '30px', padding: isMobile ? '0 10px' : '0'}}>
-            <h1 style={{color: '#3EA822', fontSize: '2.5rem', marginBottom: '1rem'}}>
-              ⚡ Our Drivers
+            <h1 style={{color: '#3EA822', fontSize: isMobile ? '2rem' : '2.5rem', marginBottom: '1rem'}}>
+              Our Drivers
             </h1>
-            <p style={{color: '#ccc', fontSize: '1.1rem', marginTop: '15px'}}>
+            <p style={{color: '#ccc', fontSize: isMobile ? '0.95rem' : '1.1rem', marginTop: '15px'}}>
               Meet the professional drivers of Vessia Racing Team
             </p>
           </div>
+
+          {isAdmin && (
+            <div style={{ textAlign: "center", marginBottom: isMobile ? "16px" : "24px" }}>
+              <button
+                onClick={() => setIsEditMode(!isEditMode)}
+                style={{
+                  padding: isMobile ? "10px 24px" : "12px 32px",
+                  backgroundColor: isEditMode ? "#c00" : "#3EA822",
+                  color: "#fff",
+                  border: "none",
+                  borderRadius: "8px",
+                  fontSize: isMobile ? "0.9rem" : "1rem",
+                  fontWeight: "bold",
+                  cursor: "pointer",
+                  transition: "all 0.3s ease",
+                  boxShadow: "0 2px 8px rgba(0,0,0,0.3)"
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.transform = "scale(1.05)";
+                  e.currentTarget.style.backgroundColor = isEditMode ? "#f44" : "#4db82e";
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.transform = "scale(1)";
+                  e.currentTarget.style.backgroundColor = isEditMode ? "#c00" : "#3EA822";
+                }}
+              >
+                {isEditMode ? "✕ Lukk redigering" : "✏️ Endre rekkefølge"}
+              </button>
+            </div>
+          )}
 
           {/* Drivers List */}
           <div className="drivers-list" style={{
@@ -89,7 +152,7 @@ export default function Drivers() {
                 <p>No drivers registered yet.</p>
               </div>
             ) : (
-              drivers.map((driver: any) => (
+              drivers.map((driver: any, index: number) => (
                 <div 
                   key={driver.id} 
                   className="driver-card"
@@ -98,9 +161,53 @@ export default function Drivers() {
                     padding: '20px',
                     borderRadius: '10px',
                     border: '1px solid #333',
-                    textAlign: 'center'
+                    textAlign: 'center',
+                    position: 'relative'
                   }}
                 >
+                  {isAdmin && isEditMode && (
+                    <div style={{
+                      position: 'absolute',
+                      top: '10px',
+                      right: '10px',
+                      display: 'flex',
+                      flexDirection: 'column',
+                      gap: '5px'
+                    }}>
+                      <button
+                        onClick={() => handleReorder(driver.id, 'up')}
+                        disabled={index === 0}
+                        style={{
+                          padding: '5px 10px',
+                          backgroundColor: index === 0 ? '#555' : '#3EA822',
+                          color: '#fff',
+                          border: 'none',
+                          borderRadius: '5px',
+                          cursor: index === 0 ? 'not-allowed' : 'pointer',
+                          fontSize: '0.9rem',
+                          fontWeight: 'bold'
+                        }}
+                      >
+                        ▲
+                      </button>
+                      <button
+                        onClick={() => handleReorder(driver.id, 'down')}
+                        disabled={index === drivers.length - 1}
+                        style={{
+                          padding: '5px 10px',
+                          backgroundColor: index === drivers.length - 1 ? '#555' : '#3EA822',
+                          color: '#fff',
+                          border: 'none',
+                          borderRadius: '5px',
+                          cursor: index === drivers.length - 1 ? 'not-allowed' : 'pointer',
+                          fontSize: '0.9rem',
+                          fontWeight: 'bold'
+                        }}
+                      >
+                        ▼
+                      </button>
+                    </div>
+                  )}
                   <div style={{marginBottom: '15px'}}>
                     {driver.profile_picture && driver.profile_picture.trim() !== '' ? (
                       <img

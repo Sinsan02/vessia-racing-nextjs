@@ -1,12 +1,15 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { supabaseAdmin } from '@/lib/supabase';
 
+export const dynamic = 'force-dynamic';
+
 export async function GET(request: NextRequest) {
   try {
     const { data: drivers, error } = await supabaseAdmin
       .from('users')
-      .select('id, full_name, experience_level, created_at, bio, profile_picture')
+      .select('id, full_name, experience_level, created_at, bio, profile_picture, display_order')
       .eq('is_driver', 1)
+      .order('display_order', { ascending: true })
       .order('created_at', { ascending: false });
 
     if (error) {
@@ -21,7 +24,8 @@ export async function GET(request: NextRequest) {
       experience: driver.experience_level,
       created_at: driver.created_at,
       bio: driver.bio,
-      profile_picture: driver.profile_picture
+      profile_picture: driver.profile_picture,
+      display_order: driver.display_order
     }));
 
     return NextResponse.json({
