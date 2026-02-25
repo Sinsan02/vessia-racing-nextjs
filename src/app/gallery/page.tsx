@@ -6,6 +6,7 @@ import Image from "next/image";
 export default function GalleryPage() {
   const [images, setImages] = useState<any[]>([]);
   const [isAdmin, setIsAdmin] = useState(false);
+  const [isEditMode, setIsEditMode] = useState(false);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
@@ -135,6 +136,36 @@ export default function GalleryPage() {
         </h1>
 
         {isAdmin && (
+          <div style={{ textAlign: "center", marginBottom: isMobile ? "16px" : "24px" }}>
+            <button
+              onClick={() => setIsEditMode(!isEditMode)}
+              style={{
+                padding: isMobile ? "10px 24px" : "12px 32px",
+                backgroundColor: isEditMode ? "#c00" : "#3EA822",
+                color: "#fff",
+                border: "none",
+                borderRadius: "8px",
+                fontSize: isMobile ? "0.9rem" : "1rem",
+                fontWeight: "bold",
+                cursor: "pointer",
+                transition: "all 0.3s ease",
+                boxShadow: "0 2px 8px rgba(0,0,0,0.3)"
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.transform = "scale(1.05)";
+                e.currentTarget.style.backgroundColor = isEditMode ? "#f44" : "#4db82e";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.transform = "scale(1)";
+                e.currentTarget.style.backgroundColor = isEditMode ? "#c00" : "#3EA822";
+              }}
+            >
+              {isEditMode ? "✕ Lukk redigering" : "✏️ Rediger galleri"}
+            </button>
+          </div>
+        )}
+
+        {isAdmin && isEditMode && (
           <div style={{ 
             marginBottom: isMobile ? "24px" : "48px",
             backgroundColor: "rgba(26, 26, 26, 0.95)",
@@ -329,7 +360,7 @@ export default function GalleryPage() {
                     Lastet opp av {img.users?.full_name || "Unknown"}
                   </div>
 
-                  {isAdmin && (
+                  {isAdmin && isEditMode && (
                     <button
                       onClick={() => handleDelete(img.id)}
                       style={{
