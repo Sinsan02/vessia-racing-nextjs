@@ -9,7 +9,7 @@ export async function PUT(request: NextRequest) {
     if (!user) {
       return NextResponse.json({ error: 'Authentication required' }, { status: 401 });
     }
-    const { name, gamertag, experience, bio, email } = await request.json();
+    const { name, gamertag, experience, bio, email, iracing_customer_id } = await request.json();
 
     // Validate required fields
     if (!name || !email) {
@@ -60,10 +60,11 @@ export async function PUT(request: NextRequest) {
         experience_level: experience,
         bio: bio,
         email: email,
+        iracing_customer_id: iracing_customer_id || null,
         updated_at: new Date().toISOString()
       })
       .eq('id', user.userId)
-      .select('id, full_name, email, gamertag, experience_level, bio, role, profile_picture, created_at')
+      .select('id, full_name, email, gamertag, experience_level, bio, role, profile_picture, created_at, iracing_customer_id')
       .single();
 
     if (error || !updatedUser) {
@@ -83,7 +84,8 @@ export async function PUT(request: NextRequest) {
       bio: updatedUser.bio,
       role: updatedUser.role,
       profile_picture: updatedUser.profile_picture,
-      createdAt: updatedUser.created_at
+      createdAt: updatedUser.created_at,
+      iracing_customer_id: updatedUser.iracing_customer_id
     });
   } catch (error: any) {
     console.error('Error updating profile:', error);

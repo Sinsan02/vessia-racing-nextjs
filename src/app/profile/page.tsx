@@ -11,6 +11,7 @@ interface User {
   createdAt: string;
   bio?: string;
   profile_picture?: string;
+  iracing_customer_id?: string;
 }
 
 export default function Profile() {
@@ -26,7 +27,8 @@ export default function Profile() {
   const [formData, setFormData] = useState({
     name: '',
     bio: '',
-    email: ''
+    email: '',
+    iracing_customer_id: ''
   });
 
   useEffect(() => {
@@ -48,7 +50,8 @@ export default function Profile() {
         setFormData({
           name: userData.name || '',
           bio: userData.bio || '',
-          email: userData.email || ''
+          email: userData.email || '',
+          iracing_customer_id: userData.iracing_customer_id || ''
         });
       }
     } catch (error) {
@@ -145,7 +148,8 @@ export default function Profile() {
       setFormData({
         name: user.name || '',
         bio: user.bio || '',
-        email: user.email || ''
+        email: user.email || '',
+        iracing_customer_id: user.iracing_customer_id || ''
       });
     }
     setIsEditing(false);
@@ -476,6 +480,38 @@ export default function Profile() {
                   ) : (
                     <p style={{color: '#fff', padding: '10px', backgroundColor: '#0a0a0a', borderRadius: '5px'}}>
                       {user.bio || 'No bio available'}
+                    </p>
+                  )}
+                </div>
+
+                <div>
+                  <label style={{display: 'block', color: '#3EA822', fontWeight: 'bold', marginBottom: '8px'}}>
+                    iRacing Customer ID:
+                  </label>
+                  {isEditing ? (
+                    <div>
+                      <input
+                        type="text"
+                        value={formData.iracing_customer_id}
+                        onChange={(e) => handleInputChange('iracing_customer_id', e.target.value)}
+                        style={{
+                          width: '100%',
+                          color: '#fff',
+                          padding: '10px',
+                          backgroundColor: '#0a0a0a',
+                          border: '2px solid #3EA822',
+                          borderRadius: '5px',
+                          fontSize: '1rem'
+                        }}
+                        placeholder="Enter your iRacing Customer ID"
+                      />
+                      <p style={{color: '#888', fontSize: '0.85rem', marginTop: '5px'}}>
+                        Find your Customer ID in your iRacing profile URL or settings. This enables auto-updating of your iRating and stats.
+                      </p>
+                    </div>
+                  ) : (
+                    <p style={{color: '#fff', padding: '10px', backgroundColor: '#0a0a0a', borderRadius: '5px'}}>
+                      {user.iracing_customer_id || 'Not configured'}
                     </p>
                   )}
                 </div>
