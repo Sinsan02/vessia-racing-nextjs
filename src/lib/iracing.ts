@@ -118,7 +118,10 @@ class IRacingService {
     irating: number;
     safety_rating: string;
     license_class: string;
-    liconsole.log(`🔍 Fetching iRacing stats for customer ID: ${customerId}`);
+    license_level: number;
+  } | null> {
+    try {
+      console.log(`🔍 Fetching iRacing stats for customer ID: ${customerId}`);
       
       // Fetch member stats
       const statsData = await this.makeRequest(`/data/member/info?cust_ids=${customerId}`);
@@ -163,10 +166,7 @@ class IRacingService {
       console.log('✅ iRacing stats retrieved successfully:', result);
       return result;
     } catch (error) {
-      console.error('❌ : licenseLevel,
-      };
-    } catch (error) {
-      console.error('Error fetching iRacing stats:', error);
+      console.error('❌ Error fetching iRacing stats:', error);
       return null;
     }
   }
