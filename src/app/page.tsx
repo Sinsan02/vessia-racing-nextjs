@@ -154,7 +154,6 @@ export default function Home() {
             margin: '0 auto'
           }}>
             <Link href="#achievements" className="btn-primary racing-pulse">Our Accomplishments</Link>
-            {!user && <Link href="/register" className="btn-secondary">Sign Up</Link>}
           </div>
         </div>
       </section>
