@@ -352,13 +352,6 @@ export default function GalleryPage() {
                       {img.description}
                     </p>
                   )}
-                  <div style={{ 
-                    fontSize: "0.8rem", 
-                    color: "#666",
-                    marginTop: "8px"
-                  }}>
-                    Lastet opp av {img.users?.full_name || "Unknown"}
-                  </div>
 
                   {isAdmin && isEditMode && (
                     <button
