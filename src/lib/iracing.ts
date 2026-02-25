@@ -47,13 +47,12 @@ class IRacingService {
       console.log('🔄 Attempting iRacing authentication...');
       console.log(`📧 Using email: ${email?.substring(0, 3)}***`);
       
-      // iRacing requires credentials in a specific format
-      // Hash the password with SHA-256 combined with lowercase email
+      // Method 1: Try with JSON body (with SHA-256)
+      console.log('🔍 Method 1: JSON with SHA-256 hash...');
       const hashInput = `${password}${email.toLowerCase()}`;
       const hashedPassword = crypto.createHash('sha256').update(hashInput, 'utf8').digest('base64');
       
-      console.log('🔍 Sending authentication request to iRacing...');
-      const response = await fetch(`${this.baseUrl}/data/auth`, {
+      let response = await fetch(`${this.baseUrl}/data/auth`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -64,12 +63,58 @@ class IRacingService {
         }),
       });
 
-      console.log(`📡 Auth response status: ${response.status}`);
+      console.log(`📡 Method 1 response: ${response.status}`);
+
+      // Method 2: Try with form data
+      if (response.status === 401) {
+        console.log('🔍 Method 2: Form data with plain password...');
+        const formData = new URLSearchParams();
+        formData.append('email', email.toLowerCase());
+        formData.append('password', password);
+        
+        response = await fetch(`${this.baseUrl}/data/auth`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+          },
+          body: formData.toString(),
+        });
+        
+        console.log(`📡 Method 2 response: ${response.status}`);
+      }
+
+      // Method 3: Try with Basic Auth in headers
+      if (response.status === 401) {
+        console.log('🔍 Method 3: Basic Auth in headers...');
+        const authString = Buffer.from(`${email}:${password}`).toString('base64');
+        
+        response = await fetch(`${this.baseUrl}/data/auth`, {
+          method: 'POST',
+          headers: {
+            'Authorization': `Basic ${authString}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({}),
+        });
+        
+        console.log(`📡 Method 3 response: ${response.status}`);
+      }
+      
+      console.log(`📡 Final auth response status: ${response.status}`);
 
       if (!response.ok) {
         console.error(`❌ iRacing authentication failed with status ${response.status}`);
         const errorText = await response.text().catch(() => 'No error details');
         console.error('Error details:', errorText);
+        
+        // Also log what we're sending
+        console.error('Debug info:', {
+          email_set: !!email,
+          password_set: !!password,
+          email_length: email?.length,
+          password_length: password?.length
+        });
+        
         return false;
       }
 
@@ -80,10 +125,6 @@ class IRacingService {
       // Also check all headers
       const allHeaders = Array.from(response.headers.entries());
       console.log('📋 All response headers:', allHeaders.map(([k, v]) => `${k}: ${v.substring(0, 30)}...`));
-
-      // Try to read response body
-      const textBody = await response.text().catch(() => '');
-      console.log('📄 Response body length:', textBody.length);
       
       if (setCookieHeader) {
         this.authCookie = setCookieHeader;

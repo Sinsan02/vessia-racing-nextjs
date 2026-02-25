@@ -19,6 +19,13 @@ export async function GET(request: NextRequest) {
     // Check if credentials are configured
     const hasEmail = !!process.env.IRACING_EMAIL;
     const hasPassword = !!process.env.IRACING_PASSWORD;
+    
+    console.log('Environment check:', {
+      IRACING_EMAIL: hasEmail,
+      IRACING_PASSWORD: hasPassword,
+      emailLength: process.env.IRACING_EMAIL?.length || 0,
+      passwordLength: process.env.IRACING_PASSWORD?.length || 0
+    });
 
     if (!hasEmail || !hasPassword) {
       return NextResponse.json({
