@@ -17,6 +17,7 @@ export async function POST(request: NextRequest) {
     const file: File | null = data.get('image') as unknown as File;
     const title = data.get('title') as string || '';
     const description = data.get('description') as string || '';
+    const category = data.get('category') as string || 'General';
 
     if (!file) {
       return NextResponse.json({ success: false, error: 'No file uploaded' }, { status: 400 });
@@ -71,6 +72,7 @@ export async function POST(request: NextRequest) {
         image_url: imageUrl,
         title: title || null,
         description: description || null,
+        category: category || 'General',
         uploaded_by: adminCheck.user.userId
       })
       .select()

@@ -3,7 +3,7 @@ import { supabaseAdmin } from '@/lib/supabase';
 
 export const dynamic = 'force-dynamic';
 
-// Get all gallery images
+// Get all gallery images with categories
 export async function GET() {
   try {
     const { data: images, error } = await supabaseAdmin
@@ -13,6 +13,7 @@ export async function GET() {
         image_url,
         title,
         description,
+        category,
         created_at,
         users!inner(
           id,

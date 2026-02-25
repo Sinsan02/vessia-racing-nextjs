@@ -5,11 +5,13 @@ import Image from "next/image";
 
 export default function GalleryPage() {
   const [images, setImages] = useState<any[]>([]);
+  const [categories, setCategories] = useState<any[]>([]);
   const [isAdmin, setIsAdmin] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
+  const [category, setCategory] = useState("General");
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
@@ -17,6 +19,7 @@ export default function GalleryPage() {
 
   useEffect(() => {
     fetchImages();
+    fetchCategories();
     checkAdmin();
 
     const checkScreenSize = () => {
@@ -36,6 +39,16 @@ export default function GalleryPage() {
       setImages(data.images || []);
     } catch (err) {
       setError("Kunne ikke hente bilder.");
+    }
+  };
+
+  const fetchCategories = async () => {
+    try {
+      const res = await fetch("/api/gallery/categories");
+      const data = await res.json();
+      setCategories(data.categories || []);
+    } catch (err) {
+      console.error("Could not fetch categories:", err);
     }
   };
 
@@ -66,6 +79,7 @@ export default function GalleryPage() {
     formData.append("image", selectedFile);
     formData.append("title", title);
     formData.append("description", description);
+    formData.append("category", category);
     
     try {
       const res = await fetch("/api/gallery/upload", {
@@ -80,6 +94,7 @@ export default function GalleryPage() {
       setSelectedFile(null);
       setTitle("");
       setDescription("");
+      setCategory("General");
       setSuccess("Bilde lastet opp!");
       fetchImages();
       
@@ -217,6 +232,28 @@ export default function GalleryPage() {
             </div>
 
             <div style={{ marginBottom: "12px" }}>
+              <label style={{ display: "block", marginBottom: "8px", fontSize: "0.9rem" }}>Kategori</label>
+              <select
+                value={category}
+                onChange={(e) => setCategory(e.target.value)}
+                style={{
+                  width: "100%",
+                  padding: "10px",
+                  backgroundColor: "#1a1a1a",
+                  border: "1px solid #333",
+                  borderRadius: "6px",
+                  color: "#fff",
+                  fontSize: "1rem",
+                  cursor: "pointer"
+                }}
+              >
+                {categories.map(cat => (
+                  <option key={cat.id} value={cat.name}>{cat.name}</option>
+                ))}
+              </select>
+            </div>
+
+            <div style={{ marginBottom: "12px" }}>
               <label style={{ display: "block", marginBottom: "8px", fontSize: "0.9rem" }}>Velg bilde</label>
               <input
                 id="file-input"
@@ -297,88 +334,117 @@ export default function GalleryPage() {
             Ingen bilder enda.
           </div>
         ) : (
-          <div style={{
-            display: "grid",
-            gridTemplateColumns: isMobile ? "1fr" : "repeat(auto-fill, minmax(300px, 1fr))",
-            gap: isMobile ? "16px" : "24px"
-          }}>
-            {images.map((img) => (
-              <div
-                key={img.id}
-                style={{
-                  position: "relative",
-                  backgroundColor: "rgba(26, 26, 26, 0.95)",
-                  borderRadius: "12px",
-                  overflow: "hidden",
-                  border: "2px solid #333",
-                  transition: "transform 0.3s ease, border-color 0.3s ease"
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.transform = "scale(1.02)";
-                  e.currentTarget.style.borderColor = "#3EA822";
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.transform = "scale(1)";
-                  e.currentTarget.style.borderColor = "#333";
-                }}
-              >
-                <div style={{ position: "relative", width: "100%", height: isMobile ? "200px" : "250px" }}>
-                  <Image
-                    src={img.image_url}
-                    alt={img.title || "Gallery image"}
-                    fill
-                    style={{ objectFit: "cover" }}
-                  />
-                </div>
-                
-                {(img.title || img.description || (isAdmin && isEditMode)) && (
-                  <div style={{ padding: "16px" }}>
-                    {img.title && (
-                      <h3 style={{ 
-                        fontSize: "1.1rem", 
-                        marginBottom: "8px", 
-                        color: "#3EA822",
-                        fontWeight: "bold"
-                      }}>
-                        {img.title}
-                      </h3>
-                    )}
-                    {img.description && (
-                      <p style={{ 
-                        fontSize: "0.9rem", 
-                        color: "#aaa", 
-                        marginBottom: "8px",
-                        lineHeight: "1.4"
-                      }}>
-                        {img.description}
-                      </p>
-                    )}
-
-                    {isAdmin && isEditMode && (
-                      <button
-                        onClick={() => handleDelete(img.id)}
+          <>
+            {categories.map((cat) => {
+              const categoryImages = images.filter(img => img.category === cat.name);
+              if (categoryImages.length === 0) return null;
+              
+              return (
+                <div key={cat.id} style={{ marginBottom: isMobile ? "32px" : "48px" }}>
+                  <h2 style={{
+                    fontSize: isMobile ? "1.5rem" : "2rem",
+                    color: "#3EA822",
+                    marginBottom: isMobile ? "16px" : "24px",
+                    fontWeight: "bold",
+                    borderBottom: "2px solid #3EA822",
+                    paddingBottom: "8px"
+                  }}>
+                    {cat.name}
+                    <span style={{ fontSize: "0.8rem", color: "#888", marginLeft: "12px" }}>
+                      ({categoryImages.length} {categoryImages.length === 1 ? 'bilde' : 'bilder'})
+                    </span>
+                  </h2>
+                  {cat.description && (
+                    <p style={{ color: "#888", marginBottom: "16px", fontSize: "0.95rem" }}>
+                      {cat.description}
+                    </p>
+                  )}
+                  <div style={{
+                    display: "grid",
+                    gridTemplateColumns: isMobile ? "1fr" : "repeat(auto-fill, minmax(300px, 1fr))",
+                    gap: isMobile ? "16px" : "24px"
+                  }}>
+                    {categoryImages.map((img) => (
+                      <div
+                        key={img.id}
                         style={{
-                          marginTop: img.title || img.description ? "12px" : "0",
-                          padding: "8px 16px",
-                          backgroundColor: "#c00",
-                          color: "#fff",
-                          border: "none",
-                          borderRadius: "6px",
-                          fontSize: "0.9rem",
-                          cursor: "pointer",
-                          transition: "background-color 0.3s ease"
+                          position: "relative",
+                          backgroundColor: "rgba(26, 26, 26, 0.95)",
+                          borderRadius: "12px",
+                          overflow: "hidden",
+                          border: "2px solid #333",
+                          transition: "transform 0.3s ease, border-color 0.3s ease"
                         }}
-                        onMouseEnter={(e) => e.currentTarget.style.backgroundColor = "#f44"}
-                        onMouseLeave={(e) => e.currentTarget.style.backgroundColor = "#c00"}
+                        onMouseEnter={(e) => {
+                          e.currentTarget.style.transform = "scale(1.02)";
+                          e.currentTarget.style.borderColor = "#3EA822";
+                        }}
+                        onMouseLeave={(e) => {
+                          e.currentTarget.style.transform = "scale(1)";
+                          e.currentTarget.style.borderColor = "#333";
+                        }}
                       >
-                        Slett bilde
-                      </button>
-                    )}
+                        <div style={{ position: "relative", width: "100%", height: isMobile ? "200px" : "250px" }}>
+                          <Image
+                            src={img.image_url}
+                            alt={img.title || "Gallery image"}
+                            fill
+                            style={{ objectFit: "cover" }}
+                          />
+                        </div>
+                        
+                        {(img.title || img.description || (isAdmin && isEditMode)) && (
+                          <div style={{ padding: "16px" }}>
+                            {img.title && (
+                              <h3 style={{ 
+                                fontSize: "1.1rem", 
+                                marginBottom: "8px", 
+                                color: "#3EA822",
+                                fontWeight: "bold"
+                              }}>
+                                {img.title}
+                              </h3>
+                            )}
+                            {img.description && (
+                              <p style={{ 
+                                fontSize: "0.9rem", 
+                                color: "#aaa", 
+                                marginBottom: "8px",
+                                lineHeight: "1.4"
+                              }}>
+                                {img.description}
+                              </p>
+                            )}
+
+                            {isAdmin && isEditMode && (
+                              <button
+                                onClick={() => handleDelete(img.id)}
+                                style={{
+                                  marginTop: img.title || img.description ? "12px" : "0",
+                                  padding: "8px 16px",
+                                  backgroundColor: "#c00",
+                                  color: "#fff",
+                                  border: "none",
+                                  borderRadius: "6px",
+                                  fontSize: "0.9rem",
+                                  cursor: "pointer",
+                                  transition: "background-color 0.3s ease"
+                                }}
+                                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = "#f44"}
+                                onMouseLeave={(e) => e.currentTarget.style.backgroundColor = "#c00"}
+                              >
+                                Slett bilde
+                              </button>
+                            )}
+                          </div>
+                        )}
+                      </div>
+                    ))}
                   </div>
-                )}
-              </div>
-            ))}
-          </div>
+                </div>
+              );
+            })}
+          </>
         )}
       </div>
     </div>
