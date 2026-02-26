@@ -187,22 +187,6 @@ export default function Home() {
             <Link href="#achievements" className="btn-primary racing-pulse">Our Accomplishments</Link>
           </div>
         </div>
-        
-        {/* Green Divider - Mobile Only */}
-        {isMobile && (
-          <div style={{
-            position: 'absolute',
-            bottom: '-2.5px',
-            left: '50%',
-            transform: 'translateX(-50%)',
-            height: '5px',
-            width: '80%',
-            backgroundColor: '#3EA822',
-            borderRadius: '10px',
-            boxShadow: '0 0 15px rgba(62, 168, 34, 0.6)',
-            zIndex: 100
-          }} />
-        )}
       </section>
 
       {/* Achievements Section */}
@@ -223,6 +207,21 @@ export default function Home() {
         transform: isMobile ? 'translateZ(0)' : undefined,
         border: isMobile ? '1px solid transparent' : undefined
       }}>
+        {/* Green Divider - Mobile Only */}
+        {isMobile && (
+          <div style={{
+            position: 'absolute',
+            top: '-2.5px',
+            left: '50%',
+            transform: 'translateX(-50%)',
+            height: '5px',
+            width: '80%',
+            backgroundColor: '#3EA822',
+            borderRadius: '10px',
+            boxShadow: '0 0 15px rgba(62, 168, 34, 0.6)',
+            zIndex: 100
+          }} />
+        )}
         <div className="container" style={{
           maxWidth: '1200px',
           margin: '0 auto',
@@ -440,22 +439,6 @@ export default function Home() {
             </div>
           )}
         </div>
-        
-        {/* Green Divider - Mobile Only */}
-        {isMobile && (
-          <div style={{
-            position: 'absolute',
-            bottom: '-2.5px',
-            left: '50%',
-            transform: 'translateX(-50%)',
-            height: '5px',
-            width: '80%',
-            backgroundColor: '#3EA822',
-            borderRadius: '10px',
-            boxShadow: '0 0 15px rgba(62, 168, 34, 0.6)',
-            zIndex: 100
-          }} />
-        )}
       </section>
 
       {/* Upcoming Event Section */}
@@ -476,6 +459,21 @@ export default function Home() {
         transform: isMobile ? 'translateZ(0)' : undefined,
         border: isMobile ? '1px solid transparent' : undefined
       }}>
+        {/* Green Divider - Mobile Only */}
+        {isMobile && (
+          <div style={{
+            position: 'absolute',
+            top: '-2.5px',
+            left: '50%',
+            transform: 'translateX(-50%)',
+            height: '5px',
+            width: '80%',
+            backgroundColor: '#3EA822',
+            borderRadius: '10px',
+            boxShadow: '0 0 15px rgba(62, 168, 34, 0.6)',
+            zIndex: 100
+          }} />
+        )}
 
         <div className="container" style={{
           maxWidth: '1200px',
@@ -604,22 +602,6 @@ export default function Home() {
             </div>
           )}
         </div>
-        
-        {/* Green Divider - Mobile Only */}
-        {isMobile && (
-          <div style={{
-            position: 'absolute',
-            bottom: '-2.5px',
-            left: '50%',
-            transform: 'translateX(-50%)',
-            height: '5px',
-            width: '80%',
-            backgroundColor: '#3EA822',
-            borderRadius: '10px',
-            boxShadow: '0 0 15px rgba(62, 168, 34, 0.6)',
-            zIndex: 100
-          }} />
-        )}
       </section>
 
       {/* Join Our Team Section */}
@@ -643,6 +625,21 @@ export default function Home() {
         transform: isMobile ? 'translateZ(0)' : undefined,
         border: isMobile ? '1px solid transparent' : undefined
       }}>
+        {/* Green Divider - Mobile Only */}
+        {isMobile && (
+          <div style={{
+            position: 'absolute',
+            top: '-2.5px',
+            left: '50%',
+            transform: 'translateX(-50%)',
+            height: '5px',
+            width: '80%',
+            backgroundColor: '#3EA822',
+            borderRadius: '10px',
+            boxShadow: '0 0 15px rgba(62, 168, 34, 0.6)',
+            zIndex: 100
+          }} />
+        )}
         <div className="container" style={{
           maxWidth: '1200px',
           margin: '0 auto',
