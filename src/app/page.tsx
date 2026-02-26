@@ -151,8 +151,8 @@ export default function Home() {
         alignItems: 'center',
         justifyContent: 'center',
         position: 'relative',
-        WebkitTransform: 'translateZ(0)',
-        transform: 'translateZ(0)',
+        WebkitTransform: isMobile ? 'translateZ(0)' : undefined,
+        transform: isMobile ? 'translateZ(0)' : undefined,
         border: isMobile ? '1px solid transparent' : undefined
       }}>
         <div className="hero-content">
@@ -205,8 +205,8 @@ export default function Home() {
         position: 'relative',
         paddingTop: '5px',
         paddingBottom: '5px',
-        WebkitTransform: 'translateZ(0)',
-        transform: 'translateZ(0)',
+        WebkitTransform: isMobile ? 'translateZ(0)' : undefined,
+        transform: isMobile ? 'translateZ(0)' : undefined,
         border: isMobile ? '1px solid transparent' : undefined
       }}>
         <div className="container" style={{
@@ -449,8 +449,8 @@ export default function Home() {
         position: 'relative',
         paddingTop: '5px',
         paddingBottom: '5px',
-        WebkitTransform: 'translateZ(0)',
-        transform: 'translateZ(0)',
+        WebkitTransform: isMobile ? 'translateZ(0)' : undefined,
+        transform: isMobile ? 'translateZ(0)' : undefined,
         border: isMobile ? '1px solid transparent' : undefined
       }}>
 
@@ -611,8 +611,8 @@ export default function Home() {
         justifyContent: 'center',
         paddingTop: '5px',
         paddingBottom: '5px',
-        WebkitTransform: 'translateZ(0)',
-        transform: 'translateZ(0)',
+        WebkitTransform: isMobile ? 'translateZ(0)' : undefined,
+        transform: isMobile ? 'translateZ(0)' : undefined,
         border: isMobile ? '1px solid transparent' : undefined
       }}>
         <div className="container" style={{
