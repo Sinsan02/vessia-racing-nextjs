@@ -183,14 +183,15 @@ export default function Home() {
         {isMobile && (
           <div style={{
             position: 'absolute',
-            bottom: '-10px',
+            bottom: '10px',
             left: '50%',
             transform: 'translateX(-50%)',
             height: '5px',
             width: '80%',
             backgroundColor: '#3EA822',
             borderRadius: '10px',
-            boxShadow: '0 0 15px rgba(62, 168, 34, 0.6)'
+            boxShadow: '0 0 15px rgba(62, 168, 34, 0.6)',
+            zIndex: 10
           }} />
         )}
       </section>
@@ -431,14 +432,15 @@ export default function Home() {
         {isMobile && (
           <div style={{
             position: 'absolute',
-            bottom: '-10px',
+            bottom: '10px',
             left: '50%',
             transform: 'translateX(-50%)',
             height: '5px',
             width: '80%',
             backgroundColor: '#3EA822',
             borderRadius: '10px',
-            boxShadow: '0 0 15px rgba(62, 168, 34, 0.6)'
+            boxShadow: '0 0 15px rgba(62, 168, 34, 0.6)',
+            zIndex: 10
           }} />
         )}
       </section>
@@ -594,14 +596,15 @@ export default function Home() {
         {isMobile && (
           <div style={{
             position: 'absolute',
-            bottom: '-10px',
+            bottom: '10px',
             left: '50%',
             transform: 'translateX(-50%)',
             height: '5px',
             width: '80%',
             backgroundColor: '#3EA822',
             borderRadius: '10px',
-            boxShadow: '0 0 15px rgba(62, 168, 34, 0.6)'
+            boxShadow: '0 0 15px rgba(62, 168, 34, 0.6)',
+            zIndex: 10
           }} />
         )}
       </section>
