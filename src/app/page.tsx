@@ -195,7 +195,7 @@ export default function Home() {
         )}
       </section>
 
-      {/* Achievements Section */>
+      {/* Achievements Section */}
       <section id="achievements" className="section" style={{
         backgroundImage: isMobile 
           ? `url('/images/decorative/Screenshot_2025-10-11_170801.png')`
