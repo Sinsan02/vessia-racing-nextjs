@@ -103,9 +103,10 @@ export default function Results() {
       minHeight: '100vh',
       height: 'auto',
       position: 'relative',
-      overflowY: 'auto',
+      overflowY: 'scroll',
       overflowX: 'hidden',
-      WebkitOverflowScrolling: 'touch'
+      WebkitOverflowScrolling: 'touch',
+      touchAction: 'pan-y pan-x'
     }}>
       <main style={{padding: '0'}}>
         <div className="container" style={{

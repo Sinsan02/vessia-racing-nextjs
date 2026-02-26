@@ -45,7 +45,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" style={{ backgroundColor: '#0a0a0a', minHeight: '100%' }}>
+    <html lang="en" style={{ backgroundColor: '#0a0a0a', height: '100%', overflow: 'hidden' }}>
       <head>
         <link rel="icon" href="/viper_scull.png" type="image/png" />
         <link rel="apple-touch-icon" href="/viper_scull.png" />
@@ -55,16 +55,17 @@ export default function RootLayout({
         <link rel="preload" as="image" href="/images/decorative/Screenshot_2025-05-18_205724.png" />
       </head>
       <body
-        className={`${orbitron.variable} ${racingSansOne.variable} ${rajdhani.variable} font-segoe bg-background-dark text-text-primary antialiased min-h-screen`}
+        className={`${orbitron.variable} ${racingSansOne.variable} ${rajdhani.variable} font-segoe bg-background-dark text-text-primary antialiased`}
         style={{
           display: 'flex',
           flexDirection: 'column',
-          minHeight: '100vh',
-          height: 'auto',
+          height: '100%',
           backgroundColor: '#0a0a0a',
-          overflowY: 'auto',
+          overflowY: 'scroll',
           overflowX: 'hidden',
-          WebkitOverflowScrolling: 'touch'
+          WebkitOverflowScrolling: 'touch',
+          touchAction: 'pan-y pan-x',
+          position: 'relative'
         }}
       >
         <Navbar />

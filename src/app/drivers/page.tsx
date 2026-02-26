@@ -77,6 +77,7 @@ export default function Drivers() {
   return (
     <div className="min-h-screen" style={{
       paddingTop: '100px',
+      paddingBottom: '40px',
       backgroundImage: `linear-gradient(rgba(10,10,10,${isMobile ? '0.75' : '0.9'}), rgba(10,10,10,${isMobile ? '0.75' : '0.9'})), url('/images/decorative/Screenshot_2026-01-23_201045.png')`,
       backgroundColor: '#0a0a0a',
       backgroundSize: 'cover',
@@ -84,7 +85,12 @@ export default function Drivers() {
       backgroundAttachment: 'scroll',
       backgroundRepeat: 'no-repeat',
       minHeight: '100vh',
-      position: 'relative'
+      height: 'auto',
+      position: 'relative',
+      overflowY: 'scroll',
+      overflowX: 'hidden',
+      WebkitOverflowScrolling: 'touch',
+      touchAction: 'pan-y pan-x'
     }}>
       <main style={{padding: isMobile ? '20px 15px' : '20px'}}>
         <div className="container" style={{

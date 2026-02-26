@@ -194,9 +194,10 @@ export default function GalleryPage() {
       color: "#fff",
       paddingTop: isMobile ? "80px" : "120px",
       paddingBottom: "60px",
-      overflowY: 'auto',
+      overflowY: 'scroll',
       overflowX: 'hidden',
-      WebkitOverflowScrolling: 'touch'
+      WebkitOverflowScrolling: 'touch',
+      touchAction: 'pan-y pan-x'
     }}>
       <div style={{ maxWidth: 1200, margin: "0 auto", padding: isMobile ? "0 16px" : "0 32px" }}>
         <h1 style={{ 

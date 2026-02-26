@@ -61,8 +61,9 @@ export default function Achievements() {
       paddingBottom: isMobile ? '20px' : '40px',
       position: 'relative',
       WebkitOverflowScrolling: 'touch',
-      overflowY: 'auto',
-      overflowX: 'hidden'
+      overflowY: 'scroll',
+      overflowX: 'hidden',
+      touchAction: 'pan-y pan-x'
     }}>
       <div className="container" style={{
         maxWidth: '1200px',

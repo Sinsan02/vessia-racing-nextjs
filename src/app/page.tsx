@@ -109,9 +109,13 @@ export default function Home() {
       backgroundAttachment: isMobile ? 'scroll' : 'fixed',
       backgroundRepeat: 'no-repeat',
       minHeight: '100vh',
+      height: 'auto',
       width: '100%',
       position: 'relative',
-      overflowX: 'hidden'
+      overflowY: 'scroll',
+      overflowX: 'hidden',
+      WebkitOverflowScrolling: 'touch',
+      touchAction: 'pan-y pan-x'
     }}>
       {/* Welcome Message */}
       {welcomeMessage && (

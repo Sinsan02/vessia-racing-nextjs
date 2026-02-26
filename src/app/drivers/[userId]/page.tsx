@@ -165,9 +165,10 @@ export default function DriverProfile() {
       backgroundPosition: 'center',
       backgroundAttachment: 'scroll',
       color: '#fff',
-      overflowY: 'auto',
+      overflowY: 'scroll',
       overflowX: 'hidden',
-      WebkitOverflowScrolling: 'touch'
+      WebkitOverflowScrolling: 'touch',
+      touchAction: 'pan-y pan-x'
     }}>
       <div style={{
         maxWidth: '1000px',

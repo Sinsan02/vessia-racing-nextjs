@@ -183,9 +183,10 @@ export default function Profile() {
       paddingTop: '100px',
       paddingBottom: hasChanges ? '100px' : '50px',
       height: 'auto',
-      overflowY: 'auto',
+      overflowY: 'scroll',
       overflowX: 'hidden',
-      WebkitOverflowScrolling: 'touch'
+      WebkitOverflowScrolling: 'touch',
+      touchAction: 'pan-y pan-x'
     }}>
       <main style={{padding: '25px'}}>
         <div className="container">

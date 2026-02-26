@@ -709,9 +709,10 @@ export default function Admin() {
       paddingTop: '100px',
       paddingBottom: '40px',
       height: 'auto',
-      overflowY: 'auto',
+      overflowY: 'scroll',
       overflowX: 'hidden',
-      WebkitOverflowScrolling: 'touch'
+      WebkitOverflowScrolling: 'touch',
+      touchAction: 'pan-y pan-x'
     }}>
       <main style={{padding: '25px'}}>
         <div className="container">
