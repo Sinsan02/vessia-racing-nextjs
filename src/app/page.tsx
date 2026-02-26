@@ -157,7 +157,7 @@ export default function Home() {
           left: 0,
           width: '100%',
           height: '100vh',
-          zIndex: -1
+          zIndex: -10
         }}>
           {backgrounds.map((bg, index) => (
             <div
@@ -173,8 +173,7 @@ export default function Home() {
                 backgroundPosition: 'center',
                 backgroundRepeat: 'no-repeat',
                 opacity: currentBg === index ? 1 : 0,
-                transition: 'opacity 0.5s ease-in-out',
-                zIndex: index
+                transition: 'opacity 0.5s ease-in-out'
               }}
             />
           ))}
