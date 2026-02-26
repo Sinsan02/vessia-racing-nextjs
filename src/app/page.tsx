@@ -133,7 +133,8 @@ export default function Home() {
         backgroundRepeat: isMobile ? 'no-repeat' : undefined,
         paddingBottom: isMobile ? '5px' : undefined,
         paddingTop: isMobile ? '5px' : undefined,
-        minHeight: isMobile ? 'auto' : undefined
+        minHeight: isMobile ? 'auto' : undefined,
+        position: 'relative'
       }}>
         <div className="hero-content">
           <Image 
@@ -162,7 +163,7 @@ export default function Home() {
 
       {/* Achievements Section */}
       <section id="achievements" className="section" style={{
-        backgroundImage: `linear-gradient(rgba(10,10,10,${isMobile ? '0.6' : '0.7'}), rgba(10,10,10,${isMobile ? '0.7' : '0.8'})), url('/images/decorative/Screenshot_2025-10-11_170801.png')`,
+        backgroundImage: isMobile ? `linear-gradient(rgba(10,10,10,0.6), rgba(10,10,10,0.7)), url('/images/decorative/Screenshot_2025-10-11_170801.png')` : `linear-gradient(rgba(10,10,10,0.7), rgba(10,10,10,0.8)), url('/images/decorative/Screenshot_2025-10-11_170801.png')`,
         backgroundColor: '#0a0a0a',
         backgroundSize: 'cover',
         backgroundPosition: 'center',
@@ -173,6 +174,22 @@ export default function Home() {
         paddingTop: isMobile ? '5px' : undefined,
         paddingBottom: isMobile ? '5px' : undefined
       }}>
+        {/* iOS-friendly fixed background for mobile */}
+        {isMobile && (
+          <div style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            width: '100%',
+            height: '100vh',
+            backgroundImage: `linear-gradient(rgba(10,10,10,0.6), rgba(10,10,10,0.7)), url('/images/decorative/Screenshot_2025-10-11_170801.png')`,
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            backgroundRepeat: 'no-repeat',
+            zIndex: -1,
+            transform: 'translateZ(0)'
+          }} />
+        )}
 
         <div className="container" style={{
           maxWidth: '1200px',
@@ -391,7 +408,7 @@ export default function Home() {
 
       {/* Upcoming Event Section */}
       <section id="results" className="section section-dark" style={{
-        backgroundImage: `linear-gradient(rgba(10,10,10,${isMobile ? '0.6' : '0.7'}), rgba(10,10,10,${isMobile ? '0.7' : '0.8'})), url('/images/decorative/Screenshot_2025-11-15_150823.png')`,
+        backgroundImage: isMobile ? `linear-gradient(rgba(10,10,10,0.6), rgba(10,10,10,0.7)), url('/images/decorative/Screenshot_2025-11-15_150823.png')` : `linear-gradient(rgba(10,10,10,0.7), rgba(10,10,10,0.8)), url('/images/decorative/Screenshot_2025-11-15_150823.png')`,
         backgroundColor: '#0a0a0a',
         backgroundSize: 'cover',
         backgroundPosition: 'center',
@@ -402,6 +419,7 @@ export default function Home() {
         paddingTop: isMobile ? '5px' : undefined,
         paddingBottom: isMobile ? '5px' : undefined
       }}>
+
         <div className="container" style={{
           maxWidth: '1200px',
           margin: '0 auto',
@@ -533,7 +551,7 @@ export default function Home() {
 
       {/* Join Our Team Section */}
       <section className="section" style={{
-        backgroundImage: `linear-gradient(rgba(10,10,10,${isMobile ? '0.6' : '0.7'}), rgba(10,10,10,${isMobile ? '0.7' : '0.8'})), url('/images/decorative/Screenshot_2025-05-18_205724.png')`,
+        backgroundImage: isMobile ? `linear-gradient(rgba(10,10,10,0.6), rgba(10,10,10,0.7)), url('/images/decorative/Screenshot_2025-05-18_205724.png')` : `linear-gradient(rgba(10,10,10,0.7), rgba(10,10,10,0.8)), url('/images/decorative/Screenshot_2025-05-18_205724.png')`,
         backgroundColor: '#0a0a0a',
         backgroundSize: 'cover',
         backgroundPosition: 'center',
