@@ -114,13 +114,9 @@ export default function Register() {
       backgroundAttachment: 'scroll',
       backgroundRepeat: 'no-repeat',
       minHeight: '100vh',
-      height: 'auto',
       paddingBottom: '40px',
       position: 'relative',
-      overflowY: 'scroll',
-      overflowX: 'hidden',
-      WebkitOverflowScrolling: 'touch',
-      touchAction: 'pan-y pan-x'
+      transform: isMobile ? 'translate3d(0,0,0)' : undefined
     }}>
       <div className="form-container">
         <h2 className="form-title">✓ Become a Member</h2>

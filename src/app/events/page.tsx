@@ -254,12 +254,8 @@ export default function Events() {
       backgroundAttachment: 'scroll',
       backgroundRepeat: 'no-repeat',
       minHeight: '100vh',
-      height: 'auto',
       position: 'relative',
-      overflowY: 'scroll',
-      overflowX: 'hidden',
-      WebkitOverflowScrolling: 'touch',
-      touchAction: 'pan-y pan-x'
+      transform: isMobile ? 'translate3d(0,0,0)' : undefined
     }}>
       <main style={{padding: isMobile ? '20px 15px' : '20px'}}>
         <div className="container" style={{

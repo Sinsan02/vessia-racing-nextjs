@@ -708,11 +708,8 @@ export default function Admin() {
       backgroundColor: '#0a0a0a',
       paddingTop: '100px',
       paddingBottom: '40px',
-      height: 'auto',
-      overflowY: 'scroll',
-      overflowX: 'hidden',
-      WebkitOverflowScrolling: 'touch',
-      touchAction: 'pan-y pan-x'
+      minHeight: '100vh',
+      position: 'relative'
     }}>
       <main style={{padding: '25px'}}>
         <div className="container">

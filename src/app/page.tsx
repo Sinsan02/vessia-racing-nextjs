@@ -109,13 +109,8 @@ export default function Home() {
       backgroundAttachment: isMobile ? 'scroll' : 'fixed',
       backgroundRepeat: 'no-repeat',
       minHeight: '100vh',
-      height: 'auto',
       width: '100%',
-      position: 'relative',
-      overflowY: 'scroll',
-      overflowX: 'hidden',
-      WebkitOverflowScrolling: 'touch',
-      touchAction: 'pan-y pan-x'
+      position: 'relative'
     }}>
       {/* Welcome Message */}
       {welcomeMessage && (
@@ -173,7 +168,9 @@ export default function Home() {
         minHeight: '100vh',
         position: 'relative',
         paddingTop: isMobile ? '5px' : undefined,
-        paddingBottom: isMobile ? '5px' : undefined
+        paddingBottom: isMobile ? '5px' : undefined,
+        transform: isMobile ? 'translate3d(0,0,0)' : undefined,
+        backfaceVisibility: isMobile ? 'hidden' : undefined
       }}>
 
         <div className="container" style={{
@@ -402,7 +399,9 @@ export default function Home() {
         minHeight: '100vh',
         position: 'relative',
         paddingTop: isMobile ? '5px' : undefined,
-        paddingBottom: isMobile ? '5px' : undefined
+        paddingBottom: isMobile ? '5px' : undefined,
+        transform: isMobile ? 'translate3d(0,0,0)' : undefined,
+        backfaceVisibility: isMobile ? 'hidden' : undefined
       }}>
         <div className="container" style={{
           maxWidth: '1200px',
@@ -547,7 +546,9 @@ export default function Home() {
         alignItems: 'center',
         justifyContent: 'center',
         paddingTop: isMobile ? '5px' : undefined,
-        paddingBottom: isMobile ? '5px' : undefined
+        paddingBottom: isMobile ? '5px' : undefined,
+        transform: isMobile ? 'translate3d(0,0,0)' : undefined,
+        backfaceVisibility: isMobile ? 'hidden' : undefined
       }}>
         <div className="container" style={{
           maxWidth: '1200px',

@@ -45,7 +45,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" style={{ backgroundColor: '#0a0a0a', height: '100%', overflow: 'hidden' }}>
+    <html lang="en" style={{ backgroundColor: '#0a0a0a', height: '100%' }}>
       <head>
         <link rel="icon" href="/viper_scull.png" type="image/png" />
         <link rel="apple-touch-icon" href="/viper_scull.png" />
@@ -59,7 +59,7 @@ export default function RootLayout({
         style={{
           display: 'flex',
           flexDirection: 'column',
-          height: '100%',
+          minHeight: '100vh',
           backgroundColor: '#0a0a0a',
           overflowY: 'scroll',
           overflowX: 'hidden',

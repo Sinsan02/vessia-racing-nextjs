@@ -101,12 +101,8 @@ export default function Results() {
       backgroundAttachment: 'scroll',
       backgroundRepeat: 'no-repeat',
       minHeight: '100vh',
-      height: 'auto',
       position: 'relative',
-      overflowY: 'scroll',
-      overflowX: 'hidden',
-      WebkitOverflowScrolling: 'touch',
-      touchAction: 'pan-y pan-x'
+      transform: isMobile ? 'translate3d(0,0,0)' : undefined
     }}>
       <main style={{padding: '0'}}>
         <div className="container" style={{
