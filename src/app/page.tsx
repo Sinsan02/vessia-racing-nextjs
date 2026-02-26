@@ -11,7 +11,6 @@ export default function Home() {
   const [achievementsLoading, setAchievementsLoading] = useState(true);
   const [user, setUser] = useState<any>(null);
   const [isMobile, setIsMobile] = useState(typeof window !== 'undefined' ? window.innerWidth <= 768 : false);
-  const [activeBackground, setActiveBackground] = useState(0);
   const hasFetchedData = useRef(false);
 
   
@@ -55,30 +54,6 @@ export default function Home() {
     
     return () => window.removeEventListener('resize', checkScreenSize);
   }, []);
-
-  // Handle scroll to change background layers
-  useEffect(() => {
-    const handleScroll = () => {
-      const scrollPosition = window.scrollY;
-      const windowHeight = window.innerHeight;
-      
-      // Calculate which section we're in (0-3)
-      const section = Math.min(Math.floor(scrollPosition / windowHeight), 3);
-      
-      setActiveBackground(section);
-    };
-    
-    handleScroll(); // Call immediately to set initial state
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-
-  // Calculate opacity for each background layer based on scroll position
-  const getBackgroundOpacity = (layerIndex: number) => {
-    // Show current section's background at full opacity
-    // All others are hidden
-    return layerIndex === activeBackground ? 1 : 0;
-  };
 
   const fetchUser = async () => {
     try {
@@ -127,91 +102,16 @@ export default function Home() {
 
   return (
     <div style={{
+      backgroundImage: `linear-gradient(rgba(10,10,10,${isMobile ? '0.5' : '0.3'}), rgba(10,10,10,${isMobile ? '0.5' : '0.3'})), url('/images/decorative/Screenshot_2025-11-23_180245.png')`,
       backgroundColor: '#0a0a0a',
+      backgroundSize: 'cover',
+      backgroundPosition: 'center',
+      backgroundAttachment: isMobile ? 'scroll' : 'fixed',
+      backgroundRepeat: 'no-repeat',
       minHeight: '100vh',
       width: '100%',
       position: 'relative'
     }}>
-      {/* Background layers container - stacked for parallax effect */}
-      <div style={{
-        position: 'fixed',
-        top: 0,
-        left: 0,
-        right: 0,
-        bottom: 0,
-        zIndex: 0,
-        pointerEvents: 'none'
-      }}>
-        {/* Layer 1 - Hero Background */}
-        <div style={{
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          backgroundImage: `linear-gradient(rgba(10,10,10,${isMobile ? '0.5' : '0.3'}), rgba(10,10,10,${isMobile ? '0.5' : '0.3'})), url('/images/decorative/Screenshot_2025-11-23_180245.png')`,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          backgroundRepeat: 'no-repeat',
-          zIndex: 1,
-          opacity: getBackgroundOpacity(0),
-          transition: 'opacity 0.6s ease-in-out'
-        }} />
-        
-        {/* Layer 2 - Achievements Background */}
-        <div style={{
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          backgroundImage: `linear-gradient(rgba(10,10,10,${isMobile ? '0.6' : '0.7'}), rgba(10,10,10,${isMobile ? '0.7' : '0.8'})), url('/images/decorative/Screenshot_2025-10-11_170801.png')`,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          backgroundRepeat: 'no-repeat',
-          zIndex: 2,
-          opacity: getBackgroundOpacity(1),
-          transition: 'opacity 0.6s ease-in-out'
-        }} />
-        
-        {/* Layer 3 - Upcoming Event Background */}
-        <div style={{
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          backgroundImage: `linear-gradient(rgba(10,10,10,${isMobile ? '0.6' : '0.7'}), rgba(10,10,10,${isMobile ? '0.7' : '0.8'})), url('/images/decorative/Screenshot_2025-11-15_150823.png')`,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          backgroundRepeat: 'no-repeat',
-          zIndex: 3,
-          opacity: getBackgroundOpacity(2),
-          transition: 'opacity 0.6s ease-in-out'
-        }} />
-        
-        {/* Layer 4 - Join Team Background */}
-        <div style={{
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          backgroundImage: `linear-gradient(rgba(10,10,10,${isMobile ? '0.6' : '0.7'}), rgba(10,10,10,${isMobile ? '0.7' : '0.8'})), url('/images/decorative/Screenshot_2025-05-18_205724.png')`,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          backgroundRepeat: 'no-repeat',
-          zIndex: 4,
-          opacity: getBackgroundOpacity(3),
-          transition: 'opacity 0.6s ease-in-out'
-        }} />
-      </div>
-      
-      {/* Content container with higher z-index */}
-      <div style={{
-        position: 'relative',
-        zIndex: 10
-      }}>
       {/* Welcome Message */}
       {welcomeMessage && (
         <div style={{
@@ -227,17 +127,12 @@ export default function Home() {
 
       {/* Hero Section */}
       <section className="hero" style={{
-        minHeight: '100vh',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        position: 'relative',
-        padding: isMobile ? '8px' : '20px'
+        background: isMobile ? 'linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.5))' : 'linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.7))',
+        paddingBottom: isMobile ? '5px' : undefined,
+        paddingTop: isMobile ? '5px' : undefined,
+        minHeight: isMobile ? 'auto' : undefined
       }}>
-        <div className="hero-content" style={{
-          position: 'relative',
-          zIndex: 2
-        }}>
+        <div className="hero-content">
           <Image 
             src="/Vessia_Logo.png" 
             alt="Vessia Racing" 
@@ -264,10 +159,16 @@ export default function Home() {
 
       {/* Achievements Section */}
       <section id="achievements" className="section" style={{
+        backgroundImage: `linear-gradient(rgba(10,10,10,${isMobile ? '0.6' : '0.7'}), rgba(10,10,10,${isMobile ? '0.7' : '0.8'})), url('/images/decorative/Screenshot_2025-10-11_170801.png')`,
+        backgroundColor: '#0a0a0a',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundAttachment: isMobile ? 'scroll' : 'fixed',
+        backgroundRepeat: 'no-repeat',
         minHeight: '100vh',
         position: 'relative',
-        paddingTop: isMobile ? '20px' : '40px',
-        paddingBottom: isMobile ? '20px' : '40px'
+        paddingTop: isMobile ? '5px' : undefined,
+        paddingBottom: isMobile ? '5px' : undefined
       }}>
 
         <div className="container" style={{
@@ -487,10 +388,16 @@ export default function Home() {
 
       {/* Upcoming Event Section */}
       <section id="results" className="section section-dark" style={{
+        backgroundImage: `linear-gradient(rgba(10,10,10,${isMobile ? '0.6' : '0.7'}), rgba(10,10,10,${isMobile ? '0.7' : '0.8'})), url('/images/decorative/Screenshot_2025-11-15_150823.png')`,
+        backgroundColor: '#0a0a0a',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundAttachment: isMobile ? 'scroll' : 'fixed',
+        backgroundRepeat: 'no-repeat',
         minHeight: '100vh',
         position: 'relative',
-        paddingTop: isMobile ? '20px' : '40px',
-        paddingBottom: isMobile ? '20px' : '40px'
+        paddingTop: isMobile ? '5px' : undefined,
+        paddingBottom: isMobile ? '5px' : undefined
       }}>
         <div className="container" style={{
           maxWidth: '1200px',
@@ -623,13 +530,19 @@ export default function Home() {
 
       {/* Join Our Team Section */}
       <section className="section" style={{
+        backgroundImage: `linear-gradient(rgba(10,10,10,${isMobile ? '0.6' : '0.7'}), rgba(10,10,10,${isMobile ? '0.7' : '0.8'})), url('/images/decorative/Screenshot_2025-05-18_205724.png')`,
+        backgroundColor: '#0a0a0a',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundAttachment: isMobile ? 'scroll' : 'fixed',
+        backgroundRepeat: 'no-repeat',
         minHeight: '100vh',
         position: 'relative',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        paddingTop: isMobile ? '20px' : '40px',
-        paddingBottom: isMobile ? '20px' : '40px'
+        paddingTop: isMobile ? '5px' : undefined,
+        paddingBottom: isMobile ? '5px' : undefined
       }}>
         <div className="container" style={{
           maxWidth: '1200px',
@@ -680,8 +593,6 @@ export default function Home() {
           </div>
         </div>
       </section>
-      
-      </div> {/* End content container */}
     </div>
   );
 }
