@@ -172,9 +172,7 @@ export default function Home() {
         minHeight: '100vh',
         position: 'relative',
         paddingTop: isMobile ? '5px' : undefined,
-        paddingBottom: isMobile ? '5px' : undefined,
-        transform: isMobile ? 'translate3d(0,0,0)' : undefined,
-        backfaceVisibility: isMobile ? 'hidden' : undefined
+        paddingBottom: isMobile ? '5px' : undefined
       }}>
 
         <div className="container" style={{
@@ -403,9 +401,7 @@ export default function Home() {
         minHeight: '100vh',
         position: 'relative',
         paddingTop: isMobile ? '5px' : undefined,
-        paddingBottom: isMobile ? '5px' : undefined,
-        transform: isMobile ? 'translate3d(0,0,0)' : undefined,
-        backfaceVisibility: isMobile ? 'hidden' : undefined
+        paddingBottom: isMobile ? '5px' : undefined
       }}>
         <div className="container" style={{
           maxWidth: '1200px',
@@ -550,9 +546,7 @@ export default function Home() {
         alignItems: 'center',
         justifyContent: 'center',
         paddingTop: isMobile ? '5px' : undefined,
-        paddingBottom: isMobile ? '5px' : undefined,
-        transform: isMobile ? 'translate3d(0,0,0)' : undefined,
-        backfaceVisibility: isMobile ? 'hidden' : undefined
+        paddingBottom: isMobile ? '5px' : undefined
       }}>
         <div className="container" style={{
           maxWidth: '1200px',
