@@ -107,16 +107,16 @@ export default function Results() {
       overflowX: 'hidden',
       WebkitOverflowScrolling: 'touch'
     }}>
-      <main style={{padding: isMobile ? '20px' : '20px'}}>
+      <main style={{padding: '0'}}>
         <div className="container" style={{
           maxWidth: '1200px',
           margin: '0 auto',
-          padding: isMobile ? '0 10px' : '40px 20px',
+          padding: isMobile ? '20px 15px' : '40px 20px',
           boxSizing: 'border-box',
           width: '100%'
         }}>
           {/* Header */}
-          <div className="results-header" style={{textAlign: 'center', marginBottom: '30px', padding: isMobile ? '0 10px' : '0'}}>
+          <div className="results-header" style={{textAlign: 'center', marginBottom: '30px', padding: '0'}}>
             <h1 style={{color: '#3EA822', fontSize: isMobile ? '2rem' : '2.5rem', marginBottom: '1rem'}}>
               🏆 Championship Results
             </h1>
@@ -126,7 +126,7 @@ export default function Results() {
           </div>
 
           {/* League Selector */}
-          <div className="league-selector" style={{marginBottom: '30px', textAlign: 'center', padding: isMobile ? '0 10px' : '0'}}>
+          <div className="league-selector" style={{marginBottom: '30px', textAlign: 'center', padding: '0'}}>
             <label style={{color: '#3EA822', fontSize: isMobile ? '1rem' : '1.2rem', marginRight: '15px', display: isMobile ? 'block' : 'inline', marginBottom: isMobile ? '10px' : '0'}}>
               Select League:
             </label>
