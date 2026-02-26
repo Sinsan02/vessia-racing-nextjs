@@ -167,19 +167,13 @@ export default function Home() {
           <p className="hero-subtitle" style={{
             fontSize: isMobile ? '1.2rem' : undefined, 
             marginBottom: isMobile ? '10px' : undefined,
-            backgroundColor: isMobile ? 'rgba(0, 0, 0, 0.6)' : undefined,
-            padding: isMobile ? '8px 15px' : undefined,
-            borderRadius: isMobile ? '8px' : undefined,
-            display: isMobile ? 'inline-block' : undefined
+            textShadow: isMobile ? '0 0 8px rgba(0, 0, 0, 0.9), 0 0 12px rgba(0, 0, 0, 0.8), 2px 2px 4px rgba(0, 0, 0, 0.9)' : undefined
           }}>Norwegian sim racing team</p>
           <p className="hero-description" style={{
             fontSize: isMobile ? '1.3rem' : undefined, 
             marginBottom: isMobile ? '20px' : undefined, 
-            padding: isMobile ? '10px 15px' : '0 10px',
-            backgroundColor: isMobile ? 'rgba(0, 0, 0, 0.6)' : undefined,
-            borderRadius: isMobile ? '8px' : undefined,
-            display: isMobile ? 'inline-block' : undefined,
-            maxWidth: isMobile ? '90%' : undefined
+            padding: isMobile ? '0 10px' : undefined,
+            textShadow: isMobile ? '0 0 8px rgba(0, 0, 0, 0.9), 0 0 12px rgba(0, 0, 0, 0.8), 2px 2px 4px rgba(0, 0, 0, 0.9)' : undefined
           }}>Competing in Scandinavian leagues and special events with dedication, precision and teamwork</p>
           <div className="hero-buttons" style={{
             display: 'flex',
@@ -240,10 +234,7 @@ export default function Home() {
           <p className="section-subtitle" style={{
             fontSize: isMobile ? '1.1rem' : undefined, 
             marginBottom: isMobile ? '10px' : undefined,
-            backgroundColor: isMobile ? 'rgba(0, 0, 0, 0.6)' : undefined,
-            padding: isMobile ? '8px 15px' : undefined,
-            borderRadius: isMobile ? '8px' : undefined,
-            display: isMobile ? 'inline-block' : undefined
+            textShadow: isMobile ? '0 0 8px rgba(0, 0, 0, 0.9), 0 0 12px rgba(0, 0, 0, 0.8), 2px 2px 4px rgba(0, 0, 0, 0.9)' : undefined
           }}>Celebrating our victories on the world's most challenging circuits</p>
           
           {achievementsLoading ? (
@@ -682,9 +673,7 @@ export default function Home() {
               fontSize: isMobile ? '1.05rem' : '1.1rem', 
               maxWidth: '600px', 
               margin: isMobile ? '0 auto 10px' : '0 auto 25px',
-              backgroundColor: isMobile ? 'rgba(0, 0, 0, 0.6)' : undefined,
-              padding: isMobile ? '10px 15px' : undefined,
-              borderRadius: isMobile ? '8px' : undefined
+              textShadow: isMobile ? '0 0 8px rgba(0, 0, 0, 0.9), 0 0 12px rgba(0, 0, 0, 0.8), 2px 2px 4px rgba(0, 0, 0, 0.9)' : undefined
             }}>
               Be part of our racing success story and compete at the highest level in professional sim racing
             </p>
