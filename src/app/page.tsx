@@ -332,7 +332,7 @@ export default function Home() {
 
                   {achievement.track_name && (
                     <p style={{
-                      color: '#888',
+                      color: '#b0b0b0',
                       fontSize: isMobile ? '0.7rem' : '0.9rem',
                       marginBottom: isMobile ? '4px' : '10px'
                     }}>
@@ -341,7 +341,7 @@ export default function Home() {
                   )}
 
                   <p style={{
-                    color: '#888',
+                    color: '#b0b0b0',
                     fontSize: isMobile ? '0.65rem' : '0.9rem',
                     marginBottom: isMobile ? '6px' : '15px'
                   }}>
@@ -354,7 +354,7 @@ export default function Home() {
 
                   {achievement.description && (
                     <div style={{
-                      color: '#999',
+                      color: '#c0c0c0',
                       fontSize: '0.85rem',
                       lineHeight: '1.6',
                       marginTop: '15px',
@@ -389,7 +389,7 @@ export default function Home() {
           ) : (
             <div style={{
               textAlign: 'center',
-              color: '#888',
+              color: '#b0b0b0',
               padding: '60px 20px'
             }}>
               <div style={{fontSize: '4rem', marginBottom: '20px'}}>🏆</div>
@@ -537,7 +537,7 @@ export default function Home() {
               )}
               {latestEvent.description && (
                 <p style={{
-                  color: '#888',
+                  color: '#b0b0b0',
                   fontSize: isMobile ? '0.7rem' : '0.95rem',
                   marginBottom: isMobile ? '8px' : '20px',
                   maxWidth: '600px',
@@ -568,7 +568,7 @@ export default function Home() {
           ) : (
             <div style={{
               textAlign: 'center',
-              color: '#888',
+              color: '#b0b0b0',
               padding: '40px'
             }}>
               <div style={{fontSize: '3rem', marginBottom: '15px'}}>🏁</div>
@@ -654,7 +654,7 @@ export default function Home() {
             <h3 style={{color: '#3EA822', marginBottom: isMobile ? '6px' : '10px', fontSize: isMobile ? '1.1rem' : '2rem', fontWeight: 'bold'}}>
               Want to join our winning team?
             </h3>
-            <p style={{color: '#888', marginBottom: isMobile ? '10px' : '25px', fontSize: isMobile ? '1.05rem' : '1.1rem', maxWidth: '600px', margin: isMobile ? '0 auto 10px' : '0 auto 25px'}}>
+            <p style={{color: '#b0b0b0', marginBottom: isMobile ? '10px' : '25px', fontSize: isMobile ? '1.05rem' : '1.1rem', maxWidth: '600px', margin: isMobile ? '0 auto 10px' : '0 auto 25px'}}>
               Be part of our racing success story and compete at the highest level in professional sim racing
             </p>
             <a
