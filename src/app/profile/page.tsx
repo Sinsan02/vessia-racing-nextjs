@@ -185,8 +185,8 @@ export default function Profile() {
       minHeight: '100vh',
       position: 'relative'
     }}>
-      <main style={{padding: '25px'}}>
-        <div className="container">
+      <main style={{padding: isMobile ? '20px 15px' : '25px', boxSizing: 'border-box', width: '100%', overflowX: 'hidden'}}>
+        <div className="container" style={{maxWidth: '1200px', margin: '0 auto', padding: '0', boxSizing: 'border-box', width: '100%'}}>
           <div style={{textAlign: 'center', marginBottom: '30px'}}>
             <h1 style={{color: '#3EA822', fontSize: '2.5rem', marginBottom: '1rem'}}>
               👤 Min Profil

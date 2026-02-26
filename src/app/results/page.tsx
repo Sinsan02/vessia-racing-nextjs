@@ -110,7 +110,8 @@ export default function Results() {
           margin: '0 auto',
           padding: isMobile ? '20px 15px' : '40px 20px',
           boxSizing: 'border-box',
-          width: '100%'
+          width: '100%',
+          overflowX: 'hidden'
         }}>
           {/* Header */}
           <div className="results-header" style={{textAlign: 'center', marginBottom: '30px', padding: '0'}}>
@@ -162,7 +163,9 @@ export default function Results() {
               margin: '0 auto',
               padding: '0',
               width: '100%',
-              boxSizing: 'border-box'
+              boxSizing: 'border-box',
+              overflowX: isMobile ? 'auto' : 'visible',
+              WebkitOverflowScrolling: 'touch'
             }}>
               <h2 style={{color: '#3EA822', fontSize: isMobile ? '1.3rem' : '1.5rem', marginBottom: '20px', textAlign: 'center', padding: '0', width: '100%'}}>
                 Standings - {leagues.find(l => l.id === selectedLeague)?.name}
@@ -178,7 +181,7 @@ export default function Results() {
                   <p>No results available for this league yet.</p>
                 </div>
               ) : (
-                <div className="standings-table" style={{width: '100%'}}>
+                <div className="standings-table" style={{width: '100%', minWidth: isMobile ? '380px' : 'auto'}}>
                   <table style={{
                     width: '100%',
                     backgroundColor: isMobile ? 'transparent' : '#1a1a1a',
@@ -186,7 +189,8 @@ export default function Results() {
                     overflow: 'hidden',
                     border: isMobile ? '1px solid rgba(62, 168, 34, 0.3)' : '1px solid #333',
                     tableLayout: isMobile ? 'auto' : 'fixed',
-                    margin: '0 auto'
+                    margin: '0 auto',
+                    minWidth: isMobile ? '380px' : 'auto'
                   }}>
                     <thead>
                       <tr style={{backgroundColor: '#333'}}>

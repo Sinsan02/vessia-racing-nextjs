@@ -40,6 +40,8 @@ body {
   position: relative;
   -webkit-overflow-scrolling: touch;
   touch-action: pan-y pan-x;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
 }
 
 /* Racing Typography System */
