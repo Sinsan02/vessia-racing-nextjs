@@ -117,17 +117,17 @@ export default function Results() {
         }}>
           {/* Header */}
           <div className="results-header" style={{textAlign: 'center', marginBottom: '30px', padding: isMobile ? '0 10px' : '0'}}>
-            <h1 style={{color: '#3EA822', fontSize: '2.5rem', marginBottom: '1rem'}}>
+            <h1 style={{color: '#3EA822', fontSize: isMobile ? '2rem' : '2.5rem', marginBottom: '1rem'}}>
               🏆 Championship Results
             </h1>
-            <p style={{color: '#ccc', fontSize: '1.1rem', marginTop: '15px'}}>
+            <p style={{color: '#ccc', fontSize: isMobile ? '1rem' : '1.1rem', marginTop: '15px'}}>
               View championship standings and driver performances
             </p>
           </div>
 
           {/* League Selector */}
-          <div className="league-selector" style={{marginBottom: '30px', textAlign: 'center'}}>
-            <label style={{color: '#3EA822', fontSize: '1.2rem', marginRight: '15px'}}>
+          <div className="league-selector" style={{marginBottom: '30px', textAlign: 'center', padding: isMobile ? '0 10px' : '0'}}>
+            <label style={{color: '#3EA822', fontSize: isMobile ? '1rem' : '1.2rem', marginRight: '15px', display: isMobile ? 'block' : 'inline', marginBottom: isMobile ? '10px' : '0'}}>
               Select League:
             </label>
             {loading ? (
@@ -141,9 +141,10 @@ export default function Results() {
                   color: '#fff',
                   border: '2px solid #3EA822',
                   borderRadius: '8px',
-                  padding: '10px 15px',
-                  fontSize: '1rem',
-                  minWidth: '200px',
+                  padding: isMobile ? '8px 12px' : '10px 15px',
+                  fontSize: isMobile ? '0.9rem' : '1rem',
+                  minWidth: isMobile ? '180px' : '200px',
+                  maxWidth: isMobile ? 'calc(100% - 20px)' : 'none',
                   cursor: 'pointer'
                 }}
               >
@@ -160,13 +161,13 @@ export default function Results() {
           {/* Results Table */}
           {selectedLeague ? (
             <div className="results-table-container" style={{
-              maxWidth: '900px',
+              maxWidth: isMobile ? '100%' : '900px',
               margin: '0 auto',
-              padding: isMobile ? '0 15px' : '0 40px',
+              padding: isMobile ? '0 5px' : '0 40px',
               width: '100%',
               boxSizing: 'border-box'
             }}>
-              <h2 style={{color: '#3EA822', fontSize: '1.5rem', marginBottom: '20px', textAlign: 'center'}}>
+              <h2 style={{color: '#3EA822', fontSize: isMobile ? '1.3rem' : '1.5rem', marginBottom: '20px', textAlign: 'center', padding: isMobile ? '0 10px' : '0'}}>
                 Standings - {leagues.find(l => l.id === selectedLeague)?.name}
               </h2>
               
@@ -186,13 +187,14 @@ export default function Results() {
                     backgroundColor: isMobile ? 'transparent' : '#1a1a1a',
                     borderRadius: '10px',
                     overflow: 'hidden',
-                    border: isMobile ? '1px solid rgba(62, 168, 34, 0.3)' : '1px solid #333'
+                    border: isMobile ? '1px solid rgba(62, 168, 34, 0.3)' : '1px solid #333',
+                    tableLayout: isMobile ? 'auto' : 'fixed'
                   }}>
                     <thead>
                       <tr style={{backgroundColor: '#333'}}>
-                        <th style={{color: '#3EA822', padding: '15px', textAlign: 'left'}}>Position</th>
-                        <th style={{color: '#3EA822', padding: '15px', textAlign: 'left'}}>Driver</th>
-                        <th style={{color: '#3EA822', padding: '15px', textAlign: 'center'}}>Points</th>
+                        <th style={{color: '#3EA822', padding: isMobile ? '12px 8px' : '15px', textAlign: 'left', width: isMobile ? '60px' : 'auto'}}>Position</th>
+                        <th style={{color: '#3EA822', padding: isMobile ? '12px 8px' : '15px', textAlign: 'left'}}>Driver</th>
+                        <th style={{color: '#3EA822', padding: isMobile ? '12px 8px' : '15px', textAlign: 'center', width: isMobile ? '70px' : 'auto'}}>Points</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -204,11 +206,11 @@ export default function Results() {
                             backgroundColor: index % 2 === 0 ? '#1a1a1a' : '#222'
                           }}
                         >
-                          <td style={{padding: '15px'}}>
+                          <td style={{padding: isMobile ? '12px 8px' : '15px'}}>
                             <div style={{
                               display: 'flex',
                               alignItems: 'center',
-                              fontSize: '1.2rem',
+                              fontSize: isMobile ? '1rem' : '1.2rem',
                               fontWeight: 'bold',
                               color: getRankColor(index + 1)
                             }}>
@@ -218,19 +220,20 @@ export default function Results() {
                               {index === 2 && <span style={{marginLeft: '8px'}}>🥉</span>}
                             </div>
                           </td>
-                          <td style={{padding: '15px'}}>
+                          <td style={{padding: isMobile ? '12px 8px' : '15px'}}>
                             <div style={{display: 'flex', alignItems: 'center'}}>
                               {driver.profile_picture && driver.profile_picture.trim() !== '' ? (
                                 <img
                                   src={driver.profile_picture}
                                   alt={`${driver.full_name} profile`}
                                   style={{
-                                    width: '40px',
-                                    height: '40px',
+                                    width: isMobile ? '35px' : '40px',
+                                    height: isMobile ? '35px' : '40px',
                                     borderRadius: '50%',
                                     objectFit: 'cover',
-                                    marginRight: '12px',
-                                    border: '2px solid #3EA822'
+                                    marginRight: isMobile ? '8px' : '12px',
+                                    border: '2px solid #3EA822',
+                                    flexShrink: 0
                                   }}
                                   onError={(e) => {
                                     // Replace with placeholder if image fails to load
@@ -245,34 +248,35 @@ export default function Results() {
                               ) : null}
                               <div
                                 style={{
-                                  width: '40px',
-                                  height: '40px',
+                                  width: isMobile ? '35px' : '40px',
+                                  height: isMobile ? '35px' : '40px',
                                   borderRadius: '50%',
                                   backgroundColor: getPlaceholderColor(driver.full_name),
                                   display: (!driver.profile_picture || driver.profile_picture.trim() === '') ? 'flex' : 'none',
                                   alignItems: 'center',
                                   justifyContent: 'center',
-                                  marginRight: '12px',
-                                  fontSize: '1.2rem',
+                                  marginRight: isMobile ? '8px' : '12px',
+                                  fontSize: isMobile ? '1rem' : '1.2rem',
                                   fontWeight: 'bold',
                                   color: 'white',
                                   border: '2px solid #3EA822',
-                                  boxShadow: '0 2px 8px rgba(0,0,0,0.2)'
+                                  boxShadow: '0 2px 8px rgba(0,0,0,0.2)',
+                                  flexShrink: 0
                                 }}
                               >
                                 {driver.full_name.charAt(0).toUpperCase()}
                               </div>
-                              <div>
-                                <div style={{color: '#fff', fontWeight: '500', fontSize: '1rem'}}>
+                              <div style={{flex: 1, minWidth: 0}}>
+                                <div style={{color: '#fff', fontWeight: '500', fontSize: isMobile ? '0.9rem' : '1rem', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis'}}>
                                   {driver.full_name}
                                 </div>
                               </div>
                             </div>
                           </td>
-                          <td style={{padding: '15px', textAlign: 'center'}}>
+                          <td style={{padding: isMobile ? '12px 8px' : '15px', textAlign: 'center'}}>
                             <div style={{
                               color: '#3EA822',
-                              fontSize: '1.3rem',
+                              fontSize: isMobile ? '1.1rem' : '1.3rem',
                               fontWeight: 'bold'
                             }}>
                               {driver.points}
