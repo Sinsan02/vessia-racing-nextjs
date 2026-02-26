@@ -62,14 +62,36 @@ export default function Home() {
       const scrollPosition = window.scrollY;
       const windowHeight = window.innerHeight;
       
-      // Calculate which section we're in (0-3)
+      // Calculate scroll progress through each section (0-1)
+      const progress = (scrollPosition % windowHeight) / windowHeight;
       const section = Math.floor(scrollPosition / windowHeight);
-      setActiveBackground(Math.min(section, 3));
+      
+      setActiveBackground(section);
     };
     
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  // Calculate opacity for each background layer based on scroll position
+  const getBackgroundOpacity = (layerIndex: number) => {
+    if (layerIndex === 0) {
+      // First layer: visible at start, fades out when scrolling to section 1
+      return activeBackground === 0 ? 1 : 0;
+    } else if (layerIndex === activeBackground) {
+      // Current layer: fully visible
+      return 1;
+    } else if (layerIndex === activeBackground - 1) {
+      // Previous layer: fading out
+      return 0;
+    } else if (layerIndex === activeBackground + 1) {
+      // Next layer: starting to fade in
+      return 0;
+    } else {
+      // Other layers: hidden
+      return 0;
+    }
+  };
 
   const fetchUser = async () => {
     try {
@@ -121,8 +143,7 @@ export default function Home() {
       backgroundColor: '#0a0a0a',
       minHeight: '100vh',
       width: '100%',
-      position: 'relative',
-      overflow: 'hidden'
+      position: 'relative'
     }}>
       {/* Background layers container - stacked for parallax effect */}
       <div style={{
@@ -134,7 +155,7 @@ export default function Home() {
         zIndex: 0,
         pointerEvents: 'none'
       }}>
-        {/* Layer 1 - Hero Background - Always visible */}
+        {/* Layer 1 - Hero Background */}
         <div style={{
           position: 'fixed',
           top: 0,
@@ -146,8 +167,8 @@ export default function Home() {
           backgroundPosition: 'center',
           backgroundRepeat: 'no-repeat',
           zIndex: 1,
-          opacity: activeBackground >= 0 ? 1 : 0,
-          transition: 'opacity 0.5s ease'
+          opacity: getBackgroundOpacity(0),
+          transition: 'opacity 0.6s ease-in-out'
         }} />
         
         {/* Layer 2 - Achievements Background */}
@@ -162,8 +183,8 @@ export default function Home() {
           backgroundPosition: 'center',
           backgroundRepeat: 'no-repeat',
           zIndex: 2,
-          opacity: activeBackground >= 1 ? 1 : 0,
-          transition: 'opacity 0.5s ease'
+          opacity: getBackgroundOpacity(1),
+          transition: 'opacity 0.6s ease-in-out'
         }} />
         
         {/* Layer 3 - Upcoming Event Background */}
@@ -178,8 +199,8 @@ export default function Home() {
           backgroundPosition: 'center',
           backgroundRepeat: 'no-repeat',
           zIndex: 3,
-          opacity: activeBackground >= 2 ? 1 : 0,
-          transition: 'opacity 0.5s ease'
+          opacity: getBackgroundOpacity(2),
+          transition: 'opacity 0.6s ease-in-out'
         }} />
         
         {/* Layer 4 - Join Team Background */}
@@ -194,8 +215,8 @@ export default function Home() {
           backgroundPosition: 'center',
           backgroundRepeat: 'no-repeat',
           zIndex: 4,
-          opacity: activeBackground >= 3 ? 1 : 0,
-          transition: 'opacity 0.5s ease'
+          opacity: getBackgroundOpacity(3),
+          transition: 'opacity 0.6s ease-in-out'
         }} />
       </div>
       
