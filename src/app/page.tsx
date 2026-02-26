@@ -106,11 +106,14 @@ export default function Home() {
       backgroundColor: '#0a0a0a',
       backgroundSize: 'cover',
       backgroundPosition: 'center',
-      backgroundAttachment: 'fixed',
+      backgroundAttachment: isMobile ? 'scroll' : 'fixed',
       backgroundRepeat: 'no-repeat',
       minHeight: '100vh',
       width: '100%',
-      position: 'relative'
+      position: 'relative',
+      WebkitBackgroundSize: 'cover',
+      MozBackgroundSize: 'cover',
+      OBackgroundSize: 'cover'
     }}>
       {/* Welcome Message */}
       {welcomeMessage && (
