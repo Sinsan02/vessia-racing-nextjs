@@ -165,7 +165,7 @@ export default function Home() {
             priority
           />
           <p className="hero-subtitle" style={{fontSize: isMobile ? '1.2rem' : undefined, marginBottom: isMobile ? '10px' : undefined}}>Norwegian sim racing team</p>
-          <p className="hero-description" style={{fontSize: isMobile ? '1rem' : undefined, marginBottom: isMobile ? '20px' : undefined, padding: isMobile ? '0 10px' : undefined}}>Competing in Scandinavian leagues and special events with dedication, precision and teamwork</p>
+          <p className="hero-description" style={{fontSize: isMobile ? '1.3rem' : undefined, marginBottom: isMobile ? '20px' : undefined, padding: isMobile ? '0 10px' : undefined}}>Competing in Scandinavian leagues and special events with dedication, precision and teamwork</p>
           <div className="hero-buttons" style={{
             display: 'flex',
             gap: '1rem',
@@ -178,18 +178,22 @@ export default function Home() {
             <Link href="#achievements" className="btn-primary racing-pulse">Our Accomplishments</Link>
           </div>
         </div>
+        
+        {/* Green Divider - Mobile Only */}
+        {isMobile && (
+          <div style={{
+            position: 'absolute',
+            bottom: '20px',
+            left: '50%',
+            transform: 'translateX(-50%)',
+            height: '5px',
+            width: '80%',
+            backgroundColor: '#3EA822',
+            borderRadius: '10px',
+            boxShadow: '0 0 15px rgba(62, 168, 34, 0.6)'
+          }} />
+        )}
       </section>
-
-      {/* Section Divider - Mobile Only */}
-      {isMobile && (
-        <div style={{
-          height: '3px',
-          width: '75%',
-          backgroundColor: '#3EA822',
-          margin: '0 auto',
-          borderRadius: '10px'
-        }} />
-      )}
 
       {/* Achievements Section */}
       <section id="achievements" className="section" style={{
@@ -217,7 +221,7 @@ export default function Home() {
           width: '100%'
         }}>
           <h2 className="section-title" style={{fontSize: isMobile ? '1.3rem' : undefined, marginBottom: isMobile ? '6px' : undefined}}>🏆 Our Accomplishments</h2>
-          <p className="section-subtitle" style={{fontSize: isMobile ? '0.8rem' : undefined, marginBottom: isMobile ? '10px' : undefined}}>Celebrating our victories on the world's most challenging circuits</p>
+          <p className="section-subtitle" style={{fontSize: isMobile ? '1.1rem' : undefined, marginBottom: isMobile ? '10px' : undefined}}>Celebrating our victories on the world's most challenging circuits</p>
           
           {achievementsLoading ? (
             <div className="achievements-grid" style={{
@@ -422,18 +426,22 @@ export default function Home() {
             </div>
           )}
         </div>
+        
+        {/* Green Divider - Mobile Only */}
+        {isMobile && (
+          <div style={{
+            position: 'absolute',
+            bottom: '20px',
+            left: '50%',
+            transform: 'translateX(-50%)',
+            height: '5px',
+            width: '80%',
+            backgroundColor: '#3EA822',
+            borderRadius: '10px',
+            boxShadow: '0 0 15px rgba(62, 168, 34, 0.6)'
+          }} />
+        )}
       </section>
-
-      {/* Section Divider - Mobile Only */}
-      {isMobile && (
-        <div style={{
-          height: '3px',
-          width: '75%',
-          backgroundColor: '#3EA822',
-          margin: '0 auto',
-          borderRadius: '10px'
-        }} />
-      )}
 
       {/* Upcoming Event Section */}
       <section id="results" className="section section-dark" style={{
@@ -581,18 +589,22 @@ export default function Home() {
             </div>
           )}
         </div>
+        
+        {/* Green Divider - Mobile Only */}
+        {isMobile && (
+          <div style={{
+            position: 'absolute',
+            bottom: '20px',
+            left: '50%',
+            transform: 'translateX(-50%)',
+            height: '5px',
+            width: '80%',
+            backgroundColor: '#3EA822',
+            borderRadius: '10px',
+            boxShadow: '0 0 15px rgba(62, 168, 34, 0.6)'
+          }} />
+        )}
       </section>
-
-      {/* Section Divider - Mobile Only */}
-      {isMobile && (
-        <div style={{
-          height: '3px',
-          width: '75%',
-          backgroundColor: '#3EA822',
-          margin: '0 auto',
-          borderRadius: '10px'
-        }} />
-      )}
 
       {/* Join Our Team Section */}
       <section className="section" style={{
@@ -639,7 +651,7 @@ export default function Home() {
             <h3 style={{color: '#3EA822', marginBottom: isMobile ? '6px' : '10px', fontSize: isMobile ? '1.1rem' : '2rem', fontWeight: 'bold'}}>
               Want to join our winning team?
             </h3>
-            <p style={{color: '#888', marginBottom: isMobile ? '10px' : '25px', fontSize: isMobile ? '0.75rem' : '1.1rem', maxWidth: '600px', margin: isMobile ? '0 auto 10px' : '0 auto 25px'}}>
+            <p style={{color: '#888', marginBottom: isMobile ? '10px' : '25px', fontSize: isMobile ? '1.05rem' : '1.1rem', maxWidth: '600px', margin: isMobile ? '0 auto 10px' : '0 auto 25px'}}>
               Be part of our racing success story and compete at the highest level in professional sim racing
             </p>
             <a
