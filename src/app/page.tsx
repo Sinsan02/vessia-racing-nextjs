@@ -206,7 +206,7 @@ export default function Home() {
             backgroundColor: '#3EA822',
             borderRadius: '10px',
             boxShadow: '0 0 15px rgba(62, 168, 34, 0.6)',
-            zIndex: 10
+            zIndex: 100
           }} />
         )}
       </section>
@@ -462,7 +462,7 @@ export default function Home() {
             backgroundColor: '#3EA822',
             borderRadius: '10px',
             boxShadow: '0 0 15px rgba(62, 168, 34, 0.6)',
-            zIndex: 10
+            zIndex: 100
           }} />
         )}
       </section>
@@ -626,7 +626,7 @@ export default function Home() {
             backgroundColor: '#3EA822',
             borderRadius: '10px',
             boxShadow: '0 0 15px rgba(62, 168, 34, 0.6)',
-            zIndex: 10
+            zIndex: 100
           }} />
         )}
       </section>
