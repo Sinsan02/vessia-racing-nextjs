@@ -163,8 +163,8 @@ export default function Home() {
             style={{maxWidth: isMobile ? '80vw' : '400px', height: 'auto', marginBottom: isMobile ? '20px' : '20px'}}
             priority
           />
-          <p className="hero-subtitle" style={{fontSize: isMobile ? '1.2rem' : undefined, marginBottom: isMobile ? '10px' : undefined, textShadow: '2px 2px 8px rgba(0,0,0,0.9)'}}>Norwegian sim racing team</p>
-          <p className="hero-description" style={{fontSize: isMobile ? '1rem' : undefined, marginBottom: isMobile ? '20px' : undefined, padding: isMobile ? '0 10px' : undefined, textShadow: '2px 2px 8px rgba(0,0,0,0.9)'}}>Competing in Scandinavian leagues and special events with dedication, precision and teamwork</p>
+          <p className="hero-subtitle" style={{fontSize: isMobile ? '1.2rem' : undefined, marginBottom: isMobile ? '10px' : undefined}}>Norwegian sim racing team</p>
+          <p className="hero-description" style={{fontSize: isMobile ? '1rem' : undefined, marginBottom: isMobile ? '20px' : undefined, padding: isMobile ? '0 10px' : undefined}}>Competing in Scandinavian leagues and special events with dedication, precision and teamwork</p>
           <div className="hero-buttons" style={{
             display: 'flex',
             gap: '1rem',
@@ -203,8 +203,8 @@ export default function Home() {
           boxSizing: 'border-box',
           width: '100%'
         }}>
-          <h2 className="section-title" style={{fontSize: isMobile ? '1.3rem' : undefined, marginBottom: isMobile ? '6px' : undefined, textShadow: '2px 2px 8px rgba(0,0,0,0.9)', backgroundColor: 'rgba(0,0,0,0.5)', padding: '10px', borderRadius: '8px', display: 'inline-block'}}>🏆 Our Accomplishments</h2>
-          <p className="section-subtitle" style={{fontSize: isMobile ? '0.8rem' : undefined, marginBottom: isMobile ? '10px' : undefined, textShadow: '2px 2px 8px rgba(0,0,0,0.9)', backgroundColor: 'rgba(0,0,0,0.5)', padding: '8px', borderRadius: '8px', display: 'inline-block', margin: '0 auto', marginTop: '10px'}}>Celebrating our victories on the world's most challenging circuits</p>
+          <h2 className="section-title" style={{fontSize: isMobile ? '1.3rem' : undefined, marginBottom: isMobile ? '6px' : undefined}}>🏆 Our Accomplishments</h2>
+          <p className="section-subtitle" style={{fontSize: isMobile ? '0.8rem' : undefined, marginBottom: isMobile ? '10px' : undefined}}>Celebrating our victories on the world's most challenging circuits</p>
           
           {achievementsLoading ? (
             <div className="achievements-grid" style={{
@@ -436,7 +436,7 @@ export default function Home() {
           boxSizing: 'border-box',
           width: '100%'
         }}>
-          <h2 className="section-title" style={{fontSize: isMobile ? '1.3rem' : undefined, marginBottom: isMobile ? '10px' : undefined, textShadow: '2px 2px 8px rgba(0,0,0,0.9)', backgroundColor: 'rgba(0,0,0,0.5)', padding: '10px', borderRadius: '8px', display: 'inline-block'}}>Upcoming Event</h2>
+          <h2 className="section-title" style={{fontSize: isMobile ? '1.3rem' : undefined, marginBottom: isMobile ? '10px' : undefined}}>Upcoming Event</h2>
           {latestEvent ? (
             <div className="latest-event" style={{
               backgroundColor: '#1a1a1a',
@@ -599,10 +599,10 @@ export default function Home() {
             boxSizing: 'border-box'
           }}>
             <div style={{fontSize: isMobile ? '1.5rem' : '2.5rem', marginBottom: isMobile ? '6px' : '15px'}}>🚀</div>
-            <h3 style={{color: '#3EA822', marginBottom: isMobile ? '6px' : '10px', fontSize: isMobile ? '1.1rem' : '2rem', fontWeight: 'bold', textShadow: '2px 2px 8px rgba(0,0,0,0.9)'}}>
+            <h3 style={{color: '#3EA822', marginBottom: isMobile ? '6px' : '10px', fontSize: isMobile ? '1.1rem' : '2rem', fontWeight: 'bold'}}>
               Want to join our winning team?
             </h3>
-            <p style={{color: '#ccc', marginBottom: isMobile ? '10px' : '25px', fontSize: isMobile ? '0.75rem' : '1.1rem', maxWidth: '600px', margin: isMobile ? '0 auto 10px' : '0 auto 25px', textShadow: '2px 2px 8px rgba(0,0,0,0.9)'}}>
+            <p style={{color: '#888', marginBottom: isMobile ? '10px' : '25px', fontSize: isMobile ? '0.75rem' : '1.1rem', maxWidth: '600px', margin: isMobile ? '0 auto 10px' : '0 auto 25px'}}>
               Be part of our racing success story and compete at the highest level in professional sim racing
             </p>
             <a
