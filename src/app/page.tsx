@@ -150,10 +150,7 @@ export default function Home() {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        position: 'relative',
-        WebkitTransform: isMobile ? 'translateZ(0)' : undefined,
-        transform: isMobile ? 'translateZ(0)' : undefined,
-        border: isMobile ? '1px solid transparent' : undefined
+        position: 'relative'
       }}>
         <div className="hero-content">
           <Image 
@@ -202,10 +199,7 @@ export default function Home() {
         minHeight: '100vh',
         position: 'relative',
         paddingTop: '5px',
-        paddingBottom: '5px',
-        WebkitTransform: isMobile ? 'translateZ(0)' : undefined,
-        transform: isMobile ? 'translateZ(0)' : undefined,
-        border: isMobile ? '1px solid transparent' : undefined
+        paddingBottom: '5px'
       }}>
         <div className="container" style={{
           maxWidth: '1200px',
@@ -439,10 +433,7 @@ export default function Home() {
         minHeight: '100vh',
         position: 'relative',
         paddingTop: '5px',
-        paddingBottom: '5px',
-        WebkitTransform: isMobile ? 'translateZ(0)' : undefined,
-        transform: isMobile ? 'translateZ(0)' : undefined,
-        border: isMobile ? '1px solid transparent' : undefined
+        paddingBottom: '5px'
       }}>
 
         <div className="container" style={{
@@ -590,10 +581,7 @@ export default function Home() {
         alignItems: 'center',
         justifyContent: 'center',
         paddingTop: '5px',
-        paddingBottom: '5px',
-        WebkitTransform: isMobile ? 'translateZ(0)' : undefined,
-        transform: isMobile ? 'translateZ(0)' : undefined,
-        border: isMobile ? '1px solid transparent' : undefined
+        paddingBottom: '5px'
       }}>
         <div className="container" style={{
           maxWidth: '1200px',
