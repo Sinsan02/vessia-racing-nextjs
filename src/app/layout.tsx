@@ -48,6 +48,7 @@ export default function RootLayout({
     <html lang="en" style={{ backgroundColor: '#0a0a0a', height: '100%' }}>
       <head>
         <link rel="icon" href="/viper_scull.png" type="image/png" />
+        <meta name="theme-color" content="#0a0a0a" />
         <link rel="apple-touch-icon" href="/viper_scull.png" />
         <link rel="preload" as="image" href="/images/decorative/Screenshot_2025-11-23_180245.png" />
         <link rel="preload" as="image" href="/images/decorative/Screenshot_2025-10-11_170801.png" />

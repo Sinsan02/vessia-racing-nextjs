@@ -142,7 +142,7 @@ export default function Home() {
         backgroundColor: '#0a0a0a',
         backgroundSize: 'cover',
         backgroundPosition: 'center',
-        backgroundAttachment: isMobile ? undefined : 'fixed',
+        backgroundAttachment: 'scroll',
         backgroundRepeat: 'no-repeat',
         paddingBottom: '5px',
         paddingTop: '5px',
@@ -150,9 +150,10 @@ export default function Home() {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        position: isMobile ? 'sticky' : 'relative',
-        top: isMobile ? 0 : undefined,
-        zIndex: isMobile ? 1 : undefined
+        position: 'relative',
+        WebkitTransform: 'translateZ(0)',
+        transform: 'translateZ(0)',
+        border: isMobile ? '1px solid transparent' : undefined
       }}>
         <div className="hero-content">
           <Image 
@@ -187,14 +188,15 @@ export default function Home() {
         backgroundColor: '#0a0a0a',
         backgroundSize: 'cover',
         backgroundPosition: 'center',
-        backgroundAttachment: isMobile ? undefined : 'fixed',
+        backgroundAttachment: 'scroll',
         backgroundRepeat: 'no-repeat',
         minHeight: '100vh',
-        position: isMobile ? 'sticky' : 'relative',
-        top: isMobile ? 0 : undefined,
-        zIndex: isMobile ? 2 : undefined,
+        position: 'relative',
         paddingTop: '5px',
-        paddingBottom: '5px'
+        paddingBottom: '5px',
+        WebkitTransform: 'translateZ(0)',
+        transform: 'translateZ(0)',
+        border: isMobile ? '1px solid transparent' : undefined
       }}>
         <div className="container" style={{
           maxWidth: '1200px',
@@ -419,14 +421,15 @@ export default function Home() {
         backgroundColor: '#0a0a0a',
         backgroundSize: 'cover',
         backgroundPosition: 'center',
-        backgroundAttachment: isMobile ? undefined : 'fixed',
+        backgroundAttachment: 'scroll',
         backgroundRepeat: 'no-repeat',
         minHeight: '100vh',
-        position: isMobile ? 'sticky' : 'relative',
-        top: isMobile ? 0 : undefined,
-        zIndex: isMobile ? 3 : undefined,
+        position: 'relative',
         paddingTop: '5px',
-        paddingBottom: '5px'
+        paddingBottom: '5px',
+        WebkitTransform: 'translateZ(0)',
+        transform: 'translateZ(0)',
+        border: isMobile ? '1px solid transparent' : undefined
       }}>
 
         <div className="container" style={{
@@ -566,17 +569,18 @@ export default function Home() {
         backgroundColor: '#0a0a0a',
         backgroundSize: 'cover',
         backgroundPosition: 'center',
-        backgroundAttachment: isMobile ? undefined : 'fixed',
+        backgroundAttachment: 'scroll',
         backgroundRepeat: 'no-repeat',
         minHeight: '100vh',
-        position: isMobile ? 'sticky' : 'relative',
-        top: isMobile ? 0 : undefined,
-        zIndex: isMobile ? 4 : undefined,
+        position: 'relative',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
         paddingTop: '5px',
-        paddingBottom: '5px'
+        paddingBottom: '5px',
+        WebkitTransform: 'translateZ(0)',
+        transform: 'translateZ(0)',
+        border: isMobile ? '1px solid transparent' : undefined
       }}>
         <div className="container" style={{
           maxWidth: '1200px',
