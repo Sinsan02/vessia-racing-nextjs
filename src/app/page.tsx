@@ -183,7 +183,7 @@ export default function Home() {
         {isMobile && (
           <div style={{
             position: 'absolute',
-            bottom: '20px',
+            bottom: '0',
             left: '50%',
             transform: 'translateX(-50%)',
             height: '5px',
@@ -195,7 +195,7 @@ export default function Home() {
         )}
       </section>
 
-      {/* Achievements Section */}
+      {/* Achievements Section */>
       <section id="achievements" className="section" style={{
         backgroundImage: isMobile 
           ? `url('/images/decorative/Screenshot_2025-10-11_170801.png')`
@@ -431,7 +431,7 @@ export default function Home() {
         {isMobile && (
           <div style={{
             position: 'absolute',
-            bottom: '20px',
+            bottom: '0',
             left: '50%',
             transform: 'translateX(-50%)',
             height: '5px',
@@ -594,7 +594,7 @@ export default function Home() {
         {isMobile && (
           <div style={{
             position: 'absolute',
-            bottom: '20px',
+            bottom: '0',
             left: '50%',
             transform: 'translateX(-50%)',
             height: '5px',
