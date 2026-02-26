@@ -137,7 +137,7 @@ export default function Home() {
       {/* Hero Section */}
       <section className="hero" style={{
         backgroundImage: isMobile 
-          ? `url('/images/decorative/Screenshot_2025-11-23_180245.png')`
+          ? `linear-gradient(rgba(10,10,10,0.3), rgba(10,10,10,0.6)), url('/images/decorative/Screenshot_2025-11-23_180245.png')`
           : `linear-gradient(rgba(10,10,10,0.3), rgba(10,10,10,0.6)), url('/images/decorative/Screenshot_2025-11-23_180245.png')`,
         backgroundColor: '#0a0a0a',
         backgroundSize: 'cover',
@@ -192,7 +192,7 @@ export default function Home() {
       {/* Achievements Section */}
       <section id="achievements" className="section" style={{
         backgroundImage: isMobile 
-          ? `url('/images/decorative/Screenshot_2025-10-11_170801.png')`
+          ? `linear-gradient(rgba(10,10,10,0.7), rgba(10,10,10,0.8)), url('/images/decorative/Screenshot_2025-10-11_170801.png')`
           : `linear-gradient(rgba(10,10,10,0.7), rgba(10,10,10,0.8)), url('/images/decorative/Screenshot_2025-10-11_170801.png')`,
         backgroundColor: '#0a0a0a',
         backgroundSize: 'cover',
@@ -429,7 +429,7 @@ export default function Home() {
       {/* Upcoming Event Section */}
       <section id="results" className="section section-dark" style={{
         backgroundImage: isMobile 
-          ? `url('/images/decorative/Screenshot_2025-11-15_150823.png')`
+          ? `linear-gradient(rgba(10,10,10,0.7), rgba(10,10,10,0.8)), url('/images/decorative/Screenshot_2025-11-15_150823.png')`
           : `linear-gradient(rgba(10,10,10,0.7), rgba(10,10,10,0.8)), url('/images/decorative/Screenshot_2025-11-15_150823.png')`,
         backgroundColor: '#0a0a0a',
         backgroundSize: 'cover',
@@ -577,7 +577,7 @@ export default function Home() {
       {/* Join Our Team Section */}
       <section className="section" style={{
         backgroundImage: isMobile 
-          ? `url('/images/decorative/Screenshot_2025-05-18_205724.png')`
+          ? `linear-gradient(rgba(10,10,10,0.7), rgba(10,10,10,0.8)), url('/images/decorative/Screenshot_2025-05-18_205724.png')`
           : `linear-gradient(rgba(10,10,10,0.7), rgba(10,10,10,0.8)), url('/images/decorative/Screenshot_2025-05-18_205724.png')`,
         backgroundColor: '#0a0a0a',
         backgroundSize: 'cover',
