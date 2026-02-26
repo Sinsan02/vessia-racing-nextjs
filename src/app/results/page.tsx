@@ -107,11 +107,11 @@ export default function Results() {
       overflowX: 'hidden',
       WebkitOverflowScrolling: 'touch'
     }}>
-      <main style={{padding: isMobile ? '20px 10px' : '20px'}}>
+      <main style={{padding: isMobile ? '20px' : '20px'}}>
         <div className="container" style={{
           maxWidth: '1200px',
           margin: '0 auto',
-          padding: isMobile ? '0' : '40px 20px',
+          padding: isMobile ? '0 10px' : '40px 20px',
           boxSizing: 'border-box',
           width: '100%'
         }}>
@@ -163,14 +163,11 @@ export default function Results() {
             <div className="results-table-container" style={{
               maxWidth: isMobile ? '100%' : '900px',
               margin: '0 auto',
-              padding: isMobile ? '0' : '0 40px',
+              padding: '0',
               width: '100%',
-              boxSizing: 'border-box',
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center'
+              boxSizing: 'border-box'
             }}>
-              <h2 style={{color: '#3EA822', fontSize: isMobile ? '1.3rem' : '1.5rem', marginBottom: '20px', textAlign: 'center', padding: isMobile ? '0 10px' : '0', width: '100%'}}>
+              <h2 style={{color: '#3EA822', fontSize: isMobile ? '1.3rem' : '1.5rem', marginBottom: '20px', textAlign: 'center', padding: '0', width: '100%'}}>
                 Standings - {leagues.find(l => l.id === selectedLeague)?.name}
               </h2>
               
@@ -184,14 +181,15 @@ export default function Results() {
                   <p>No results available for this league yet.</p>
                 </div>
               ) : (
-                <div className="standings-table" style={{width: '100%', display: 'flex', justifyContent: 'center'}}>
+                <div className="standings-table" style={{width: '100%'}}>
                   <table style={{
                     width: '100%',
                     backgroundColor: isMobile ? 'transparent' : '#1a1a1a',
                     borderRadius: '10px',
                     overflow: 'hidden',
                     border: isMobile ? '1px solid rgba(62, 168, 34, 0.3)' : '1px solid #333',
-                    tableLayout: isMobile ? 'auto' : 'fixed'
+                    tableLayout: isMobile ? 'auto' : 'fixed',
+                    margin: '0 auto'
                   }}>
                     <thead>
                       <tr style={{backgroundColor: '#333'}}>
