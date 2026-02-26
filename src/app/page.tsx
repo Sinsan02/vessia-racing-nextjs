@@ -102,11 +102,11 @@ export default function Home() {
 
   return (
     <div style={{
-      backgroundImage: `linear-gradient(rgba(10,10,10,${isMobile ? '0.5' : '0.3'}), rgba(10,10,10,${isMobile ? '0.5' : '0.3'})), url('/images/decorative/Screenshot_2025-11-23_180245.png')`,
+      backgroundImage: isMobile ? 'none' : `linear-gradient(rgba(10,10,10,0.3), rgba(10,10,10,0.3)), url('/images/decorative/Screenshot_2025-11-23_180245.png')`,
       backgroundColor: '#0a0a0a',
       backgroundSize: 'cover',
       backgroundPosition: 'center',
-      backgroundAttachment: isMobile ? 'scroll' : 'fixed',
+      backgroundAttachment: 'fixed',
       backgroundRepeat: 'no-repeat',
       minHeight: '100vh',
       width: '100%',
@@ -127,7 +127,11 @@ export default function Home() {
 
       {/* Hero Section */}
       <section className="hero" style={{
-        background: isMobile ? 'linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.5))' : 'linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.7))',
+        backgroundImage: isMobile ? `linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.7)), url('/images/decorative/Screenshot_2025-11-23_180245.png')` : 'linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.7))',
+        backgroundSize: isMobile ? 'cover' : undefined,
+        backgroundPosition: isMobile ? 'center' : undefined,
+        backgroundAttachment: isMobile ? 'local' : undefined,
+        backgroundRepeat: isMobile ? 'no-repeat' : undefined,
         paddingBottom: isMobile ? '5px' : undefined,
         paddingTop: isMobile ? '5px' : undefined,
         minHeight: isMobile ? 'auto' : undefined
@@ -163,7 +167,7 @@ export default function Home() {
         backgroundColor: '#0a0a0a',
         backgroundSize: 'cover',
         backgroundPosition: 'center',
-        backgroundAttachment: isMobile ? 'scroll' : 'fixed',
+        backgroundAttachment: isMobile ? 'local' : 'fixed',
         backgroundRepeat: 'no-repeat',
         minHeight: '100vh',
         position: 'relative',
@@ -392,7 +396,7 @@ export default function Home() {
         backgroundColor: '#0a0a0a',
         backgroundSize: 'cover',
         backgroundPosition: 'center',
-        backgroundAttachment: isMobile ? 'scroll' : 'fixed',
+        backgroundAttachment: isMobile ? 'local' : 'fixed',
         backgroundRepeat: 'no-repeat',
         minHeight: '100vh',
         position: 'relative',
@@ -534,7 +538,7 @@ export default function Home() {
         backgroundColor: '#0a0a0a',
         backgroundSize: 'cover',
         backgroundPosition: 'center',
-        backgroundAttachment: isMobile ? 'scroll' : 'fixed',
+        backgroundAttachment: isMobile ? 'local' : 'fixed',
         backgroundRepeat: 'no-repeat',
         minHeight: '100vh',
         position: 'relative',
