@@ -164,8 +164,23 @@ export default function Home() {
             style={{maxWidth: isMobile ? '80vw' : '400px', height: 'auto', marginBottom: isMobile ? '20px' : '20px'}}
             priority
           />
-          <p className="hero-subtitle" style={{fontSize: isMobile ? '1.2rem' : undefined, marginBottom: isMobile ? '10px' : undefined}}>Norwegian sim racing team</p>
-          <p className="hero-description" style={{fontSize: isMobile ? '1.3rem' : undefined, marginBottom: isMobile ? '20px' : undefined, padding: isMobile ? '0 10px' : undefined}}>Competing in Scandinavian leagues and special events with dedication, precision and teamwork</p>
+          <p className="hero-subtitle" style={{
+            fontSize: isMobile ? '1.2rem' : undefined, 
+            marginBottom: isMobile ? '10px' : undefined,
+            backgroundColor: isMobile ? 'rgba(0, 0, 0, 0.6)' : undefined,
+            padding: isMobile ? '8px 15px' : undefined,
+            borderRadius: isMobile ? '8px' : undefined,
+            display: isMobile ? 'inline-block' : undefined
+          }}>Norwegian sim racing team</p>
+          <p className="hero-description" style={{
+            fontSize: isMobile ? '1.3rem' : undefined, 
+            marginBottom: isMobile ? '20px' : undefined, 
+            padding: isMobile ? '10px 15px' : '0 10px',
+            backgroundColor: isMobile ? 'rgba(0, 0, 0, 0.6)' : undefined,
+            borderRadius: isMobile ? '8px' : undefined,
+            display: isMobile ? 'inline-block' : undefined,
+            maxWidth: isMobile ? '90%' : undefined
+          }}>Competing in Scandinavian leagues and special events with dedication, precision and teamwork</p>
           <div className="hero-buttons" style={{
             display: 'flex',
             gap: '1rem',
@@ -222,7 +237,14 @@ export default function Home() {
           width: '100%'
         }}>
           <h2 className="section-title" style={{fontSize: isMobile ? '1.3rem' : undefined, marginBottom: isMobile ? '6px' : undefined}}>🏆 Our Accomplishments</h2>
-          <p className="section-subtitle" style={{fontSize: isMobile ? '1.1rem' : undefined, marginBottom: isMobile ? '10px' : undefined}}>Celebrating our victories on the world's most challenging circuits</p>
+          <p className="section-subtitle" style={{
+            fontSize: isMobile ? '1.1rem' : undefined, 
+            marginBottom: isMobile ? '10px' : undefined,
+            backgroundColor: isMobile ? 'rgba(0, 0, 0, 0.6)' : undefined,
+            padding: isMobile ? '8px 15px' : undefined,
+            borderRadius: isMobile ? '8px' : undefined,
+            display: isMobile ? 'inline-block' : undefined
+          }}>Celebrating our victories on the world's most challenging circuits</p>
           
           {achievementsLoading ? (
             <div className="achievements-grid" style={{
@@ -654,7 +676,16 @@ export default function Home() {
             <h3 style={{color: '#3EA822', marginBottom: isMobile ? '6px' : '10px', fontSize: isMobile ? '1.1rem' : '2rem', fontWeight: 'bold'}}>
               Want to join our winning team?
             </h3>
-            <p style={{color: '#b0b0b0', marginBottom: isMobile ? '10px' : '25px', fontSize: isMobile ? '1.05rem' : '1.1rem', maxWidth: '600px', margin: isMobile ? '0 auto 10px' : '0 auto 25px'}}>
+            <p style={{
+              color: '#b0b0b0', 
+              marginBottom: isMobile ? '10px' : '25px', 
+              fontSize: isMobile ? '1.05rem' : '1.1rem', 
+              maxWidth: '600px', 
+              margin: isMobile ? '0 auto 10px' : '0 auto 25px',
+              backgroundColor: isMobile ? 'rgba(0, 0, 0, 0.6)' : undefined,
+              padding: isMobile ? '10px 15px' : undefined,
+              borderRadius: isMobile ? '8px' : undefined
+            }}>
               Be part of our racing success story and compete at the highest level in professional sim racing
             </p>
             <a
