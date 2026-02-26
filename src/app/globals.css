@@ -515,12 +515,6 @@ html {
     touch-action: pan-y pan-x !important;
   }
   
-  /* Enable scrolling backgrounds on mobile for better performance */
-  body > div:first-child[style*="backgroundAttachment"],
-  .section[style*="backgroundAttachment"] {
-    background-attachment: scroll !important;
-  }
-  
   /* Adjust container padding for mobile */
   .container {
     padding: 0 15px !important;
@@ -556,15 +550,6 @@ html {
   /* Adjust section padding for mobile */
   .section {
     padding: 10px 0 !important;
-  }
-  
-  /* Hero section adjustments */
-  .hero {
-    padding: 8px 8px !important;
-    min-height: 100vh !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
   }
   
   .hero-content h1,

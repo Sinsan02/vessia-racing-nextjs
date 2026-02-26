@@ -126,15 +126,19 @@ export default function Home() {
         backgroundColor: '#0a0a0a',
         backgroundSize: 'cover',
         backgroundPosition: 'center',
-        backgroundAttachment: isMobile ? 'scroll' : 'fixed',
+        backgroundAttachment: 'scroll',
         backgroundRepeat: 'no-repeat',
         minHeight: '100vh',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        position: 'relative'
+        position: 'relative',
+        padding: isMobile ? '8px' : '20px'
       }}>
-        <div className="hero-content">
+        <div className="hero-content" style={{
+          position: 'relative',
+          zIndex: 2
+        }}>
           <Image 
             src="/Vessia_Logo.png" 
             alt="Vessia Racing" 
@@ -165,12 +169,12 @@ export default function Home() {
         backgroundColor: '#0a0a0a',
         backgroundSize: 'cover',
         backgroundPosition: 'center',
-        backgroundAttachment: isMobile ? 'scroll' : 'fixed',
+        backgroundAttachment: 'scroll',
         backgroundRepeat: 'no-repeat',
         minHeight: '100vh',
         position: 'relative',
-        paddingTop: isMobile ? '5px' : undefined,
-        paddingBottom: isMobile ? '5px' : undefined
+        paddingTop: isMobile ? '20px' : '40px',
+        paddingBottom: isMobile ? '20px' : '40px'
       }}>
 
         <div className="container" style={{
@@ -394,12 +398,12 @@ export default function Home() {
         backgroundColor: '#0a0a0a',
         backgroundSize: 'cover',
         backgroundPosition: 'center',
-        backgroundAttachment: isMobile ? 'scroll' : 'fixed',
+        backgroundAttachment: 'scroll',
         backgroundRepeat: 'no-repeat',
         minHeight: '100vh',
         position: 'relative',
-        paddingTop: isMobile ? '5px' : undefined,
-        paddingBottom: isMobile ? '5px' : undefined
+        paddingTop: isMobile ? '20px' : '40px',
+        paddingBottom: isMobile ? '20px' : '40px'
       }}>
         <div className="container" style={{
           maxWidth: '1200px',
@@ -536,15 +540,15 @@ export default function Home() {
         backgroundColor: '#0a0a0a',
         backgroundSize: 'cover',
         backgroundPosition: 'center',
-        backgroundAttachment: isMobile ? 'scroll' : 'fixed',
+        backgroundAttachment: 'scroll',
         backgroundRepeat: 'no-repeat',
         minHeight: '100vh',
         position: 'relative',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        paddingTop: isMobile ? '5px' : undefined,
-        paddingBottom: isMobile ? '5px' : undefined
+        paddingTop: isMobile ? '20px' : '40px',
+        paddingBottom: isMobile ? '20px' : '40px'
       }}>
         <div className="container" style={{
           maxWidth: '1200px',
