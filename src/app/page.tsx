@@ -140,7 +140,7 @@ export default function Home() {
   return (
     <div style={{
       backgroundImage: isMobile ? 'none' : `linear-gradient(rgba(10,10,10,0.3), rgba(10,10,10,0.3)), url('/images/decorative/Screenshot_2025-11-23_180245.png')`,
-      backgroundColor: '#0a0a0a',
+      backgroundColor: isMobile ? 'transparent' : '#0a0a0a',
       backgroundSize: 'cover',
       backgroundPosition: 'center',
       backgroundAttachment: 'fixed',
@@ -241,23 +241,6 @@ export default function Home() {
         paddingTop: isMobile ? '5px' : undefined,
         paddingBottom: isMobile ? '5px' : undefined
       }}>
-        {/* iOS-friendly fixed background for mobile */}
-        {isMobile && (
-          <div style={{
-            position: 'fixed',
-            top: 0,
-            left: 0,
-            width: '100%',
-            height: '100vh',
-            backgroundImage: `linear-gradient(rgba(10,10,10,0.6), rgba(10,10,10,0.7)), url('/images/decorative/Screenshot_2025-10-11_170801.png')`,
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
-            backgroundRepeat: 'no-repeat',
-            zIndex: -1,
-            transform: 'translateZ(0)'
-          }} />
-        )}
-
         <div className="container" style={{
           maxWidth: '1200px',
           margin: '0 auto',

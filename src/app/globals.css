@@ -1911,3 +1911,9 @@ html {
 .logout-btn:hover {
   background-color: #c82333;
 }
+/* Mobile background override - remove dark background for layered image system */
+@media (max-width: 768px) {
+  html, body {
+    background-color: transparent !important;
+  }
+}
