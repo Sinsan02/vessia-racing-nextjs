@@ -180,6 +180,17 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Section Divider - Mobile Only */}
+      {isMobile && (
+        <div style={{
+          height: '3px',
+          width: '75%',
+          backgroundColor: '#3EA822',
+          margin: '0 auto',
+          borderRadius: '10px'
+        }} />
+      )}
+
       {/* Achievements Section */}
       <section id="achievements" className="section" style={{
         backgroundImage: isMobile 
@@ -413,6 +424,17 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Section Divider - Mobile Only */}
+      {isMobile && (
+        <div style={{
+          height: '3px',
+          width: '75%',
+          backgroundColor: '#3EA822',
+          margin: '0 auto',
+          borderRadius: '10px'
+        }} />
+      )}
+
       {/* Upcoming Event Section */}
       <section id="results" className="section section-dark" style={{
         backgroundImage: isMobile 
@@ -560,6 +582,17 @@ export default function Home() {
           )}
         </div>
       </section>
+
+      {/* Section Divider - Mobile Only */}
+      {isMobile && (
+        <div style={{
+          height: '3px',
+          width: '75%',
+          backgroundColor: '#3EA822',
+          margin: '0 auto',
+          borderRadius: '10px'
+        }} />
+      )}
 
       {/* Join Our Team Section */}
       <section className="section" style={{
