@@ -11,7 +11,6 @@ export default function Home() {
   const [achievementsLoading, setAchievementsLoading] = useState(true);
   const [user, setUser] = useState<any>(null);
   const [isMobile, setIsMobile] = useState(typeof window !== 'undefined' ? window.innerWidth <= 768 : false);
-  const [currentBg, setCurrentBg] = useState(0);
   const hasFetchedData = useRef(false);
 
   
@@ -25,32 +24,8 @@ export default function Home() {
       setIsMobile(window.innerWidth <= 768);
     };
     
-    // Handle scroll to change backgrounds on mobile
-    const handleScroll = () => {
-      if (!isMobile) return;
-      
-      const scrollPos = window.scrollY;
-      const windowHeight = window.innerHeight;
-      
-      // Determine which background should be active based on scroll position
-      if (scrollPos < windowHeight * 0.8) {
-        setCurrentBg(0); // Hero background
-      } else if (scrollPos < windowHeight * 2) {
-        setCurrentBg(1); // Achievements background
-      } else if (scrollPos < windowHeight * 3) {
-        setCurrentBg(2); // Results background
-      } else {
-        setCurrentBg(3); // Join Team background
-      }
-    };
-    
     checkScreenSize();
     window.addEventListener('resize', checkScreenSize);
-    
-    if (isMobile) {
-      window.addEventListener('scroll', handleScroll);
-      handleScroll(); // Initial check
-    }
     
     // Check for welcome message from URL params
     const params = new URLSearchParams(window.location.search);
@@ -79,9 +54,6 @@ export default function Home() {
     
     return () => {
       window.removeEventListener('resize', checkScreenSize);
-      if (isMobile) {
-        window.removeEventListener('scroll', handleScroll);
-      }
     };
   }, [isMobile]);
 
@@ -140,7 +112,7 @@ export default function Home() {
   return (
     <div style={{
       backgroundImage: isMobile ? 'none' : `linear-gradient(rgba(10,10,10,0.3), rgba(10,10,10,0.3)), url('/images/decorative/Screenshot_2025-11-23_180245.png')`,
-      backgroundColor: isMobile ? 'transparent' : '#0a0a0a',
+      backgroundColor: '#0a0a0a',
       backgroundSize: 'cover',
       backgroundPosition: 'center',
       backgroundAttachment: 'fixed',
@@ -149,36 +121,6 @@ export default function Home() {
       width: '100%',
       position: 'relative'
     }}>
-      {/* iOS-friendly layered backgrounds for mobile */}
-      {isMobile && (
-        <div style={{
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          width: '100%',
-          height: '100vh',
-          zIndex: -10
-        }}>
-          {backgrounds.map((bg, index) => (
-            <div
-              key={index}
-              style={{
-                position: 'absolute',
-                top: 0,
-                left: 0,
-                width: '100%',
-                height: '100%',
-                backgroundImage: `linear-gradient(rgba(10,10,10,0.6), rgba(10,10,10,0.7)), url('${bg}')`,
-                backgroundSize: 'cover',
-                backgroundPosition: 'center',
-                backgroundRepeat: 'no-repeat',
-                opacity: currentBg === index ? 1 : 0,
-                transition: 'opacity 0.5s ease-in-out'
-              }}
-            />
-          ))}
-        </div>
-      )}
       {/* Welcome Message */}
       {welcomeMessage && (
         <div style={{
@@ -194,7 +136,14 @@ export default function Home() {
 
       {/* Hero Section */}
       <section className="hero" style={{
-        background: isMobile ? 'transparent' : 'linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.7))',
+        backgroundImage: isMobile 
+          ? `url('/images/decorative/Screenshot_2025-11-23_180245.png')`
+          : `linear-gradient(rgba(10,10,10,0.3), rgba(10,10,10,0.6)), url('/images/decorative/Screenshot_2025-11-23_180245.png')`,
+        backgroundColor: isMobile ? undefined : '#0a0a0a',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundAttachment: isMobile ? undefined : 'fixed',
+        backgroundRepeat: 'no-repeat',
         paddingBottom: isMobile ? '5px' : undefined,
         paddingTop: isMobile ? '5px' : undefined,
         minHeight: isMobile ? '100vh' : undefined,
@@ -230,8 +179,10 @@ export default function Home() {
 
       {/* Achievements Section */}
       <section id="achievements" className="section" style={{
-        backgroundImage: isMobile ? 'none' : `linear-gradient(rgba(10,10,10,0.7), rgba(10,10,10,0.8)), url('/images/decorative/Screenshot_2025-10-11_170801.png')`,
-        backgroundColor: isMobile ? 'transparent' : '#0a0a0a',
+        backgroundImage: isMobile 
+          ? `url('/images/decorative/Screenshot_2025-10-11_170801.png')`
+          : `linear-gradient(rgba(10,10,10,0.7), rgba(10,10,10,0.8)), url('/images/decorative/Screenshot_2025-10-11_170801.png')`,
+        backgroundColor: isMobile ? undefined : '#0a0a0a',
         backgroundSize: 'cover',
         backgroundPosition: 'center',
         backgroundAttachment: isMobile ? undefined : 'fixed',
@@ -458,8 +409,10 @@ export default function Home() {
 
       {/* Upcoming Event Section */}
       <section id="results" className="section section-dark" style={{
-        backgroundImage: isMobile ? 'none' : `linear-gradient(rgba(10,10,10,0.7), rgba(10,10,10,0.8)), url('/images/decorative/Screenshot_2025-11-15_150823.png')`,
-        backgroundColor: isMobile ? 'transparent' : '#0a0a0a',
+        backgroundImage: isMobile 
+          ? `url('/images/decorative/Screenshot_2025-11-15_150823.png')`
+          : `linear-gradient(rgba(10,10,10,0.7), rgba(10,10,10,0.8)), url('/images/decorative/Screenshot_2025-11-15_150823.png')`,
+        backgroundColor: isMobile ? undefined : '#0a0a0a',
         backgroundSize: 'cover',
         backgroundPosition: 'center',
         backgroundAttachment: isMobile ? undefined : 'fixed',
@@ -601,8 +554,10 @@ export default function Home() {
 
       {/* Join Our Team Section */}
       <section className="section" style={{
-        backgroundImage: isMobile ? 'none' : `linear-gradient(rgba(10,10,10,0.7), rgba(10,10,10,0.8)), url('/images/decorative/Screenshot_2025-05-18_205724.png')`,
-        backgroundColor: isMobile ? 'transparent' : '#0a0a0a',
+        backgroundImage: isMobile 
+          ? `url('/images/decorative/Screenshot_2025-05-18_205724.png')`
+          : `linear-gradient(rgba(10,10,10,0.7), rgba(10,10,10,0.8)), url('/images/decorative/Screenshot_2025-05-18_205724.png')`,
+        backgroundColor: isMobile ? undefined : '#0a0a0a',
         backgroundSize: 'cover',
         backgroundPosition: 'center',
         backgroundAttachment: isMobile ? undefined : 'fixed',
