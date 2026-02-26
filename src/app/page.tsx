@@ -183,7 +183,7 @@ export default function Home() {
         {isMobile && (
           <div style={{
             position: 'absolute',
-            bottom: '10px',
+            bottom: '-2.5px',
             left: '50%',
             transform: 'translateX(-50%)',
             height: '5px',
@@ -432,7 +432,7 @@ export default function Home() {
         {isMobile && (
           <div style={{
             position: 'absolute',
-            bottom: '10px',
+            bottom: '-2.5px',
             left: '50%',
             transform: 'translateX(-50%)',
             height: '5px',
@@ -596,7 +596,7 @@ export default function Home() {
         {isMobile && (
           <div style={{
             position: 'absolute',
-            bottom: '10px',
+            bottom: '-2.5px',
             left: '50%',
             transform: 'translateX(-50%)',
             height: '5px',
