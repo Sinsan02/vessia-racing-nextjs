@@ -106,7 +106,7 @@ export default function Home() {
       backgroundColor: '#0a0a0a',
       backgroundSize: 'cover',
       backgroundPosition: 'center',
-      backgroundAttachment: isMobile ? 'scroll' : 'fixed',
+      backgroundAttachment: 'fixed',
       backgroundRepeat: 'no-repeat',
       minHeight: '100vh',
       width: '100%',
@@ -128,9 +128,10 @@ export default function Home() {
       {/* Hero Section */}
       <section className="hero" style={{
         background: isMobile ? 'linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.5))' : 'linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.7))',
-        paddingBottom: isMobile ? '5px' : undefined,
-        paddingTop: isMobile ? '5px' : undefined,
-        minHeight: isMobile ? 'auto' : undefined
+        minHeight: '100vh',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center'
       }}>
         <div className="hero-content">
           <Image 
