@@ -164,8 +164,7 @@ export default function Results() {
               padding: '0',
               width: '100%',
               boxSizing: 'border-box',
-              overflowX: isMobile ? 'auto' : 'visible',
-              WebkitOverflowScrolling: 'touch'
+              overflowX: 'visible'
             }}>
               <h2 style={{color: '#3EA822', fontSize: isMobile ? '1.3rem' : '1.5rem', marginBottom: '20px', textAlign: 'center', padding: '0', width: '100%'}}>
                 Standings - {leagues.find(l => l.id === selectedLeague)?.name}
@@ -181,22 +180,21 @@ export default function Results() {
                   <p>No results available for this league yet.</p>
                 </div>
               ) : (
-                <div className="standings-table" style={{width: '100%', minWidth: isMobile ? '380px' : 'auto'}}>
+                <div className="standings-table" style={{width: '100%'}}>
                   <table style={{
                     width: '100%',
                     backgroundColor: isMobile ? 'transparent' : '#1a1a1a',
                     borderRadius: '10px',
                     overflow: 'hidden',
                     border: isMobile ? '1px solid rgba(62, 168, 34, 0.3)' : '1px solid #333',
-                    tableLayout: isMobile ? 'auto' : 'fixed',
-                    margin: '0 auto',
-                    minWidth: isMobile ? '380px' : 'auto'
+                    tableLayout: 'auto',
+                    margin: '0 auto'
                   }}>
                     <thead>
                       <tr style={{backgroundColor: '#333'}}>
-                        <th style={{color: '#3EA822', padding: isMobile ? '12px 8px' : '15px', textAlign: 'left', width: isMobile ? '60px' : 'auto'}}>Position</th>
-                        <th style={{color: '#3EA822', padding: isMobile ? '12px 8px' : '15px', textAlign: 'left'}}>Driver</th>
-                        <th style={{color: '#3EA822', padding: isMobile ? '12px 8px' : '15px', textAlign: 'center', width: isMobile ? '70px' : 'auto'}}>Points</th>
+                        <th style={{color: '#3EA822', padding: isMobile ? '8px 4px' : '15px', textAlign: 'center', width: isMobile ? '45px' : 'auto', fontSize: isMobile ? '0.75rem' : '1rem'}}>Pos</th>
+                        <th style={{color: '#3EA822', padding: isMobile ? '8px 6px' : '15px', textAlign: 'left', fontSize: isMobile ? '0.75rem' : '1rem'}}>Driver</th>
+                        <th style={{color: '#3EA822', padding: isMobile ? '8px 4px' : '15px', textAlign: 'center', width: isMobile ? '50px' : 'auto', fontSize: isMobile ? '0.75rem' : '1rem'}}>Pts</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -208,33 +206,30 @@ export default function Results() {
                             backgroundColor: index % 2 === 0 ? '#1a1a1a' : '#222'
                           }}
                         >
-                          <td style={{padding: isMobile ? '12px 8px' : '15px'}}>
+                          <td style={{padding: isMobile ? '8px 4px' : '15px'}}>
                             <div style={{
                               display: 'flex',
                               alignItems: 'center',
-                              fontSize: isMobile ? '1rem' : '1.2rem',
+                              justifyContent: 'center',
+                              fontSize: isMobile ? '0.85rem' : '1.2rem',
                               fontWeight: 'bold',
                               color: getRankColor(index + 1)
                             }}>
-                              #{index + 1}
-                              {index === 0 && <span style={{marginLeft: '8px'}}>🥇</span>}
-                              {index === 1 && <span style={{marginLeft: '8px'}}>🥈</span>}
-                              {index === 2 && <span style={{marginLeft: '8px'}}>🥉</span>}
+                              {index === 0 ? '🥇' : index === 1 ? '🥈' : index === 2 ? '🥉' : `${index + 1}`}
                             </div>
                           </td>
-                          <td style={{padding: isMobile ? '12px 8px' : '15px'}}>
-                            <div style={{display: 'flex', alignItems: 'center'}}>
+                          <td style={{padding: isMobile ? '8px 6px' : '15px'}}>
+                            <div style={{display: 'flex', alignItems: 'center', gap: isMobile ? '6px' : '12px'}}>
                               {driver.profile_picture && driver.profile_picture.trim() !== '' ? (
                                 <img
                                   src={driver.profile_picture}
                                   alt={`${driver.full_name} profile`}
                                   style={{
-                                    width: isMobile ? '35px' : '40px',
-                                    height: isMobile ? '35px' : '40px',
+                                    width: isMobile ? '28px' : '40px',
+                                    height: isMobile ? '28px' : '40px',
                                     borderRadius: '50%',
                                     objectFit: 'cover',
-                                    marginRight: isMobile ? '8px' : '12px',
-                                    border: '2px solid #3EA822',
+                                    border: isMobile ? '1px solid #3EA822' : '2px solid #3EA822',
                                     flexShrink: 0
                                   }}
                                   onError={(e) => {
@@ -250,18 +245,17 @@ export default function Results() {
                               ) : null}
                               <div
                                 style={{
-                                  width: isMobile ? '35px' : '40px',
-                                  height: isMobile ? '35px' : '40px',
+                                  width: isMobile ? '28px' : '40px',
+                                  height: isMobile ? '28px' : '40px',
                                   borderRadius: '50%',
                                   backgroundColor: getPlaceholderColor(driver.full_name),
                                   display: (!driver.profile_picture || driver.profile_picture.trim() === '') ? 'flex' : 'none',
                                   alignItems: 'center',
                                   justifyContent: 'center',
-                                  marginRight: isMobile ? '8px' : '12px',
-                                  fontSize: isMobile ? '1rem' : '1.2rem',
+                                  fontSize: isMobile ? '0.75rem' : '1.2rem',
                                   fontWeight: 'bold',
                                   color: 'white',
-                                  border: '2px solid #3EA822',
+                                  border: isMobile ? '1px solid #3EA822' : '2px solid #3EA822',
                                   boxShadow: '0 2px 8px rgba(0,0,0,0.2)',
                                   flexShrink: 0
                                 }}
@@ -269,16 +263,16 @@ export default function Results() {
                                 {driver.full_name.charAt(0).toUpperCase()}
                               </div>
                               <div style={{flex: 1, minWidth: 0}}>
-                                <div style={{color: '#fff', fontWeight: '500', fontSize: isMobile ? '0.9rem' : '1rem', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis'}}>
+                                <div style={{color: '#fff', fontWeight: '500', fontSize: isMobile ? '0.8rem' : '1rem', wordWrap: 'break-word', overflowWrap: 'break-word', lineHeight: isMobile ? '1.2' : '1.5'}}>
                                   {driver.full_name}
                                 </div>
                               </div>
                             </div>
                           </td>
-                          <td style={{padding: isMobile ? '12px 8px' : '15px', textAlign: 'center'}}>
+                          <td style={{padding: isMobile ? '8px 4px' : '15px', textAlign: 'center'}}>
                             <div style={{
                               color: '#3EA822',
-                              fontSize: isMobile ? '1.1rem' : '1.3rem',
+                              fontSize: isMobile ? '0.9rem' : '1.3rem',
                               fontWeight: 'bold'
                             }}>
                               {driver.points}
