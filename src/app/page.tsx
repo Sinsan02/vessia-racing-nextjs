@@ -62,35 +62,22 @@ export default function Home() {
       const scrollPosition = window.scrollY;
       const windowHeight = window.innerHeight;
       
-      // Calculate scroll progress through each section (0-1)
-      const progress = (scrollPosition % windowHeight) / windowHeight;
-      const section = Math.floor(scrollPosition / windowHeight);
+      // Calculate which section we're in (0-3)
+      const section = Math.min(Math.floor(scrollPosition / windowHeight), 3);
       
       setActiveBackground(section);
     };
     
+    handleScroll(); // Call immediately to set initial state
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
   // Calculate opacity for each background layer based on scroll position
   const getBackgroundOpacity = (layerIndex: number) => {
-    if (layerIndex === 0) {
-      // First layer: visible at start, fades out when scrolling to section 1
-      return activeBackground === 0 ? 1 : 0;
-    } else if (layerIndex === activeBackground) {
-      // Current layer: fully visible
-      return 1;
-    } else if (layerIndex === activeBackground - 1) {
-      // Previous layer: fading out
-      return 0;
-    } else if (layerIndex === activeBackground + 1) {
-      // Next layer: starting to fade in
-      return 0;
-    } else {
-      // Other layers: hidden
-      return 0;
-    }
+    // Show current section's background at full opacity
+    // All others are hidden
+    return layerIndex === activeBackground ? 1 : 0;
   };
 
   const fetchUser = async () => {
