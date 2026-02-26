@@ -184,6 +184,7 @@ export default function GalleryPage() {
   return (
     <div style={{
       minHeight: "100vh",
+      height: 'auto',
       backgroundImage: `linear-gradient(rgba(10,10,10,${isMobile ? '0.75' : '0.85'}), rgba(10,10,10,${isMobile ? '0.75' : '0.85'})), url('/images/decorative/Screenshot_2025-10-11_170713.png')`,
       backgroundColor: '#0a0a0a',
       backgroundSize: 'cover',
@@ -192,7 +193,10 @@ export default function GalleryPage() {
       backgroundRepeat: 'no-repeat',
       color: "#fff",
       paddingTop: isMobile ? "80px" : "120px",
-      paddingBottom: "60px"
+      paddingBottom: "60px",
+      overflowY: 'auto',
+      overflowX: 'hidden',
+      WebkitOverflowScrolling: 'touch'
     }}>
       <div style={{ maxWidth: 1200, margin: "0 auto", padding: isMobile ? "0 16px" : "0 32px" }}>
         <h1 style={{ 

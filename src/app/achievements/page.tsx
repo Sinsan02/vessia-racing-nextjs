@@ -55,9 +55,14 @@ export default function Achievements() {
       backgroundAttachment: 'scroll',
       backgroundRepeat: 'no-repeat',
       minHeight: '100vh',
+      height: 'auto',
       width: '100%',
       paddingTop: isMobile ? '0' : '40px',
-      position: 'relative'
+      paddingBottom: isMobile ? '20px' : '40px',
+      position: 'relative',
+      WebkitOverflowScrolling: 'touch',
+      overflowY: 'auto',
+      overflowX: 'hidden'
     }}>
       <div className="container" style={{
         maxWidth: '1200px',

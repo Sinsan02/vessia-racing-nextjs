@@ -93,6 +93,7 @@ export default function Results() {
   return (
     <div className="min-h-screen" style={{
       paddingTop: '100px',
+      paddingBottom: '40px',
       backgroundImage: `linear-gradient(rgba(10,10,10,${isMobile ? '0.75' : '0.9'}), rgba(10,10,10,${isMobile ? '0.75' : '0.9'})), url('/images/decorative/Screenshot_2025-11-10_214034.png')`,
       backgroundColor: '#0a0a0a',
       backgroundSize: 'cover',
@@ -100,7 +101,11 @@ export default function Results() {
       backgroundAttachment: 'scroll',
       backgroundRepeat: 'no-repeat',
       minHeight: '100vh',
-      position: 'relative'
+      height: 'auto',
+      position: 'relative',
+      overflowY: 'auto',
+      overflowX: 'hidden',
+      WebkitOverflowScrolling: 'touch'
     }}>
       <main style={{padding: isMobile ? '20px 15px' : '20px'}}>
         <div className="container" style={{

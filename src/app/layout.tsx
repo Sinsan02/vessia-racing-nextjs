@@ -33,9 +33,9 @@ export const metadata: Metadata = {
 export const viewport = {
   width: 'device-width',
   initialScale: 1.0,
-  maximumScale: 1.0,
+  maximumScale: 5.0,
   minimumScale: 1.0,
-  userScalable: false,
+  userScalable: true,
   viewportFit: 'cover'
 };
 
@@ -60,11 +60,15 @@ export default function RootLayout({
           display: 'flex',
           flexDirection: 'column',
           minHeight: '100vh',
-          backgroundColor: '#0a0a0a'
+          height: 'auto',
+          backgroundColor: '#0a0a0a',
+          overflowY: 'auto',
+          overflowX: 'hidden',
+          WebkitOverflowScrolling: 'touch'
         }}
       >
         <Navbar />
-        <main className="main-content" style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
+        <main className="main-content" style={{ flex: '1 0 auto', width: '100%' }}>
           {children}
         </main>
         <footer style={{

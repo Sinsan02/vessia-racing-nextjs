@@ -704,7 +704,15 @@ export default function Admin() {
   };
 
   return (
-    <div className="min-h-screen" style={{backgroundColor: '#0a0a0a', paddingTop: '100px'}}>
+    <div className="min-h-screen" style={{
+      backgroundColor: '#0a0a0a',
+      paddingTop: '100px',
+      paddingBottom: '40px',
+      height: 'auto',
+      overflowY: 'auto',
+      overflowX: 'hidden',
+      WebkitOverflowScrolling: 'touch'
+    }}>
       <main style={{padding: '25px'}}>
         <div className="container">
           <div className="admin-header" style={{textAlign: 'center', marginBottom: '30px'}}>

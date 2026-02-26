@@ -32,18 +32,10 @@ export default function Navbar() {
     checkScreenSize();
     window.addEventListener('resize', checkScreenSize);
     
-    // Prevent body scroll when mobile menu is open
-    if (isMenuOpen && isMobile) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = '';
-    }
-    
     return () => {
       window.removeEventListener('resize', checkScreenSize);
-      document.body.style.overflow = '';
     };
-  }, [isMenuOpen, isMobile]);
+  }, [isMobile]);
 
   useEffect(() => {
     // Prevent double mounting in StrictMode

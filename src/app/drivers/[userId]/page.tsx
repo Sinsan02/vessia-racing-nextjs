@@ -156,6 +156,7 @@ export default function DriverProfile() {
   return (
     <div style={{
       minHeight: '100vh',
+      height: 'auto',
       paddingTop: isMobile ? '80px' : '120px',
       paddingBottom: '60px',
       backgroundImage: `linear-gradient(rgba(10,10,10,${isMobile ? '0.85' : '0.9'}), rgba(10,10,10,${isMobile ? '0.85' : '0.9'})), url('/images/decorative/Screenshot_2026-01-23_201045.png')`,
@@ -163,7 +164,10 @@ export default function DriverProfile() {
       backgroundSize: 'cover',
       backgroundPosition: 'center',
       backgroundAttachment: 'scroll',
-      color: '#fff'
+      color: '#fff',
+      overflowY: 'auto',
+      overflowX: 'hidden',
+      WebkitOverflowScrolling: 'touch'
     }}>
       <div style={{
         maxWidth: '1000px',

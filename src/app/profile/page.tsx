@@ -178,7 +178,15 @@ export default function Profile() {
   }
 
   return (
-    <div className="min-h-screen" style={{backgroundColor: '#0a0a0a', paddingTop: '100px', paddingBottom: hasChanges ? '100px' : '50px'}}>
+    <div className="min-h-screen" style={{
+      backgroundColor: '#0a0a0a',
+      paddingTop: '100px',
+      paddingBottom: hasChanges ? '100px' : '50px',
+      height: 'auto',
+      overflowY: 'auto',
+      overflowX: 'hidden',
+      WebkitOverflowScrolling: 'touch'
+    }}>
       <main style={{padding: '25px'}}>
         <div className="container">
           <div style={{textAlign: 'center', marginBottom: '30px'}}>
