@@ -16,6 +16,9 @@ export default function GalleryPage() {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [isMobile, setIsMobile] = useState(typeof window !== 'undefined' ? window.innerWidth <= 768 : false);
+  const [editingCategoryId, setEditingCategoryId] = useState<number | null>(null);
+  const [editCategoryName, setEditCategoryName] = useState("");
+  const [editCategoryDesc, setEditCategoryDesc] = useState("");
 
   useEffect(() => {
     fetchImages();
@@ -178,6 +181,73 @@ export default function GalleryPage() {
       fetchImages();
     } catch (err) {
       setError('Error reordering category.');
+    }
+  };
+
+  const handleEditCategory = (category: any) => {
+    setEditingCategoryId(category.id);
+    setEditCategoryName(category.name);
+    setEditCategoryDesc(category.description || "");
+    setError("");
+    setSuccess("");
+  };
+
+  const handleCancelEdit = () => {
+    setEditingCategoryId(null);
+    setEditCategoryName("");
+    setEditCategoryDesc("");
+  };
+
+  const handleUpdateCategory = async () => {
+    if (!editCategoryName.trim()) {
+      setError("Category name is required");
+      return;
+    }
+
+    try {
+      const res = await fetch(`/api/gallery/categories/${editingCategoryId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({
+          name: editCategoryName,
+          description: editCategoryDesc
+        })
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) throw new Error(data.error || "Failed to update category");
+
+      setSuccess("Category updated!");
+      handleCancelEdit();
+      fetchCategories();
+      fetchImages(); // Refresh to show updated category
+    } catch (err: any) {
+      setError(err.message || "Error updating category.");
+    }
+  };
+
+  const handleDeleteCategory = async (categoryId: number, categoryName: string) => {
+    if (!confirm(`Are you sure you want to delete the category "${categoryName}"? This cannot be undone.`)) {
+      return;
+    }
+
+    try {
+      const res = await fetch(`/api/gallery/categories/${categoryId}`, {
+        method: 'DELETE',
+        credentials: 'include'
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) throw new Error(data.error || "Failed to delete category");
+
+      setSuccess("Category deleted!");
+      fetchCategories();
+      fetchImages(); // Refresh gallery
+    } catch (err: any) {
+      setError(err.message || "Error deleting category.");
     }
   };
 
@@ -458,7 +528,7 @@ export default function GalleryPage() {
                       {cat.name}
                     </div>
                     {isAdmin && isEditMode && (
-                      <div style={{ display: "flex", gap: "8px" }}>
+                      <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
                         <button
                           onClick={() => handleReorderCategory(cat.id, 'up')}
                           style={{
@@ -493,6 +563,40 @@ export default function GalleryPage() {
                         >
                           ▼
                         </button>
+                        <button
+                          onClick={() => handleEditCategory(cat)}
+                          style={{
+                            padding: "6px 12px",
+                            backgroundColor: "#2196F3",
+                            color: "#fff",
+                            border: "none",
+                            borderRadius: "6px",
+                            fontSize: "0.9rem",
+                            cursor: "pointer",
+                            transition: "background-color 0.3s ease"
+                          }}
+                          onMouseEnter={(e) => e.currentTarget.style.backgroundColor = "#42A5F5"}
+                          onMouseLeave={(e) => e.currentTarget.style.backgroundColor = "#2196F3"}
+                        >
+                          ✏️ Edit
+                        </button>
+                        <button
+                          onClick={() => handleDeleteCategory(cat.id, cat.name)}
+                          style={{
+                            padding: "6px 12px",
+                            backgroundColor: "#f44",
+                            color: "#fff",
+                            border: "none",
+                            borderRadius: "6px",
+                            fontSize: "0.9rem",
+                            cursor: "pointer",
+                            transition: "background-color 0.3s ease"
+                          }}
+                          onMouseEnter={(e) => e.currentTarget.style.backgroundColor = "#ff5555"}
+                          onMouseLeave={(e) => e.currentTarget.style.backgroundColor = "#f44"}
+                        >
+                          🗑️ Delete
+                        </button>
                       </div>
                     )}
                   </h2>
@@ -501,6 +605,106 @@ export default function GalleryPage() {
                       {cat.description}
                     </p>
                   )}
+                  
+                  {/* Edit Category Form */}
+                  {isAdmin && isEditMode && editingCategoryId === cat.id && (
+                    <div style={{
+                      marginBottom: "24px",
+                      padding: isMobile ? "16px" : "20px",
+                      backgroundColor: "rgba(33, 150, 243, 0.1)",
+                      border: "2px solid #2196F3",
+                      borderRadius: "12px"
+                    }}>
+                      <h3 style={{
+                        margin: "0 0 16px 0",
+                        fontSize: "1.2rem",
+                        color: "#2196F3",
+                        fontWeight: "bold"
+                      }}>
+                        Edit Category
+                      </h3>
+                      
+                      <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
+                        <div>
+                          <label style={{ display: "block", marginBottom: "6px", fontSize: "0.9rem", color: "#ccc" }}>
+                            Category Name *
+                          </label>
+                          <input
+                            type="text"
+                            value={editCategoryName}
+                            onChange={(e) => setEditCategoryName(e.target.value)}
+                            style={{
+                              width: "100%",
+                              padding: "10px",
+                              backgroundColor: "#1a1a1a",
+                              border: "1px solid #333",
+                              borderRadius: "6px",
+                              color: "#fff",
+                              fontSize: "1rem"
+                            }}
+                          />
+                        </div>
+                        
+                        <div>
+                          <label style={{ display: "block", marginBottom: "6px", fontSize: "0.9rem", color: "#ccc" }}>
+                            Description (optional)
+                          </label>
+                          <textarea
+                            value={editCategoryDesc}
+                            onChange={(e) => setEditCategoryDesc(e.target.value)}
+                            rows={3}
+                            style={{
+                              width: "100%",
+                              padding: "10px",
+                              backgroundColor: "#1a1a1a",
+                              border: "1px solid #333",
+                              borderRadius: "6px",
+                              color: "#fff",
+                              fontSize: "1rem",
+                              resize: "vertical"
+                            }}
+                          />
+                        </div>
+                        
+                        <div style={{ display: "flex", gap: "8px", marginTop: "8px" }}>
+                          <button
+                            onClick={handleUpdateCategory}
+                            disabled={!editCategoryName.trim()}
+                            style={{
+                              padding: "10px 20px",
+                              backgroundColor: editCategoryName.trim() ? "#2196F3" : "#555",
+                              color: "#fff",
+                              border: "none",
+                              borderRadius: "6px",
+                              fontSize: "1rem",
+                              fontWeight: "bold",
+                              cursor: editCategoryName.trim() ? "pointer" : "not-allowed",
+                              transition: "background-color 0.3s ease"
+                            }}
+                          >
+                            Save Changes
+                          </button>
+                          <button
+                            onClick={handleCancelEdit}
+                            style={{
+                              padding: "10px 20px",
+                              backgroundColor: "#666",
+                              color: "#fff",
+                              border: "none",
+                              borderRadius: "6px",
+                              fontSize: "1rem",
+                              fontWeight: "bold",
+                              cursor: "pointer",
+                              transition: "background-color 0.3s ease"
+                            }}
+                          >
+                            Cancel
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                  
                   <div style={{
                     display: "grid",
                     gridTemplateColumns: isMobile ? "1fr" : "repeat(auto-fill, minmax(300px, 1fr))",
