@@ -594,8 +594,9 @@ export default function Home() {
               color: '#b0b0b0',
               padding: '40px'
             }}>
-              <div style={{fontSize: '3rem', marginBottom: '15px'}}>🏁</div>
-              <p>No events have been completed yet.</p>
+              <div style={{fontSize: '3rem', marginBottom: '15px'}}>📅</div>
+              <p>No upcoming events scheduled at the moment.</p>
+              <p style={{fontSize: '0.9rem', marginTop: '10px', color: '#888'}}>Check back soon for new racing events!</p>
               <Link
                 href="/events"
                 className="btn-primary"
@@ -609,7 +610,7 @@ export default function Home() {
                   marginTop: '15px'
                 }}
               >
-                View Events
+                View All Events
               </Link>
             </div>
           )}
