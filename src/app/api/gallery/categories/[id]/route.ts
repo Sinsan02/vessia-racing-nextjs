@@ -7,7 +7,7 @@ export const dynamic = 'force-dynamic';
 // Update category
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     // Check if user is admin
@@ -17,7 +17,8 @@ export async function PUT(
     }
 
     const { name, description } = await request.json();
-    const categoryId = parseInt(params.id);
+    const { id } = await params;
+    const categoryId = parseInt(id);
 
     if (isNaN(categoryId)) {
       return NextResponse.json({ success: false, error: 'Invalid category ID' }, { status: 400 });
@@ -84,7 +85,7 @@ export async function PUT(
 // Delete category
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     // Check if user is admin
@@ -93,7 +94,8 @@ export async function DELETE(
       return NextResponse.json({ success: false, error: adminCheck.error }, { status: adminCheck.status });
     }
 
-    const categoryId = parseInt(params.id);
+    const { id } = await params;
+    const categoryId = parseInt(id);
 
     if (isNaN(categoryId)) {
       return NextResponse.json({ success: false, error: 'Invalid category ID' }, { status: 400 });
