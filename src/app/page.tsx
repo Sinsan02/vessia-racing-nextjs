@@ -236,16 +236,7 @@ export default function Home() {
           position: 'relative',
           zIndex: 2
         }}>
-          <div style={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            gap: isMobile ? '6px' : '10px',
-            marginBottom: isMobile ? '6px' : undefined
-          }}>
-            <span style={{fontSize: isMobile ? '1.1rem' : '1.5rem'}}>🏆</span>
-            <h2 className="section-title" style={{fontSize: isMobile ? '1.3rem' : undefined, margin: 0}}>Our Accomplishments</h2>
-          </div>
+          <h2 className="section-title" style={{fontSize: isMobile ? '1.3rem' : undefined, marginBottom: isMobile ? '6px' : undefined}}>Our Accomplishments</h2>
           <p className="section-subtitle" style={{
             fontSize: isMobile ? '1.1rem' : undefined, 
             marginBottom: isMobile ? '10px' : undefined,

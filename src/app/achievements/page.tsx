@@ -75,25 +75,14 @@ export default function Achievements() {
         marginBottom: '50px',
         padding: isMobile ? '0 10px' : '0'
       }}>
-        <div style={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          gap: isMobile ? '8px' : '12px',
-          marginBottom: '15px'
+        <h1 style={{
+          color: '#3EA822',
+          fontSize: isMobile ? '1.8rem' : '3rem',
+          marginBottom: '15px',
+          fontWeight: 'bold'
         }}>
-          <span style={{
-            fontSize: isMobile ? '1.8rem' : '2.5rem'
-          }}>🏆</span>
-          <h1 style={{
-            color: '#3EA822',
-            fontSize: isMobile ? '1.8rem' : '3rem',
-            margin: 0,
-            fontWeight: 'bold'
-          }}>
-            Our Accomplishments
-          </h1>
-        </div>
+          Our Accomplishments
+        </h1>
         <p style={{
           color: '#888',
           fontSize: '1.2rem',
