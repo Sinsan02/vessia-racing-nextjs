@@ -1,7 +1,20 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { supabaseAdmin } from '@/lib/supabase';
+import crypto from 'crypto';
 
 export const dynamic = 'force-dynamic';
+
+/**
+ * Mask client_secret using iRacing's required algorithm
+ * https://oauth.iracing.com/oauth2/book/token_endpoint.html#client-secret-and-user-password-masking
+ */
+function maskClientSecret(secret: string, clientId: string): string {
+  const normalizedId = clientId.trim().toLowerCase();
+  const combined = `${secret}${normalizedId}`;
+  const hasher = crypto.createHash('sha256');
+  hasher.update(combined);
+  return hasher.digest('base64');
+}
 
 /**
  * Handle iRacing OAuth callback
@@ -69,6 +82,10 @@ export async function GET(request: NextRequest) {
     console.log('   clientSecret first 30 chars:', clientSecret?.substring(0, 30) + '...', '(length:', clientSecret?.length, ')');
     console.log('   clientSecret === expected?', clientSecret === 'cultural-VERTIGO-Hyperlink-grimacing-DROWN-manlike');
     console.log('   redirectUri:', redirectUri);
+    
+    // Mask the client_secret as required by iRacing
+    const maskedSecret = maskClientSecret(clientSecret!, clientId!);
+    console.log('   🔒 Masked client_secret (first 30 chars):', maskedSecret.substring(0, 30) + '...');
 
     if (!clientId || !clientSecret || !redirectUri) {
       console.error('iRacing OAuth credentials not configured');
@@ -77,36 +94,26 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    // Exchange authorization code for access token
-    // Documentation: https://oauth.iracing.com/oauth2/book/token_endpoint.html
-    console.log('🔄 Exchanging authorization code for access token with PKCE...');
-    console.log('   Client ID:', clientId);
-    console.log('   Client Secret (first 10 chars):', clientSecret?.substring(0, 10));
-    console.log('   Code verifier length:', codeVerifier?.length);
+    // Exchange authoode verifier length:', codeVerifier?.length);
     
-    // iRacing requires BOTH Basic Auth AND client_id in body
-    const authString = `${clientId}:${clientSecret}`;
-    const basicAuth = Buffer.from(authString).toString('base64');
-    console.log('   Using Basic Auth + client_id in body (not client_secret)');
-    console.log('   Basic Auth header length:', basicAuth.length);
-    console.log('   Auth string to encode (first 20 chars):', authString.substring(0, 20) + '...');
-    console.log('   Basic Auth (first 30 chars):', basicAuth.substring(0, 30) + '...');
-    
-    // Verify by decoding
-    const decoded = Buffer.from(basicAuth, 'base64').toString();
-    console.log('   Decoded Basic Auth matches?', decoded === authString);
+    // iRacing requires client_secret in body (masked) + NO Basic Auth
+    console.log('   Sending masked client_secret in body (no Basic Auth)');
     
     const tokenBody = new URLSearchParams();
     tokenBody.append('grant_type', 'authorization_code');
     tokenBody.append('code', code);
     tokenBody.append('redirect_uri', redirectUri);
-    tokenBody.append('client_id', clientId); // Required in body even with Basic Auth
-    // client_secret ONLY in Basic Auth header, NOT in body
+    tokenBody.append('client_id', clientId);
+    tokenBody.append('client_secret', maskedSecret); // MASKED secret
     tokenBody.append('code_verifier', codeVerifier);
     
-    console.log('   Token request body:', tokenBody.toString());
+    console.log('   Token request body (with masked secret)');
     
     const tokenResponse = await fetch('https://oauth.iracing.com/oauth2/token', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+        // NO Authorization header - credentials in body/oauth.iracing.com/oauth2/token', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',

@@ -3,6 +3,19 @@
  */
 
 import { createClient } from '@supabase/supabase-js';
+import crypto from 'crypto';
+
+/**
+ * Mask client_secret using iRacing's required algorithm
+ * https://oauth.iracing.com/oauth2/book/token_endpoint.html#client-secret-and-user-password-masking
+ */
+function maskClientSecret(secret: string, clientId: string): string {
+  const normalizedId = clientId.trim().toLowerCase();
+  const combined = `${secret}${normalizedId}`;
+  const hasher = crypto.createHash('sha256');
+  hasher.update(combined);
+  return hasher.digest('base64');
+}
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
@@ -47,19 +60,19 @@ export async function refreshIRacingToken(userId: string): Promise<TokenRefreshR
     const clientId = process.env.IRACING_CLIENT_ID!.trim();
     const clientSecret = process.env.IRACING_CLIENT_SECRET!.trim();
     
-    // Use Basic Auth + client_id in body (match token exchange method)
-    const basicAuth = Buffer.from(`${clientId}:${clientSecret}`).toString('base64');
+    // Mask the client_secret as required by iRacing
+    const maskedSecret = maskClientSecret(clientSecret, clientId);
     
     const tokenBody = new URLSearchParams();
     tokenBody.append('grant_type', 'refresh_token');
     tokenBody.append('refresh_token', refreshToken);
-    tokenBody.append('client_id', clientId); // Required in body
+    tokenBody.append('client_id', clientId);
+    tokenBody.append('client_secret', maskedSecret); // MASKED secret
     
     const tokenResponse = await fetch('https://oauth.iracing.com/oauth2/token', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
-        'Authorization': `Basic ${basicAuth}`,
       },
       body: tokenBody,
     });
