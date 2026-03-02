@@ -1,33 +1,71 @@
 # iRacing Integration Setup
 
-This guide explains how to set up iRacing API integration to display driver statistics with automatic daily updates.
+This guide explains how to set up iRacing OAuth integration to display driver statistics with automatic daily updates.
 
 ## Features
 
-- **Self-Service**: Users add their own iRacing Customer ID in their profile
-- **Automatic Updates**: Stats are refreshed automatically every night at 2 AM UTC
-- **No Password Sharing**: Users don't need to share iRacing credentials
-- **Manual Refresh**: Admins can manually trigger updates for individual drivers or all drivers
+- **OAuth Integration**: Users login with their iRacing accounts securely
+- **Automatic Sync**: Stats are fetched and cached automatically
+- **No Password Storage**: Secure OAuth2 flow, no passwords stored on your server
+- **Auto-updating**: Stats refresh automatically every night at 2 AM UTC
 
 ## Prerequisites
 
-1. Admin iRacing account credentials for API access
-2. Users must add their iRacing Customer ID to their profile
+1. Registered iRacing OAuth client (see registration process below)
+2. Domain/URL for your application
+
+## OAuth Client Registration
+
+To use iRacing's API, you must first register your application with iRacing.
+
+### Registration Process
+
+1. Email iRacing from your iRacing account email
+2. Provide the following information:
+
+```
+Client Name: Vessia Racing
+Client Type: server-side
+Developer's Name: [Your Name]
+Developer's URL: https://vessiaracing.com
+Developer's Email: [Your iRacing Email]
+Redirect URIs: https://vessiaracing.com/api/auth/iracing/callback
+Audiences: data-server
+```
+
+3. Wait for approval (up to 10 days)
+4. Receive your `client_id` and `client_secret`
+
+**Important**: Keep your `client_secret` secure and never commit it to version control!
 
 ## Environment Variables
 
 Add the following to your `.env.local` file:
 
 ```env
-IRACING_EMAIL=your_admin_iracing_email@example.com
-IRACING_PASSWORD=your_admin_iracing_password
+IRACING_CLIENT_ID=your-client-id-from-iracing
+IRACING_CLIENT_SECRET=your-client-secret-from-iracing
+IRACING_REDIRECT_URI=https://vessiaracing.com/api/auth/iracing/callback
 CRON_SECRET=your_random_secret_for_cron_jobs
 ```
 
 **Security Notes:** 
-- Use an admin iRacing account for API access
-- Keep credentials secure, never commit to version control
+- Never commit `.env.local` to version control (already in `.gitignore`)
+- Keep your client_secret secure
 - Generate a random CRON_SECRET to protect the cron endpoint
+- Use HTTPS in production for redirect_uri
+
+## Vercel Environment Variables
+
+Add the same variables to your Vercel project:
+
+1. Go to your Vercel project settings
+2. Navigate to "Environment Variables"
+3. Add each variable for Production, Preview, and Development:
+   - `IRACING_CLIENT_ID`
+   - `IRACING_CLIENT_SECRET`
+   - `IRACING_REDIRECT_URI`
+   - `CRON_SECRET`
 
 ## Database Setup
 
@@ -39,27 +77,38 @@ iracing-integration-setup.sql
 ```
 
 This adds:
-- `iracing_customer_id` - The driver's iRacing customer ID (added by users themselves)
+- `iracing_customer_id` - The driver's iRacing customer ID (obtained via OAuth)
 - `iracing_data` - JSON field to cache stats (iRating, safety rating, license)
 - `iracing_data_updated_at` - Timestamp of last data fetch
 
-## User Self-Service
+## User Setup - OAuth Integration
 
-### Adding iRacing Customer ID
+### Connecting iRacing Account
 
-Users can add their own iRacing Customer ID:
+Users connect their iRacing account via OAuth:
 
-1. Log in to the website
-2. Go to "Profile" page
-3. Click "Edit Profile"
-4. Enter your iRacing Customer ID in the field
-5. Click "Save Changes"
+1. **Log in** to Vessia Racing website
+2. **Go to Profile** page
+3. **Click "Connect with iRacing"** button
+4. **Login to iRacing** (redirected to iRacing.com)
+5. **Authorize** Vessia Racing to access your data
+6. **Done!** Redirected back with your Customer ID automatically saved
 
-**Finding Your Customer ID:**
-- Log in to iRacing.com
-- Go to your profile or any results page
-- Look at the URL: `https://members.iracing.com/membersite/member/CareerStats.do?custid=123456`
-- Your Customer ID is the number after `custid=` (e.g., 123456)
+**What Happens:**
+- User is redirected to iRacing's secure login page
+- User logs in with their iRacing credentials (on iRacing.com, not your site)
+- iRacing asks user to authorize your app
+- User is redirected back with an authorization code
+- Your app exchanges the code for an access token
+- Your app fetches the user's Customer ID
+- Customer ID is saved to the user's profile
+- Stats are automatically synced
+
+**Security:**
+- ✅ No passwords are stored on your server
+- ✅ Users login directly on iRacing.com
+- ✅ OAuth2 standard security
+- ✅ Users can revoke access anytime on iRacing.com
 
 ## Automatic Stats Updates
 

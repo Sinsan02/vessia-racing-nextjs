@@ -5,6 +5,16 @@
 ALTER TABLE public.users 
 ADD COLUMN IF NOT EXISTS iracing_customer_id TEXT;
 
+-- Add OAuth token fields for automatic updates
+ALTER TABLE public.users 
+ADD COLUMN IF NOT EXISTS iracing_access_token TEXT;
+
+ALTER TABLE public.users 
+ADD COLUMN IF NOT EXISTS iracing_refresh_token TEXT;
+
+ALTER TABLE public.users 
+ADD COLUMN IF NOT EXISTS iracing_token_expires_at TIMESTAMP WITH TIME ZONE;
+
 -- Add fields to cache iRacing data (to reduce API calls)
 ALTER TABLE public.users 
 ADD COLUMN IF NOT EXISTS iracing_data JSONB;
@@ -18,5 +28,8 @@ CREATE INDEX IF NOT EXISTS idx_users_iracing_customer_id ON public.users(iracing
 
 -- Comment on columns
 COMMENT ON COLUMN public.users.iracing_customer_id IS 'iRacing customer ID for API integration';
+COMMENT ON COLUMN public.users.iracing_access_token IS 'OAuth access token (short-lived)';
+COMMENT ON COLUMN public.users.iracing_refresh_token IS 'OAuth refresh token (long-lived, for automatic updates)';
+COMMENT ON COLUMN public.users.iracing_token_expires_at IS 'When the access token expires';
 COMMENT ON COLUMN public.users.iracing_data IS 'Cached iRacing statistics (iRating, safety rating, etc.)';
 COMMENT ON COLUMN public.users.iracing_data_updated_at IS 'Last time iRacing data was fetched';

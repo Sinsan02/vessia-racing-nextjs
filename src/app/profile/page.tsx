@@ -12,6 +12,14 @@ interface User {
   bio?: string;
   profile_picture?: string;
   iracing_customer_id?: string;
+  iracing_data?: {
+    irating?: number;
+    safety_rating?: string;
+    license_class?: string;
+    license_level?: number;
+    last_updated?: string;
+  };
+  iracing_data_updated_at?: string;
 }
 
 export default function Profile() {
@@ -22,6 +30,8 @@ export default function Profile() {
   const [isSaving, setIsSaving] = useState(false);
   const [isMobile, setIsMobile] = useState(typeof window !== 'undefined' ? window.innerWidth <= 768 : false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const [successMessage, setSuccessMessage] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
   
   // Form data
   const [formData, setFormData] = useState({
@@ -38,6 +48,34 @@ export default function Profile() {
     checkScreenSize();
     window.addEventListener('resize', checkScreenSize);
     fetchUserProfile();
+    
+    // Check for OAuth callback messages
+    const urlParams = new URLSearchParams(window.location.search);
+    const success = urlParams.get('success');
+    const error = urlParams.get('error');
+    
+    if (success === 'iracing_connected') {
+      setSuccessMessage('🎉 Successfully connected to iRacing! Your stats will be synced automatically.');
+      // Clear URL params
+      window.history.replaceState({}, '', '/profile');
+    } else if (error) {
+      const errorMessages: { [key: string]: string } = {
+        'iracing_auth_failed': '❌ Failed to connect to iRacing. Please try again.',
+        'token_exchange_failed': '❌ Authentication failed. Please try again.',
+        'no_access_token': '❌ Failed to receive access token. Please try again.',
+        'userinfo_failed': '❌ Could not fetch iRacing profile. Please try again.',
+        'no_customer_id': '❌ Could not find iRacing Customer ID.',
+        'not_authenticated': '❌ Please log in first.',
+        'invalid_session': '❌ Your session expired. Please log in again.',
+        'update_failed': '❌ Failed to save iRacing connection.',
+        'state_mismatch': '❌ Security validation failed. Please try again.',
+        'callback_error': '❌ Something went wrong. Please try again.'
+      };
+      setErrorMessage(errorMessages[error] || '❌ An error occurred. Please try again.');
+      // Clear URL params
+      window.history.replaceState({}, '', '/profile');
+    }
+    
     return () => window.removeEventListener('resize', checkScreenSize);
   }, []);
 
@@ -192,6 +230,65 @@ export default function Profile() {
               👤 Min Profil
             </h1>
             <p style={{color: '#ccc', fontSize: '1.1rem'}}>Manage your Vessia Racing profile</p>
+            
+            {/* Success/Error Messages */}
+            {successMessage && (
+              <div style={{
+                backgroundColor: 'rgba(62, 168, 34, 0.1)',
+                border: '2px solid #3EA822',
+                color: '#3EA822',
+                padding: '15px',
+                borderRadius: '8px',
+                marginTop: '20px',
+                marginBottom: '10px',
+                textAlign: 'left'
+              }}>
+                {successMessage}
+                <button
+                  onClick={() => setSuccessMessage('')}
+                  style={{
+                    float: 'right',
+                    background: 'none',
+                    border: 'none',
+                    color: '#3EA822',
+                    cursor: 'pointer',
+                    fontSize: '1.2rem',
+                    fontWeight: 'bold'
+                  }}
+                >
+                  ×
+                </button>
+              </div>
+            )}
+            
+            {errorMessage && (
+              <div style={{
+                backgroundColor: 'rgba(255, 68, 68, 0.1)',
+                border: '2px solid #f44',
+                color: '#f44',
+                padding: '15px',
+                borderRadius: '8px',
+                marginTop: '20px',
+                marginBottom: '10px',
+                textAlign: 'left'
+              }}>
+                {errorMessage}
+                <button
+                  onClick={() => setErrorMessage('')}
+                  style={{
+                    float: 'right',
+                    background: 'none',
+                    border: 'none',
+                    color: '#f44',
+                    cursor: 'pointer',
+                    fontSize: '1.2rem',
+                    fontWeight: 'bold'
+                  }}
+                >
+                  ×
+                </button>
+              </div>
+            )}
             
             {!isEditing && (
               <button
@@ -492,33 +589,81 @@ export default function Profile() {
 
                 <div>
                   <label style={{display: 'block', color: '#3EA822', fontWeight: 'bold', marginBottom: '8px'}}>
-                    iRacing Customer ID:
+                    iRacing Integration:
                   </label>
-                  {isEditing ? (
+                  {user.iracing_customer_id ? (
                     <div>
-                      <input
-                        type="text"
-                        value={formData.iracing_customer_id}
-                        onChange={(e) => handleInputChange('iracing_customer_id', e.target.value)}
-                        style={{
-                          width: '100%',
-                          color: '#fff',
-                          padding: '10px',
-                          backgroundColor: '#0a0a0a',
-                          border: '2px solid #3EA822',
-                          borderRadius: '5px',
-                          fontSize: '1rem'
-                        }}
-                        placeholder="Enter your iRacing Customer ID"
-                      />
-                      <p style={{color: '#888', fontSize: '0.85rem', marginTop: '5px'}}>
-                        Find your Customer ID in your iRacing profile URL or settings. This enables auto-updating of your iRating and stats.
+                      <div style={{
+                        padding: '15px',
+                        backgroundColor: '#0a0a0a',
+                        borderRadius: '5px',
+                        marginBottom: '10px',
+                        border: '1px solid #2d2d2d'
+                      }}>
+                        <p style={{color: '#3EA822', fontWeight: 'bold', marginBottom: '10px'}}>
+                          ✅ Connected (ID: {user.iracing_customer_id})
+                        </p>
+                        
+                        {user.iracing_data ? (
+                          <div style={{display: 'grid', gap: '8px', marginTop: '12px'}}>
+                            <div style={{display: 'flex', justifyContent: 'space-between', padding: '8px', backgroundColor: '#151515', borderRadius: '4px'}}>
+                              <span style={{color: '#888'}}>iRating:</span>
+                              <span style={{color: '#fff', fontWeight: 'bold'}}>{user.iracing_data.irating || 'N/A'}</span>
+                            </div>
+                            <div style={{display: 'flex', justifyContent: 'space-between', padding: '8px', backgroundColor: '#151515', borderRadius: '4px'}}>
+                              <span style={{color: '#888'}}>Safety Rating:</span>
+                              <span style={{color: '#fff', fontWeight: 'bold'}}>{user.iracing_data.safety_rating || 'N/A'}</span>
+                            </div>
+                            <div style={{display: 'flex', justifyContent: 'space-between', padding: '8px', backgroundColor: '#151515', borderRadius: '4px'}}>
+                              <span style={{color: '#888'}}>License:</span>
+                              <span style={{color: '#fff', fontWeight: 'bold'}}>{user.iracing_data.license_class || 'N/A'}</span>
+                            </div>
+                            {user.iracing_data_updated_at && (
+                              <p style={{color: '#666', fontSize: '0.75rem', marginTop: '4px', textAlign: 'right'}}>
+                                Last updated: {new Date(user.iracing_data_updated_at).toLocaleString('nb-NO')}
+                              </p>
+                            )}
+                          </div>
+                        ) : (
+                          <p style={{color: '#888', fontSize: '0.9rem', marginTop: '8px'}}>
+                            No stats available yet. Stats will be synced automatically at 2 AM each night.
+                          </p>
+                        )}
+                      </div>
+                      <p style={{color: '#888', fontSize: '0.85rem'}}>
+                        📊 Stats are automatically updated daily at 2:00 AM
                       </p>
                     </div>
                   ) : (
-                    <p style={{color: '#fff', padding: '10px', backgroundColor: '#0a0a0a', borderRadius: '5px'}}>
-                      {user.iracing_customer_id || 'Not configured'}
-                    </p>
+                    <div>
+                      <button
+                        onClick={() => window.location.href = '/api/auth/iracing/authorize'}
+                        style={{
+                          width: '100%',
+                          padding: '12px 20px',
+                          backgroundColor: '#e8202f',
+                          color: '#fff',
+                          border: 'none',
+                          borderRadius: '5px',
+                          fontSize: '1rem',
+                          fontWeight: 'bold',
+                          cursor: 'pointer',
+                          transition: 'background-color 0.3s ease',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          gap: '10px'
+                        }}
+                        onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#ff3344'}
+                        onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#e8202f'}
+                      >
+                        <span style={{fontSize: '1.2rem'}}>🏁</span>
+                        Connect with iRacing
+                      </button>
+                      <p style={{color: '#888', fontSize: '0.85rem', marginTop: '8px'}}>
+                        Login with your iRacing account to automatically sync your stats, iRating, and safety rating.
+                      </p>
+                    </div>
                   )}
                 </div>
 

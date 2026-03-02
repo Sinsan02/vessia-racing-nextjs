@@ -16,7 +16,7 @@ export async function GET(request: NextRequest) {
     // Get full user details from Supabase
     const { data: user, error } = await supabaseAdmin
       .from('users')
-      .select('id, full_name, email, experience_level, role, is_driver, bio, profile_picture, created_at, iracing_customer_id')
+      .select('id, full_name, email, experience_level, role, is_driver, bio, profile_picture, created_at, iracing_customer_id, iracing_data, iracing_data_updated_at')
       .eq('id', userPayload.userId)
       .single();
 
@@ -37,7 +37,9 @@ export async function GET(request: NextRequest) {
       bio: user.bio,
       profile_picture: user.profile_picture,
       createdAt: user.created_at,
-      iracing_customer_id: user.iracing_customer_id
+      iracing_customer_id: user.iracing_customer_id,
+      iracing_data: user.iracing_data,
+      iracing_data_updated_at: user.iracing_data_updated_at
     });
   } catch (error) {
     console.error('Get current user error:', error);

@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { supabaseAdmin } from '@/lib/supabase';
-import { iRacingService } from '@/lib/iracing';
+import { getValidIRacingToken } from '@/lib/iracing-oauth';
 
 /**
  * Cron job endpoint to refresh iRacing stats for all drivers
@@ -13,7 +13,101 @@ import { iRacingService } from '@/lib/iracing';
  *     "schedule": "0 2 * * *"
  *   }]
  * }
+ * 
+ * Uses OAuth tokens for authentication with iRacing API
  */
+
+interface IRacingMemberInfo {
+  members?: Array<{
+    cust_id: number;
+    display_name: string;
+    irating?: number;
+  }>;
+}
+
+interface IRacingCareerStats {
+  stats?: Array<{
+    category: string;
+    license_level?: number;
+    safety_rating?: number;
+  }>;
+}
+
+/**
+ * Fetch driver stats from iRacing using OAuth token
+ */
+async function fetchDriverStats(accessToken: string, customerId: string): Promise<any> {
+  try {
+    console.log(`🔍 Fetching stats for customer ID: ${customerId}`);
+
+    // Fetch member info
+    const memberResponse = await fetch(
+      `https://members-ng.iracing.com/data/member/info?cust_ids=${customerId}`,
+      {
+        headers: {
+          'Authorization': `Bearer ${accessToken}`,
+        },
+      }
+    );
+
+    if (!memberResponse.ok) {
+      console.error(`❌ Failed to fetch member info: ${memberResponse.status}`);
+      return null;
+    }
+
+    const memberData: IRacingMemberInfo = await memberResponse.json();
+    
+    if (!memberData.members || memberData.members.length === 0) {
+      console.error(`❌ No member data found for customer ID: ${customerId}`);
+      return null;
+    }
+
+    const member = memberData.members[0];
+
+    // Fetch career stats
+    const careerResponse = await fetch(
+      `https://members-ng.iracing.com/data/stats/member_career?cust_id=${customerId}`,
+      {
+        headers: {
+          'Authorization': `Bearer ${accessToken}`,
+        },
+      }
+    );
+
+    let safetyRating = 'N/A';
+    let licenseClass = 'Rookie';
+    let licenseLevel = 1;
+
+    if (careerResponse.ok) {
+      const careerData: IRacingCareerStats = await careerResponse.json();
+      
+      if (careerData.stats && careerData.stats.length > 0) {
+        const roadStats = careerData.stats.find((s) => s.category === 'Road') || careerData.stats[0];
+        
+        if (roadStats.license_level !== undefined) {
+          licenseLevel = roadStats.license_level;
+          const licenseClasses = ['Rookie', 'D', 'C', 'B', 'A', 'Pro', 'Pro/WC'];
+          licenseClass = licenseClasses[Math.min(licenseLevel, licenseClasses.length - 1)] || 'Rookie';
+        }
+
+        if (roadStats.safety_rating !== undefined) {
+          safetyRating = `${licenseClass} ${roadStats.safety_rating.toFixed(2)}`;
+        }
+      }
+    }
+
+    return {
+      irating: member.irating || 0,
+      safety_rating: safetyRating,
+      license_class: licenseClass,
+      license_level: licenseLevel,
+    };
+
+  } catch (error) {
+    console.error(`❌ Error fetching stats for ${customerId}:`, error);
+    return null;
+  }
+}
 
 export async function GET(request: NextRequest) {
   try {
@@ -30,12 +124,14 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    // Get all users with iRacing Customer IDs
+    // Get all users with iRacing refresh tokens (OAuth connected)
     const { data: drivers, error } = await supabaseAdmin
       .from('users')
-      .select('id, full_name, iracing_customer_id')
+      .select('id, full_name, iracing_customer_id, iracing_refresh_token')
       .not('iracing_customer_id', 'is', null)
-      .neq('iracing_customer_id', '');
+      .not('iracing_refresh_token', 'is', null)
+      .neq('iracing_customer_id', '')
+      .neq('iracing_refresh_token', '');
 
     if (error) {
       console.error('Error fetching drivers:', error);
@@ -48,7 +144,7 @@ export async function GET(request: NextRequest) {
     if (!drivers || drivers.length === 0) {
       return NextResponse.json({
         success: true,
-        message: 'No drivers with iRacing IDs found',
+        message: 'No drivers with iRacing OAuth connection found',
         updated: 0
       });
     }
@@ -60,9 +156,20 @@ export async function GET(request: NextRequest) {
     // Process each driver
     for (const driver of drivers) {
       try {
-        console.log(`Fetching stats for ${driver.full_name} (${driver.iracing_customer_id})...`);
+        console.log(`Processing ${driver.full_name} (${driver.iracing_customer_id})...`);
         
-        const stats = await iRacingService.getDriverStats(driver.iracing_customer_id);
+        // Get a valid OAuth access token (will refresh if expired)
+        const accessToken = await getValidIRacingToken(driver.id);
+        
+        if (!accessToken) {
+          console.error(`❌ Failed to get valid token for ${driver.full_name}`);
+          errorCount++;
+          errors.push(`${driver.full_name}: Token unavailable or expired`);
+          continue;
+        }
+        
+        // Fetch stats using OAuth token
+        const stats = await fetchDriverStats(accessToken, driver.iracing_customer_id);
         
         if (stats) {
           // Update driver with new stats
@@ -80,9 +187,9 @@ export async function GET(request: NextRequest) {
           if (updateError) {
             console.error(`Failed to update ${driver.full_name}:`, updateError);
             errorCount++;
-            errors.push(`${driver.full_name}: Update failed`);
+            errors.push(`${driver.full_name}: Database update failed`);
           } else {
-            console.log(`✓ Updated ${driver.full_name}`);
+            console.log(`✅ Updated ${driver.full_name}`);
             successCount++;
           }
         } else {
