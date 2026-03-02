@@ -203,8 +203,40 @@ export async function GET(request: NextRequest) {
     const userInfo = await userInfoResponse.json();
     console.log('✅ User info received from Data API:', JSON.stringify(userInfo).substring(0, 200));
     
-    // Extract customer ID from various possible locations
-    const iracingCustomerId = userInfo.cust_id || userInfo.custId || userInfo.customer_id || userInfo.id;
+    // iRacing Data API returns a link to the actual data
+    let iracingCustomerId;
+    
+    if (userInfo.link) {
+      console.log('🔗 Fetching data from link:', userInfo.link.substring(0, 100) + '...');
+      const dataResponse = await fetch(userInfo.link);
+      
+      if (!dataResponse.ok) {
+        console.error('❌ Failed to fetch data from link:', dataResponse.status);
+        // Fallback to saving without customer ID
+        const authUser = getUserFromRequest(request);
+        if (!authUser) {
+          return NextResponse.redirect(new URL('/login?error=auth_required', request.url));
+        }
+        
+        await supabaseAdmin.from('users').update({
+          iracing_access_token: accessToken,
+          iracing_refresh_token: refreshToken,
+          iracing_token_expires_at: expiresAt.toISOString(),
+        }).eq('id', authUser.userId);
+        
+        const response = NextResponse.redirect(new URL('/profile?success=iracing_connected', request.url));
+        response.cookies.delete('iracing_oauth_state');
+        response.cookies.delete('iracing_code_verifier');
+        return response;
+      }
+      
+      const memberData = await dataResponse.json();
+      console.log('✅ Member data:', JSON.stringify(memberData).substring(0, 200));
+      iracingCustomerId = memberData.cust_id || memberData.custId || memberData.customer_id || memberData.id;
+    } else {
+      // Direct data (legacy format)
+      iracingCustomerId = userInfo.cust_id || userInfo.custId || userInfo.customer_id || userInfo.id;
+    }
 
     if (!iracingCustomerId) {
       console.error('❌ No customer ID in user info');
