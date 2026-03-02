@@ -45,15 +45,9 @@ export default function Profile() {
   const [successMessage, setSuccessMessage] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
   
-  // Translate iRacing category names to display names
+  // iRacing returns category names directly - no translation needed
   const getCategoryDisplayName = (category: string): string => {
-    const categoryNames: { [key: string]: string } = {
-      'Road': 'Sports Car',
-      'Oval': 'Oval',
-      'Dirt Road': 'Dirt Road',
-      'Dirt Oval': 'Dirt Oval'
-    };
-    return categoryNames[category] || category;
+    return category;
   };
   
   // Form data

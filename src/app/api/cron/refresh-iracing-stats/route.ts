@@ -121,22 +121,30 @@ async function fetchDriverStats(accessToken: string, customerId: string): Promis
           console.warn(`⚠️ Failed to fetch career data from S3: ${careerDataResponse.status}`);
         } else {
           const careerData: IRacingCareerStats = await careerDataResponse.json();
-          console.log('📊 Career data structure:', JSON.stringify(careerData).substring(0, 500));
+          console.log('📊 Full career data:', JSON.stringify(careerData));
           
           if (careerData.stats && careerData.stats.length > 0) {
             // Process each category
             careerData.stats.forEach((categoryData) => {
               const category = categoryData.category;
               const licenseClasses = ['Rookie', 'D', 'C', 'B', 'A', 'Pro', 'Pro/WC'];
+              
+              // Get license info from category data
               const licenseLevel = categoryData.license_level || 1;
               const licenseClass = licenseClasses[Math.min(licenseLevel, licenseClasses.length - 1)] || 'Rookie';
               
+              // iRating and safety rating are at the category level in career stats
+              const irating = categoryData.irating || 0;
+              const safetyRating = categoryData.safety_rating ? categoryData.safety_rating : 0;
+              
               categoryStats[category] = {
-                irating: categoryData.irating || 0,
-                safety_rating: categoryData.safety_rating ? `${licenseClass} ${categoryData.safety_rating.toFixed(2)}` : 'N/A',
+                irating: irating,
+                safety_rating: safetyRating > 0 ? `${licenseClass} ${safetyRating.toFixed(2)}` : 'N/A',
                 license_class: licenseClass,
                 license_level: licenseLevel
               };
+              
+              console.log(`📊 ${category}: iRating=${irating}, SR=${safetyRating}, License=${licenseClass}`);
             });
             
             console.log('✅ Processed stats for categories:', Object.keys(categoryStats).join(', '));
