@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
-import Image from 'next/image';
 
 interface DriverProfile {
   id: number;
@@ -201,12 +200,37 @@ export default function DriverProfile() {
               height: isMobile ? '120px' : '150px',
               flexShrink: 0
             }}>
-              {driver.profile_picture ? (
-                <Image
+              {driver.profile_picture && driver.profile_picture.trim() && driver.profile_picture !== '/uploads/default-avatar.png' ? (
+                <img
                   src={driver.profile_picture}
                   alt={driver.full_name}
-                  fill
+                  onError={(e) => {
+                    // If image fails to load, hide it and show placeholder
+                    const target = e.target as HTMLImageElement;
+                    target.style.display = 'none';
+                    const parent = target.parentElement;
+                    if (parent) {
+                      const placeholder = document.createElement('div');
+                      placeholder.style.cssText = `
+                        width: 100%;
+                        height: 100%;
+                        border-radius: 50%;
+                        background-color: ${getPlaceholderColor(driver.full_name)};
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        font-size: ${isMobile ? '3rem' : '4rem'};
+                        font-weight: bold;
+                        color: #fff;
+                        border: 3px solid #3EA822;
+                      `;
+                      placeholder.textContent = driver.full_name.charAt(0).toUpperCase();
+                      parent.appendChild(placeholder);
+                    }
+                  }}
                   style={{
+                    width: '100%',
+                    height: '100%',
                     objectFit: 'cover',
                     borderRadius: '50%',
                     border: '3px solid #3EA822'
