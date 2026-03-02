@@ -14,6 +14,15 @@ interface DriverProfile {
   created_at: string;
   iracing_customer_id?: string;
   iracing_data?: {
+    categories?: {
+      [key: string]: {
+        irating?: number;
+        safety_rating?: string;
+        license_class?: string;
+        license_level?: number;
+      };
+    };
+    // Legacy support
     irating?: number;
     safety_rating?: string;
     license_class?: string;
@@ -281,56 +290,73 @@ export default function DriverProfile() {
                 gridTemplateColumns: isMobile ? '1fr' : 'repeat(auto-fit, minmax(200px, 1fr))',
                 gap: '20px'
               }}>
-                {driver.iracing_data.irating && (
-                  <div style={{
-                    backgroundColor: 'rgba(62, 168, 34, 0.1)',
-                    padding: '20px',
-                    borderRadius: '8px',
-                    border: '1px solid #3EA822',
-                    textAlign: 'center'
-                  }}>
-                    <div style={{ fontSize: '0.9rem', color: '#aaa', marginBottom: '8px' }}>
-                      iRating
-                    </div>
-                    <div style={{ fontSize: '2rem', fontWeight: 'bold', color: '#3EA822' }}>
-                      {driver.iracing_data.irating}
-                    </div>
-                  </div>
-                )}
+                {/* Get first category stats or use legacy format */}
+                {(() => {
+                  let stats = driver.iracing_data;
+                  
+                  // If new format with categories, use first category
+                  if (driver.iracing_data.categories) {
+                    const categories = Object.keys(driver.iracing_data.categories);
+                    if (categories.length > 0) {
+                      stats = driver.iracing_data.categories[categories[0]];
+                    }
+                  }
+                  
+                  return (
+                    <>
+                      {stats.irating && (
+                        <div style={{
+                          backgroundColor: 'rgba(62, 168, 34, 0.1)',
+                          padding: '20px',
+                          borderRadius: '8px',
+                          border: '1px solid #3EA822',
+                          textAlign: 'center'
+                        }}>
+                          <div style={{ fontSize: '0.9rem', color: '#aaa', marginBottom: '8px' }}>
+                            iRating
+                          </div>
+                          <div style={{ fontSize: '2rem', fontWeight: 'bold', color: '#3EA822' }}>
+                            {stats.irating}
+                          </div>
+                        </div>
+                      )}
 
-                {driver.iracing_data.safety_rating && (
-                  <div style={{
-                    backgroundColor: 'rgba(62, 168, 34, 0.1)',
-                    padding: '20px',
-                    borderRadius: '8px',
-                    border: '1px solid #3EA822',
-                    textAlign: 'center'
-                  }}>
-                    <div style={{ fontSize: '0.9rem', color: '#aaa', marginBottom: '8px' }}>
-                      Safety Rating
-                    </div>
-                    <div style={{ fontSize: '2rem', fontWeight: 'bold', color: '#3EA822' }}>
-                      {driver.iracing_data.safety_rating}
-                    </div>
-                  </div>
-                )}
+                      {stats.safety_rating && (
+                        <div style={{
+                          backgroundColor: 'rgba(62, 168, 34, 0.1)',
+                          padding: '20px',
+                          borderRadius: '8px',
+                          border: '1px solid #3EA822',
+                          textAlign: 'center'
+                        }}>
+                          <div style={{ fontSize: '0.9rem', color: '#aaa', marginBottom: '8px' }}>
+                            Safety Rating
+                          </div>
+                          <div style={{ fontSize: '2rem', fontWeight: 'bold', color: '#3EA822' }}>
+                            {stats.safety_rating}
+                          </div>
+                        </div>
+                      )}
 
-                {driver.iracing_data.license_class && (
-                  <div style={{
-                    backgroundColor: 'rgba(62, 168, 34, 0.1)',
-                    padding: '20px',
-                    borderRadius: '8px',
-                    border: '1px solid #3EA822',
-                    textAlign: 'center'
-                  }}>
-                    <div style={{ fontSize: '0.9rem', color: '#aaa', marginBottom: '8px' }}>
-                      License
-                    </div>
-                    <div style={{ fontSize: '2rem', fontWeight: 'bold', color: '#3EA822' }}>
-                      {driver.iracing_data.license_class}
-                    </div>
-                  </div>
-                )}
+                      {stats.license_class && (
+                        <div style={{
+                          backgroundColor: 'rgba(62, 168, 34, 0.1)',
+                          padding: '20px',
+                          borderRadius: '8px',
+                          border: '1px solid #3EA822',
+                          textAlign: 'center'
+                        }}>
+                          <div style={{ fontSize: '0.9rem', color: '#aaa', marginBottom: '8px' }}>
+                            License
+                          </div>
+                          <div style={{ fontSize: '2rem', fontWeight: 'bold', color: '#3EA822' }}>
+                            {stats.license_class}
+                          </div>
+                        </div>
+                      )}
+                    </>
+                  );
+                })()}
               </div>
             ) : (
               <div style={{

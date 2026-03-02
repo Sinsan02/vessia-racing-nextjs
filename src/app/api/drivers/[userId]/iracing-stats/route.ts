@@ -162,11 +162,10 @@ export async function POST(
             // Process each license/category
             licenses.forEach((licenseData: any) => {
               const category = licenseData.category_name; // Use category_name (e.g., "Sports Car") not category (e.g., "sports_car")
-              const licenseClasses = ['Rookie', 'D', 'C', 'B', 'A', 'Pro', 'Pro/WC'];
               
-              // Get license info
+              // Use group_name from iRacing API (e.g., "Class A", "Class D", "Rookie")
+              const licenseClass = licenseData.group_name?.replace('Class ', '') || 'Rookie';
               const licenseLevel = licenseData.license_level || 1;
-              const licenseClass = licenseClasses[Math.min(licenseLevel, licenseClasses.length - 1)] || 'Rookie';
               
               // iRating and safety rating from profile/licenses
               const irating = licenseData.irating || 0;
