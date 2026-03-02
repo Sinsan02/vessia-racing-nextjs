@@ -1,25 +1,33 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { requireAdmin } from '@/lib/auth';
+import { getUserFromRequest } from '@/lib/auth';
 import { supabaseAdmin } from '@/lib/supabase';
-import { iRacingService } from '@/lib/iracing';
+import { getValidIRacingToken } from '@/lib/iracing-oauth';
 
 export async function POST(
   request: NextRequest,
   { params }: { params: Promise<{ userId: string }> }
 ) {
   try {
-    // Only admins can refresh stats
-    const adminCheck = await requireAdmin(request);
-    if (!adminCheck.success) {
-      return NextResponse.json({ error: adminCheck.error }, { status: adminCheck.status });
-    }
-
     const { userId } = await params;
 
-    // Get driver with iracing_customer_id
+    // Get authenticated user
+    const authUser = getUserFromRequest(request);
+    if (!authUser) {
+      return NextResponse.json({ error: 'Not authenticated' }, { status: 401 });
+    }
+
+    // User can only refresh their own stats (unless admin)
+    const isOwnProfile = authUser.userId === parseInt(userId);
+    const isAdmin = authUser.role === 'admin';
+
+    if (!isOwnProfile && !isAdmin) {
+      return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+    }
+
+    // Get driver with OAuth tokens
     const { data: driver, error: driverError } = await supabaseAdmin
       .from('users')
-      .select('id, iracing_customer_id')
+      .select('id, iracing_customer_id, iracing_access_token, iracing_refresh_token, iracing_token_expires_at')
       .eq('id', userId)
       .single();
 
@@ -32,24 +40,97 @@ export async function POST(
 
     if (!driver.iracing_customer_id) {
       return NextResponse.json(
-        { error: 'Driver does not have an iRacing Customer ID configured' },
+        { error: 'iRacing not connected. Please connect your iRacing account first.' },
         { status: 400 }
       );
     }
 
-    // Fetch stats from iRacing
-    const stats = await iRacingService.getDriverStats(driver.iracing_customer_id);
+    // Get valid OAuth access token (will refresh if needed)
+    console.log(`🔍 Getting valid iRacing token for user ${userId}...`);
+    const accessToken = await getValidIRacingToken(userId);
 
-    if (!stats) {
-      console.error(`Failed to fetch iRacing stats for customer ID: ${driver.iracing_customer_id}`);
+    if (!accessToken) {
       return NextResponse.json(
-        { 
-          error: 'Failed to fetch iRacing stats. Please check:\n1. Your Customer ID is correct\n2. Server logs for authentication errors',
-          details: 'Check Vercel logs for detailed error messages'
+        { error: 'Failed to get iRacing access token. Please reconnect your iRacing account.' },
+        { status: 401 }
+      );
+    }
+
+    console.log(`✅ Got valid access token for user ${userId}`);
+    console.log(`🔍 Fetching stats for customer ID: ${driver.iracing_customer_id}`);
+
+    // Fetch member info from iRacing Data API using OAuth token
+    const memberInfoResponse = await fetch(
+      `https://members-ng.iracing.com/data/member/info?cust_ids=${driver.iracing_customer_id}`,
+      {
+        headers: {
+          'Authorization': `Bearer ${accessToken}`,
         },
+      }
+    );
+
+    if (!memberInfoResponse.ok) {
+      const errorText = await memberInfoResponse.text();
+      console.error(`❌ Failed to fetch member info: ${memberInfoResponse.status}`, errorText);
+      return NextResponse.json(
+        { error: 'Failed to fetch iRacing stats. Please try reconnecting your account.' },
         { status: 500 }
       );
     }
+
+    const memberData = await memberInfoResponse.json();
+    
+    if (!memberData || !memberData.members || memberData.members.length === 0) {
+      console.error(`❌ No member data found for customer ID: ${driver.iracing_customer_id}`);
+      return NextResponse.json(
+        { error: 'No iRacing data found for your account' },
+        { status: 404 }
+      );
+    }
+
+    const member = memberData.members[0];
+    console.log(`✅ Member data retrieved: ${member.display_name || 'Unknown'}`);
+
+    // Fetch career stats for license info
+    const careerResponse = await fetch(
+      `https://members-ng.iracing.com/data/stats/member_career?cust_id=${driver.iracing_customer_id}`,
+      {
+        headers: {
+          'Authorization': `Bearer ${accessToken}`,
+        },
+      }
+    );
+
+    let safetyRating = 'N/A';
+    let licenseClass = 'Rookie';
+    let licenseLevel = 1;
+
+    if (careerResponse.ok) {
+      const careerData = await careerResponse.json();
+      
+      if (careerData && careerData.stats && careerData.stats.length > 0) {
+        const roadStats = careerData.stats.find((s: any) => s.category === 'Road') || careerData.stats[0];
+        
+        if (roadStats.license_level !== undefined) {
+          licenseLevel = roadStats.license_level;
+          const licenseClasses = ['Rookie', 'D', 'C', 'B', 'A', 'Pro', 'Pro/WC'];
+          licenseClass = licenseClasses[Math.min(licenseLevel, licenseClasses.length - 1)] || 'Rookie';
+        }
+
+        if (roadStats.safety_rating !== undefined) {
+          safetyRating = `${licenseClass} ${roadStats.safety_rating.toFixed(2)}`;
+        }
+      }
+    }
+
+    const stats = {
+      irating: member.irating || 0,
+      safety_rating: safetyRating,
+      license_class: licenseClass,
+      license_level: licenseLevel,
+    };
+
+    console.log('✅ iRacing stats retrieved successfully:', stats);
 
     // Update driver with new stats
     const { error: updateError } = await supabaseAdmin
