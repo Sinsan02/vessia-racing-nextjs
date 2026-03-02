@@ -151,9 +151,12 @@ export async function GET(request: NextRequest) {
 
     console.log('✅ Token exchange successful');
 
-    // Fetch user info from iRacing
-    console.log('🔄 Fetching user info from iRacing...');
-    const userInfoResponse = await fetch('https://oauth.iracing.com/oauth2/userinfo', {
+    // Get user info from iRacing Data API
+    // The OAuth userinfo endpoint doesn't exist, but we can get the customer ID from the Data API
+    console.log('🔄 Fetching user info from iRacing Data API...');
+    
+    // Try /data/member/info endpoint to get current user
+    const userInfoResponse = await fetch('https://members-ng.iracing.com/data/member/info', {
       headers: {
         'Authorization': `Bearer ${accessToken}`,
       },
@@ -161,15 +164,48 @@ export async function GET(request: NextRequest) {
 
     if (!userInfoResponse.ok) {
       const errorText = await userInfoResponse.text();
-      console.error('❌ Failed to fetch user info:', userInfoResponse.status, errorText);
-      return NextResponse.redirect(
-        new URL('/profile?error=userinfo_failed', request.url)
-      );
+      console.error('❌ Failed to fetch user info from Data API:', userInfoResponse.status, errorText);
+      console.log('⚠️ Trying alternative: decode access token for customer ID...');
+      
+      // Alternative: Try to get customer ID from token response or decode JWT
+      // For now, let's save the tokens and redirect - user can manually sync later
+      console.log('⚠️ Proceeding without customer ID - will try to fetch on profile page');
+      
+      // Get current user from our database
+      const { data: { user }, error: authError } = await supabaseAdmin.auth.getUser(request.cookies.get('auth_token')?.value || '');
+      
+      if (authError || !user) {
+        console.error('❌ Could not get authenticated user:', authError);
+        return NextResponse.redirect(new URL('/profile?error=auth_required', request.url));
+      }
+
+      // Save tokens without customer ID for now
+      const { error: updateError } = await supabaseAdmin
+        .from('users')
+        .update({
+          iracing_access_token: accessToken,
+          iracing_refresh_token: refreshToken,
+          iracing_token_expires_at: expiresAt.toISOString(),
+        })
+        .eq('id', user.id);
+
+      if (updateError) {
+        console.error('❌ Failed to save iRacing tokens:', updateError);
+        return NextResponse.redirect(new URL('/profile?error=save_failed', request.url));
+      }
+
+      // Clear OAuth cookies
+      const response = NextResponse.redirect(new URL('/profile?warning=partial_success', request.url));
+      response.cookies.delete('iracing_oauth_state');
+      response.cookies.delete('iracing_code_verifier');
+      return response;
     }
 
     const userInfo = await userInfoResponse.json();
-    console.log('✅ User info received:', userInfo);
-    const iracingCustomerId = userInfo.sub || userInfo.cust_id;
+    console.log('✅ User info received from Data API:', JSON.stringify(userInfo).substring(0, 200));
+    
+    // Extract customer ID from various possible locations
+    const iracingCustomerId = userInfo.cust_id || userInfo.custId || userInfo.customer_id || userInfo.id;
 
     if (!iracingCustomerId) {
       console.error('No customer ID in user info');
