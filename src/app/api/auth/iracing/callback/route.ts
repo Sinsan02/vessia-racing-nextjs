@@ -35,9 +35,18 @@ export async function GET(request: NextRequest) {
     // Verify state parameter for CSRF protection
     const storedState = request.cookies.get('iracing_oauth_state')?.value;
     if (!storedState || storedState !== state) {
-      console.error('State mismatch - possible CSRF attack');
+      console.error('❌ State mismatch - possible CSRF attack');
       return NextResponse.redirect(
         new URL('/profile?error=state_mismatch', request.url)
+      );
+    }
+
+    // Get PKCE code_verifier from cookie
+    const codeVerifier = request.cookies.get('iracing_code_verifier')?.value;
+    if (!codeVerifier) {
+      console.error('❌ No code_verifier found in cookies');
+      return NextResponse.redirect(
+        new URL('/profile?error=pkce_missing', request.url)
       );
     }
 
@@ -54,7 +63,7 @@ export async function GET(request: NextRequest) {
 
     // Exchange authorization code for access token
     // Documentation: https://oauth.iracing.com/oauth2/book/token_endpoint.html
-    console.log('🔄 Exchanging authorization code for access token...');
+    console.log('🔄 Exchanging authorization code for access token with PKCE...');
     const tokenResponse = await fetch('https://oauth.iracing.com/oauth2/token', {
       method: 'POST',
       headers: {
@@ -66,6 +75,7 @@ export async function GET(request: NextRequest) {
         redirect_uri: redirectUri,
         client_id: clientId,
         client_secret: clientSecret,
+        code_verifier: codeVerifier, // PKCE code verifier
         audience: 'data-server', // Required for data API access
       }),
     });
@@ -163,13 +173,14 @@ export async function GET(request: NextRequest) {
     console.log(`   Customer ID: ${iracingCustomerId}`);
     console.log(`   Token expires at: ${expiresAt.toISOString()}`);
 
-    // Success! Clear state cookie and redirect to profile
+    // Success! Clear cookies and redirect to profile
     const response = NextResponse.redirect(
       new URL('/profile?success=iracing_connected', request.url)
     );
     
-    // Clear state cookie
+    // Clear OAuth cookies
     response.cookies.delete('iracing_oauth_state');
+    response.cookies.delete('iracing_code_verifier');
     
     return response;
 

@@ -1,9 +1,26 @@
 import { NextRequest, NextResponse } from 'next/server';
+import crypto from 'crypto';
 
 export const dynamic = 'force-dynamic';
 
 /**
- * Start iRacing OAuth flow
+ * Generate PKCE code verifier and challenge
+ */
+function generatePKCE() {
+  // Generate random code_verifier (43-128 characters)
+  const codeVerifier = crypto.randomBytes(32).toString('base64url');
+  
+  // Create code_challenge (SHA-256 hash of verifier, base64url encoded)
+  const codeChallenge = crypto
+    .createHash('sha256')
+    .update(codeVerifier)
+    .digest('base64url');
+  
+  return { codeVerifier, codeChallenge };
+}
+
+/**
+ * Start iRacing OAuth flow with PKCE
  * Redirects user to iRacing authorization page
  */
 export async function GET(request: NextRequest) {
@@ -11,7 +28,7 @@ export async function GET(request: NextRequest) {
     const clientId = process.env.IRACING_CLIENT_ID;
     const redirectUri = process.env.IRACING_REDIRECT_URI;
 
-    console.log('🏁 Starting iRacing OAuth flow...');
+    console.log('🏁 Starting iRacing OAuth flow with PKCE...');
     console.log('   Client ID:', clientId);
     console.log('   Redirect URI:', redirectUri);
 
@@ -23,13 +40,18 @@ export async function GET(request: NextRequest) {
       );
     }
 
+    // Generate PKCE parameters
+    const { codeVerifier, codeChallenge } = generatePKCE();
+    console.log('   Generated PKCE code_challenge');
+
     // Use oauth.iracing.com as per official iRacing OAuth documentation
     // Documentation: https://oauth.iracing.com/oauth2/book/authorize_endpoint.html
     const authUrl = new URL('https://oauth.iracing.com/oauth2/authorize');
     authUrl.searchParams.set('client_id', clientId);
     authUrl.searchParams.set('redirect_uri', redirectUri);
     authUrl.searchParams.set('response_type', 'code');
-    // Note: Trying without scope - iRacing might not require it for authorization
+    authUrl.searchParams.set('code_challenge', codeChallenge);
+    authUrl.searchParams.set('code_challenge_method', 'S256');
     
     // Generate and store state for CSRF protection
     const state = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
@@ -40,11 +62,18 @@ export async function GET(request: NextRequest) {
     console.log('   - client_id:', clientId);
     console.log('   - redirect_uri:', redirectUri);
     console.log('   - response_type: code');
+    console.log('   - code_challenge_method: S256');
     console.log('   - state:', state);
     
-    // Store state in cookie for verification later
+    // Store state and code_verifier in cookies for verification later
     const response = NextResponse.redirect(authUrl.toString());
     response.cookies.set('iracing_oauth_state', state, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      maxAge: 600 // 10 minutes
+    });
+    response.cookies.set('iracing_code_verifier', codeVerifier, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'lax',
