@@ -59,8 +59,7 @@ export async function refreshIRacingToken(userId: string): Promise<TokenRefreshR
       body: new URLSearchParams({
         grant_type: 'refresh_token',
         refresh_token: refreshToken,
-        client_id: clientId, // Required in body
-        audience: 'data-server', // Required for data API access
+        client_id: clientId,
       }),
     });
 
