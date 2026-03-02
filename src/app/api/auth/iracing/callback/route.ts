@@ -64,9 +64,23 @@ export async function GET(request: NextRequest) {
     // Exchange authorization code for access token
     // Documentation: https://oauth.iracing.com/oauth2/book/token_endpoint.html
     console.log('🔄 Exchanging authorization code for access token with PKCE...');
+    console.log('   Client ID:', clientId);
+    console.log('   Client ID length:', clientId?.length);
+    console.log('   Client Secret length:', clientSecret?.length);
+    console.log('   Code verifier length:', codeVerifier?.length);
     
     // iRacing requires Basic Authentication (client_id:client_secret encoded in base64)
     const basicAuth = Buffer.from(`${clientId}:${clientSecret}`).toString('base64');
+    console.log('   Basic Auth header (first 20 chars):', basicAuth.substring(0, 20) + '...');
+    
+    const tokenBody = {
+      grant_type: 'authorization_code',
+      code: code,
+      redirect_uri: redirectUri,
+      client_id: clientId,
+      code_verifier: codeVerifier,
+    };
+    console.log('   Token request body:', JSON.stringify(tokenBody, null, 2));
     
     const tokenResponse = await fetch('https://oauth.iracing.com/oauth2/token', {
       method: 'POST',
@@ -74,13 +88,7 @@ export async function GET(request: NextRequest) {
         'Content-Type': 'application/x-www-form-urlencoded',
         'Authorization': `Basic ${basicAuth}`,
       },
-      body: new URLSearchParams({
-        grant_type: 'authorization_code',
-        code: code,
-        redirect_uri: redirectUri,
-        client_id: clientId,
-        code_verifier: codeVerifier, // PKCE code verifier
-      }),
+      body: new URLSearchParams(tokenBody),
     });
 
     if (!tokenResponse.ok) {
