@@ -47,17 +47,19 @@ export async function refreshIRacingToken(userId: string): Promise<TokenRefreshR
     const clientId = process.env.IRACING_CLIENT_ID!.trim();
     const clientSecret = process.env.IRACING_CLIENT_SECRET!.trim();
     
-    // Send credentials in body (same method as token exchange)
+    // Use Basic Auth (match token exchange method)
+    const basicAuth = Buffer.from(`${clientId}:${clientSecret}`).toString('base64');
+    
     const tokenBody = new URLSearchParams();
     tokenBody.append('grant_type', 'refresh_token');
     tokenBody.append('refresh_token', refreshToken);
-    tokenBody.append('client_id', clientId);
-    tokenBody.append('client_secret', clientSecret);
+    // Do NOT include client_id or client_secret in body
     
     const tokenResponse = await fetch('https://oauth.iracing.com/oauth2/token', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
+        'Authorization': `Basic ${basicAuth}`,
       },
       body: tokenBody,
     });
