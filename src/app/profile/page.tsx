@@ -45,6 +45,19 @@ export default function Profile() {
   const [successMessage, setSuccessMessage] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
   
+  // Translate iRacing category names to display names
+  const getCategoryDisplayName = (category: string): string => {
+    const categoryNames: { [key: string]: string } = {
+      'Road': 'Sports Car',
+      'Oval': 'Oval',
+      'Dirt Road': 'Dirt Road',
+      'Dirt Oval': 'Dirt Oval',
+      'Sports Car': 'Sports Car',
+      'Formula Car': 'Formula Car'
+    };
+    return categoryNames[category] || category;
+  };
+  
   // Form data
   const [formData, setFormData] = useState({
     name: '',
@@ -735,7 +748,7 @@ export default function Profile() {
                               >
                                 {Object.keys(user.iracing_data.categories).map((category) => (
                                   <option key={category} value={category}>
-                                    {category}
+                                    {getCategoryDisplayName(category)}
                                   </option>
                                 ))}
                               </select>
