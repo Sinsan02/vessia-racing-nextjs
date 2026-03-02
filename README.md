@@ -2,6 +2,8 @@
 
 A comprehensive racing league management platform built with Next.js 15 and Supabase.
 
+<!-- Last updated: March 2, 2026 -->
+
 ## Features
 
 - **User Management**: Registration, authentication, and user profiles with image upload
