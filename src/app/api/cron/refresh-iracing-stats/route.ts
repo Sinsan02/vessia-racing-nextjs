@@ -92,7 +92,7 @@ async function fetchDriverStats(accessToken: string, customerId: string): Promis
       return null;
     }
 
-    console.log(`✅ Member: ${member.display_name || 'Unknown'}, iRating: ${member.irating || 'N/A'}`);
+    console.log(`✅ Member: ${member.display_name || 'Unknown'}`);
 
     // Fetch career stats - also returns a link to S3 data
     const careerInfoResponse = await fetch(
@@ -104,12 +104,14 @@ async function fetchDriverStats(accessToken: string, customerId: string): Promis
       }
     );
 
+    let irating = 0;
     let safetyRating = 'N/A';
     let licenseClass = 'Rookie';
     let licenseLevel = 1;
 
     if (careerInfoResponse.ok) {
       const careerInfoData = await careerInfoResponse.json();
+      console.log('📦 Career info response:', JSON.stringify(careerInfoData).substring(0, 200));
       
       // Career stats also return a link to S3 data
       if (careerInfoData.link) {
@@ -120,9 +122,16 @@ async function fetchDriverStats(accessToken: string, customerId: string): Promis
           console.warn(`⚠️ Failed to fetch career data from S3: ${careerDataResponse.status}`);
         } else {
           const careerData: IRacingCareerStats = await careerDataResponse.json();
+          console.log('📊 Career data structure:', JSON.stringify(careerData).substring(0, 500));
           
           if (careerData.stats && careerData.stats.length > 0) {
             const roadStats = careerData.stats.find((s) => s.category === 'Road') || careerData.stats[0];
+            console.log('🏎️ Road stats:', JSON.stringify(roadStats).substring(0, 300));
+            
+            // Get iRating from road stats
+            if (roadStats.irating !== undefined) {
+              irating = roadStats.irating;
+            }
             
             if (roadStats.license_level !== undefined) {
               licenseLevel = roadStats.license_level;
@@ -133,13 +142,19 @@ async function fetchDriverStats(accessToken: string, customerId: string): Promis
             if (roadStats.safety_rating !== undefined) {
               safetyRating = `${licenseClass} ${roadStats.safety_rating.toFixed(2)}`;
             }
+          } else {
+            console.warn('⚠️ No stats found in career data');
           }
         }
+      } else {
+        console.warn('⚠️ No link in career info response');
       }
+    } else {
+      console.warn(`⚠️ Failed to fetch career info: ${careerInfoResponse.status}`);
     }
 
     return {
-      irating: member.irating || 0,
+      irating: irating,
       safety_rating: safetyRating,
       license_class: licenseClass,
       license_level: licenseLevel,
