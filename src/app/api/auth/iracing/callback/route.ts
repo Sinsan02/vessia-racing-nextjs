@@ -84,17 +84,17 @@ export async function GET(request: NextRequest) {
     console.log('   Client Secret (first 10 chars):', clientSecret?.substring(0, 10));
     console.log('   Code verifier length:', codeVerifier?.length);
     
-    // Go back to Basic Auth - body credentials caused URL encoding issues
-    // The "missing client_id" error we saw before might have been transient
+    // iRacing requires BOTH Basic Auth AND client_id in body
     const basicAuth = Buffer.from(`${clientId}:${clientSecret}`).toString('base64');
-    console.log('   Using Basic Auth (no client_id in body this time)');
+    console.log('   Using Basic Auth + client_id in body (not client_secret)');
     console.log('   Basic Auth header length:', basicAuth.length);
     
     const tokenBody = new URLSearchParams();
     tokenBody.append('grant_type', 'authorization_code');
     tokenBody.append('code', code);
     tokenBody.append('redirect_uri', redirectUri);
-    // Do NOT include client_id or client_secret in body - only in Basic Auth header
+    tokenBody.append('client_id', clientId); // Required in body even with Basic Auth
+    // client_secret ONLY in Basic Auth header, NOT in body
     tokenBody.append('code_verifier', codeVerifier);
     
     console.log('   Token request body:', tokenBody.toString());
