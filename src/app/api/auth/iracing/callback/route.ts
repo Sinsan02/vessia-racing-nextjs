@@ -85,9 +85,16 @@ export async function GET(request: NextRequest) {
     console.log('   Code verifier length:', codeVerifier?.length);
     
     // iRacing requires BOTH Basic Auth AND client_id in body
-    const basicAuth = Buffer.from(`${clientId}:${clientSecret}`).toString('base64');
+    const authString = `${clientId}:${clientSecret}`;
+    const basicAuth = Buffer.from(authString).toString('base64');
     console.log('   Using Basic Auth + client_id in body (not client_secret)');
     console.log('   Basic Auth header length:', basicAuth.length);
+    console.log('   Auth string to encode (first 20 chars):', authString.substring(0, 20) + '...');
+    console.log('   Basic Auth (first 30 chars):', basicAuth.substring(0, 30) + '...');
+    
+    // Verify by decoding
+    const decoded = Buffer.from(basicAuth, 'base64').toString();
+    console.log('   Decoded Basic Auth matches?', decoded === authString);
     
     const tokenBody = new URLSearchParams();
     tokenBody.append('grant_type', 'authorization_code');
