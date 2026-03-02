@@ -51,9 +51,7 @@ export default function Profile() {
       'Road': 'Sports Car',
       'Oval': 'Oval',
       'Dirt Road': 'Dirt Road',
-      'Dirt Oval': 'Dirt Oval',
-      'Sports Car': 'Sports Car',
-      'Formula Car': 'Formula Car'
+      'Dirt Oval': 'Dirt Oval'
     };
     return categoryNames[category] || category;
   };
