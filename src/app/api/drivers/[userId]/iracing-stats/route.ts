@@ -169,8 +169,9 @@ export async function POST(
               const irating = licenseData.irating || 0;
               const safetyRating = licenseData.safety_rating || 0;
               
+              // Skip Road category (iRacing returns both Road and Sports Car, Road is deprecated)
               // Only include categories with actual iRating (skip categories with 0)
-              if (irating > 0) {
+              if (category !== 'Road' && irating > 0) {
                 categoryStats[category] = {
                   irating: irating,
                   safety_rating: safetyRating > 0 ? `${licenseClass} ${safetyRating.toFixed(2)}` : 'N/A',
@@ -180,7 +181,7 @@ export async function POST(
                 
                 console.log(`📊 ${category}: iRating=${irating}, SR=${safetyRating}, License=${licenseClass}`);
               } else {
-                console.log(`⏭️ Skipping ${category} (no activity)`);
+                console.log(`⏭️ Skipping ${category} (${category === 'Road' ? 'deprecated category' : 'no activity'})`);
               }
             });
             
