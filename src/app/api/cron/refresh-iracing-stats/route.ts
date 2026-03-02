@@ -95,9 +95,9 @@ async function fetchDriverStats(accessToken: string, customerId: string): Promis
 
     console.log(`✅ Member: ${member.display_name || 'Unknown'}`);
 
-    // Fetch career stats - also returns a link to S3 data
-    const careerInfoResponse = await fetch(
-      `https://members-ng.iracing.com/data/stats/member_career?cust_id=${customerId}`,
+    // Fetch member profile which contains licenses with iRating and safety rating
+    const profileResponse = await fetch(
+      `https://members-ng.iracing.com/data/member/profile?cust_id=${customerId}`,
       {
         headers: {
           'Authorization': `Bearer ${accessToken}`,
@@ -108,55 +108,60 @@ async function fetchDriverStats(accessToken: string, customerId: string): Promis
     // Process stats for all categories
     const categoryStats: any = {};
 
-    if (careerInfoResponse.ok) {
-      const careerInfoData = await careerInfoResponse.json();
-      console.log('📦 Career info response:', JSON.stringify(careerInfoData).substring(0, 200));
+    if (profileResponse.ok) {
+      const profileInfoData = await profileResponse.json();
+      console.log('📦 Profile info response:', JSON.stringify(profileInfoData).substring(0, 200));
       
-      // Career stats also return a link to S3 data
-      if (careerInfoData.link) {
-        console.log(`🔗 Fetching career data from S3...`);
-        const careerDataResponse = await fetch(careerInfoData.link);
+      // Profile data also returns a link to S3 data
+      if (profileInfoData.link) {
+        console.log(`🔗 Fetching profile data from S3...`);
+        const profileDataResponse = await fetch(profileInfoData.link);
         
-        if (!careerDataResponse.ok) {
-          console.warn(`⚠️ Failed to fetch career data from S3: ${careerDataResponse.status}`);
+        if (!profileDataResponse.ok) {
+          console.warn(`⚠️ Failed to fetch profile data from S3: ${profileDataResponse.status}`);
         } else {
-          const careerData: IRacingCareerStats = await careerDataResponse.json();
-          console.log('📊 Full career data:', JSON.stringify(careerData));
+          const profileData = await profileDataResponse.json();
+          console.log('📊 Full profile data:', JSON.stringify(profileData));
           
-          if (careerData.stats && careerData.stats.length > 0) {
-            // Process each category
-            careerData.stats.forEach((categoryData) => {
-              const category = categoryData.category;
+          if (profileData && profileData.licenses && profileData.licenses.length > 0) {
+            // Process each license/category
+            profileData.licenses.forEach((licenseData: any) => {
+              const category = licenseData.category;
               const licenseClasses = ['Rookie', 'D', 'C', 'B', 'A', 'Pro', 'Pro/WC'];
               
-              // Get license info from category data
-              const licenseLevel = categoryData.license_level || 1;
+              // Get license info
+              const licenseLevel = licenseData.license_level || 1;
               const licenseClass = licenseClasses[Math.min(licenseLevel, licenseClasses.length - 1)] || 'Rookie';
               
-              // iRating and safety rating are at the category level in career stats
-              const irating = categoryData.irating || 0;
-              const safetyRating = categoryData.safety_rating ? categoryData.safety_rating : 0;
+              // iRating and safety rating from profile/licenses
+              const irating = licenseData.irating || 0;
+              const safetyRating = licenseData.safety_rating || 0;
               
-              categoryStats[category] = {
-                irating: irating,
-                safety_rating: safetyRating > 0 ? `${licenseClass} ${safetyRating.toFixed(2)}` : 'N/A',
-                license_class: licenseClass,
-                license_level: licenseLevel
-              };
-              
-              console.log(`📊 ${category}: iRating=${irating}, SR=${safetyRating}, License=${licenseClass}`);
+              // Only include categories with actual iRating (skip categories with 0)
+              if (irating > 0) {
+                categoryStats[category] = {
+                  irating: irating,
+                  safety_rating: safetyRating > 0 ? `${licenseClass} ${safetyRating.toFixed(2)}` : 'N/A',
+                  license_class: licenseClass,
+                  license_level: licenseLevel
+                };
+                
+                console.log(`📊 ${category}: iRating=${irating}, SR=${safetyRating}, License=${licenseClass}`);
+              } else {
+                console.log(`⏭️ Skipping ${category} (no activity)`);
+              }
             });
             
             console.log('✅ Processed stats for categories:', Object.keys(categoryStats).join(', '));
           } else {
-            console.warn('⚠️ No stats found in career data');
+            console.warn('⚠️ No licenses found in profile data');
           }
         }
       } else {
-        console.warn('⚠️ No link in career info response');
+        console.warn('⚠️ No link in profile info response');
       }
     } else {
-      console.warn(`⚠️ Failed to fetch career info: ${careerInfoResponse.status}`);
+      console.warn(`⚠️ Failed to fetch profile info: ${profileResponse.status}`);
     }
 
     return {
