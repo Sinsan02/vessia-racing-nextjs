@@ -176,7 +176,7 @@ export async function POST(
               if (category !== 'Road' && irating > 0) {
                 categoryStats[category] = {
                   irating: irating,
-                  safety_rating: safetyRating > 0 ? `${licenseClass} ${safetyRating.toFixed(2)}` : 'N/A',
+                  safety_rating: safetyRating > 0 ? safetyRating.toFixed(2) : 'N/A',
                   license_class: licenseClass,
                   license_level: licenseLevel
                 };
