@@ -44,8 +44,8 @@ export async function refreshIRacingToken(userId: string): Promise<TokenRefreshR
     // Exchange refresh token for new access token
     console.log(`🔄 Refreshing iRacing token for user ${userId}...`);
     
-    const clientId = process.env.IRACING_CLIENT_ID!;
-    const clientSecret = process.env.IRACING_CLIENT_SECRET!;
+    const clientId = process.env.IRACING_CLIENT_ID!.trim();
+    const clientSecret = process.env.IRACING_CLIENT_SECRET!.trim();
     
     // Use Basic Authentication for client credentials
     const basicAuth = Buffer.from(`${clientId}:${clientSecret}`).toString('base64');

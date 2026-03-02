@@ -60,9 +60,15 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    const clientId = process.env.IRACING_CLIENT_ID;
-    const clientSecret = process.env.IRACING_CLIENT_SECRET;
-    const redirectUri = process.env.IRACING_REDIRECT_URI;
+    const clientId = process.env.IRACING_CLIENT_ID?.trim();
+    const clientSecret = process.env.IRACING_CLIENT_SECRET?.trim();
+    const redirectUri = process.env.IRACING_REDIRECT_URI?.trim();
+
+    console.log('🔑 Environment variables (TRIMMED):');
+    console.log('   clientId:', clientId, '(length:', clientId?.length, ')');
+    console.log('   clientSecret first 30 chars:', clientSecret?.substring(0, 30) + '...', '(length:', clientSecret?.length, ')');
+    console.log('   clientSecret === expected?', clientSecret === 'cultural-VERTIGO-Hyperlink-grimacing-DROWN-manlike');
+    console.log('   redirectUri:', redirectUri);
 
     if (!clientId || !clientSecret || !redirectUri) {
       console.error('iRacing OAuth credentials not configured');

@@ -25,8 +25,8 @@ function generatePKCE() {
  */
 export async function GET(request: NextRequest) {
   try {
-    const clientId = process.env.IRACING_CLIENT_ID;
-    const redirectUri = process.env.IRACING_REDIRECT_URI;
+    const clientId = process.env.IRACING_CLIENT_ID?.trim();
+    const redirectUri = process.env.IRACING_REDIRECT_URI?.trim();
 
     console.log('🏁 Starting iRacing OAuth flow with PKCE...');
     console.log('   Client ID:', clientId);
