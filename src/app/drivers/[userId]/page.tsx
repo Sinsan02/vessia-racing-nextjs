@@ -258,7 +258,7 @@ export default function DriverProfile() {
         </div>
 
         {/* iRacing Stats */}
-        {driver.iracing_customer_id ? (
+        {driver.iracing_customer_id && (
           <div style={{
             backgroundColor: 'rgba(26, 26, 26, 0.95)',
             borderRadius: '12px',

@@ -57,11 +57,9 @@ export default function Profile() {
     const error = urlParams.get('error');
     
     if (success === 'iracing_connected') {
-      setSuccessMessage('🎉 Successfully connected to iRacing! Fetching your stats...');
+      setSuccessMessage('🎉 Successfully connected to iRacing! Click "Synkroniser nå" to fetch your stats.');
       // Clear URL params
       window.history.replaceState({}, '', '/profile');
-      // Automatically fetch stats after connection
-      setTimeout(() => syncIRacingStats(), 1000);
     } else if (error) {
       const errorMessages: { [key: string]: string } = {
         'iracing_auth_failed': '❌ Failed to connect to iRacing. Please try again.',
@@ -138,7 +136,9 @@ export default function Profile() {
       console.error('Error disconnecting iRacing:', error);
       setErrorMessage('❌ En feil oppstod. Prøv igjen.');
     } finally {
-    
+      setIsDisconnecting(false);
+    }
+  };
 
   const syncIRacingStats = async () => {
     if (!user?.id) return;
@@ -165,8 +165,6 @@ export default function Profile() {
       setErrorMessage('❌ En feil oppstod ved synkronisering. Prøv igjen.');
     } finally {
       setIsSyncingStats(false);
-    }
-  };  setIsDisconnecting(false);
     }
   };
 
@@ -659,11 +657,16 @@ export default function Profile() {
                       <div style={{
                         padding: '15px',
                         backgroundColor: '#0a0a0a',
-                        bord⏳ Ingen stats ennå. Klikk &quot;Synkroniser nå&quot; for å hente dine stats.
-                          </p>
-                        )}
+                        borderRadius: '5px',
+                        marginBottom: '12px',
+                        border: '1px solid #3EA822'
+                      }}>
+                        <p style={{color: '#3EA822', margin: 0}}>
+                          ✅ Connected • Customer ID: {user.iracing_customer_id}
+                        </p>
                       </div>
-                      <div style={{display: 'flex', flexDirection: 'column', gap: '10px'}}>
+                      
+                      <div style={{display: 'flex', flexDirection: 'column', gap: '10px', marginBottom: '12px'}}>
                         <button
                           onClick={syncIRacingStats}
                           disabled={isSyncingStats}
@@ -678,47 +681,45 @@ export default function Profile() {
                             fontWeight: 'bold',
                             cursor: isSyncingStats ? 'not-allowed' : 'pointer',
                             transition: 'background-color 0.3s ease',
-                            opacity: isSyncingStats ? 0.6 : 1,
-                            marginBottom: '5px'
+                            opacity: isSyncingStats ? 0.6 : 1
                           }}
                           onMouseEnter={(e) => !isSyncingStats && (e.currentTarget.style.backgroundColor = '#2d8518')}
                           onMouseLeave={(e) => !isSyncingStats && (e.currentTarget.style.backgroundColor = '#3EA822')}
                         >
                           {isSyncingStats ? '⏳ Synkroniserer...' : '🔄 Synkroniser nå'}
                         </button>
-                        <p style={{color: '#888', fontSize: '0.85rem'}}>
+                        <p style={{color: '#888', fontSize: '0.85rem', margin: 0}}>
                           📊 Stats oppdateres automatisk hver natt kl 02:00
-                        
-                        {user.iracing_data ? (
-                          <div style={{display: 'grid', gap: '8px', marginTop: '12px'}}>
-                            <div style={{display: 'flex', justifyContent: 'space-between', padding: '8px', backgroundColor: '#151515', borderRadius: '4px'}}>
-                              <span style={{color: '#888'}}>iRating:</span>
-                              <span style={{color: '#fff', fontWeight: 'bold'}}>{user.iracing_data.irating || 'N/A'}</span>
-                            </div>
-                            <div style={{display: 'flex', justifyContent: 'space-between', padding: '8px', backgroundColor: '#151515', borderRadius: '4px'}}>
-                              <span style={{color: '#888'}}>Safety Rating:</span>
-                              <span style={{color: '#fff', fontWeight: 'bold'}}>{user.iracing_data.safety_rating || 'N/A'}</span>
-                            </div>
-                            <div style={{display: 'flex', justifyContent: 'space-between', padding: '8px', backgroundColor: '#151515', borderRadius: '4px'}}>
-                              <span style={{color: '#888'}}>License:</span>
-                              <span style={{color: '#fff', fontWeight: 'bold'}}>{user.iracing_data.license_class || 'N/A'}</span>
-                            </div>
-                            {user.iracing_data_updated_at && (
-                              <p style={{color: '#666', fontSize: '0.75rem', marginTop: '4px', textAlign: 'right'}}>
-                                Last updated: {new Date(user.iracing_data_updated_at).toLocaleString('nb-NO')}
-                              </p>
-                            )}
-                          </div>
-                        ) : (
-                          <p style={{color: '#888', fontSize: '0.9rem', marginTop: '8px'}}>
-                            No stats available yet. Stats will be synced automatically at 2 AM each night.
-                          </p>
-                        )}
-                      </div>
-                      <div style={{display: 'flex', flexDirection: 'column', gap: '10px'}}>
-                        <p style={{color: '#888', fontSize: '0.85rem'}}>
-                          📊 Stats are automatically updated daily at 2:00 AM
                         </p>
+                      </div>
+                      
+                      {user.iracing_data ? (
+                        <div style={{display: 'grid', gap: '8px', marginBottom: '12px'}}>
+                          <div style={{display: 'flex', justifyContent: 'space-between', padding: '8px', backgroundColor: '#151515', borderRadius: '4px'}}>
+                            <span style={{color: '#888'}}>iRating:</span>
+                            <span style={{color: '#fff', fontWeight: 'bold'}}>{user.iracing_data.irating || 'N/A'}</span>
+                          </div>
+                          <div style={{display: 'flex', justifyContent: 'space-between', padding: '8px', backgroundColor: '#151515', borderRadius: '4px'}}>
+                            <span style={{color: '#888'}}>Safety Rating:</span>
+                            <span style={{color: '#fff', fontWeight: 'bold'}}>{user.iracing_data.safety_rating || 'N/A'}</span>
+                          </div>
+                          <div style={{display: 'flex', justifyContent: 'space-between', padding: '8px', backgroundColor: '#151515', borderRadius: '4px'}}>
+                            <span style={{color: '#888'}}>License:</span>
+                            <span style={{color: '#fff', fontWeight: 'bold'}}>{user.iracing_data.license_class || 'N/A'}</span>
+                          </div>
+                          {user.iracing_data_updated_at && (
+                            <p style={{color: '#666', fontSize: '0.75rem', marginTop: '4px', textAlign: 'right'}}>
+                              Last updated: {new Date(user.iracing_data_updated_at).toLocaleString('nb-NO')}
+                            </p>
+                          )}
+                        </div>
+                      ) : (
+                        <p style={{color: '#888', fontSize: '0.9rem', marginBottom: '12px'}}>
+                          ⏳ Ingen stats ennå. Klikk "Synkroniser nå" for å hente dine stats.
+                        </p>
+                      )}
+                      
+                      <div style={{display: 'flex', flexDirection: 'column', gap: '10px'}}>
                         <button
                           onClick={handleDisconnectIRacing}
                           disabled={isDisconnecting}
