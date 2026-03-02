@@ -47,6 +47,7 @@ export default function DriverProfile() {
   const [driver, setDriver] = useState<DriverProfile | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState<string>('');
   const [isMobile, setIsMobile] = useState(typeof window !== 'undefined' ? window.innerWidth <= 768 : false);
 
   useEffect(() => {
@@ -71,6 +72,14 @@ export default function DriverProfile() {
       }
       const data = await response.json();
       setDriver(data.driver);
+      
+      // Set default category to the first available one
+      if (data.driver.iracing_data?.categories) {
+        const categories = Object.keys(data.driver.iracing_data.categories);
+        if (categories.length > 0) {
+          setSelectedCategory(categories[0]);
+        }
+      }
     } catch (err: any) {
       setError(err.message || 'Failed to load driver profile');
     } finally {
@@ -285,78 +294,109 @@ export default function DriverProfile() {
             </h2>
 
             {driver.iracing_data ? (
-              <div style={{
-                display: 'grid',
-                gridTemplateColumns: isMobile ? '1fr' : 'repeat(auto-fit, minmax(200px, 1fr))',
-                gap: '20px'
-              }}>
-                {/* Get first category stats or use legacy format */}
-                {(() => {
-                  let stats = driver.iracing_data;
-                  
-                  // If new format with categories, use first category
-                  if (driver.iracing_data.categories) {
-                    const categories = Object.keys(driver.iracing_data.categories);
-                    if (categories.length > 0) {
-                      stats = driver.iracing_data.categories[categories[0]];
+              <div>
+                {/* Category selector */}
+                {driver.iracing_data.categories && Object.keys(driver.iracing_data.categories).length > 0 && (
+                  <div style={{marginBottom: '24px'}}>
+                    <label style={{color: '#888', fontSize: '0.9rem', display: 'block', marginBottom: '8px'}}>
+                      Kategori:
+                    </label>
+                    <select
+                      value={selectedCategory}
+                      onChange={(e) => setSelectedCategory(e.target.value)}
+                      style={{
+                        width: '100%',
+                        maxWidth: '300px',
+                        padding: '10px 14px',
+                        backgroundColor: '#1a1a1a',
+                        color: '#fff',
+                        border: '2px solid #3EA822',
+                        borderRadius: '6px',
+                        fontSize: '1rem',
+                        cursor: 'pointer',
+                        outline: 'none'
+                      }}
+                    >
+                      {Object.keys(driver.iracing_data.categories).map((category) => (
+                        <option key={category} value={category}>
+                          {category}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                )}
+                
+                {/* Stats display */}
+                <div style={{
+                  display: 'grid',
+                  gridTemplateColumns: isMobile ? '1fr' : 'repeat(auto-fit, minmax(200px, 1fr))',
+                  gap: '20px'
+                }}>
+                  {/* Get selected category stats or use legacy format */}
+                  {(() => {
+                    let stats = driver.iracing_data;
+                    
+                    // If new format with categories, use selected category
+                    if (driver.iracing_data.categories && selectedCategory) {
+                      stats = driver.iracing_data.categories[selectedCategory];
                     }
-                  }
-                  
-                  return (
-                    <>
-                      {stats.irating && (
-                        <div style={{
-                          backgroundColor: 'rgba(62, 168, 34, 0.1)',
-                          padding: '20px',
-                          borderRadius: '8px',
-                          border: '1px solid #3EA822',
-                          textAlign: 'center'
-                        }}>
-                          <div style={{ fontSize: '0.9rem', color: '#aaa', marginBottom: '8px' }}>
-                            iRating
+                    
+                    return (
+                      <>
+                        {stats.irating && (
+                          <div style={{
+                            backgroundColor: 'rgba(62, 168, 34, 0.1)',
+                            padding: '20px',
+                            borderRadius: '8px',
+                            border: '1px solid #3EA822',
+                            textAlign: 'center'
+                          }}>
+                            <div style={{ fontSize: '0.9rem', color: '#aaa', marginBottom: '8px' }}>
+                              iRating
+                            </div>
+                            <div style={{ fontSize: '2rem', fontWeight: 'bold', color: '#3EA822' }}>
+                              {stats.irating}
+                            </div>
                           </div>
-                          <div style={{ fontSize: '2rem', fontWeight: 'bold', color: '#3EA822' }}>
-                            {stats.irating}
-                          </div>
-                        </div>
-                      )}
+                        )}
 
-                      {stats.safety_rating && (
-                        <div style={{
-                          backgroundColor: 'rgba(62, 168, 34, 0.1)',
-                          padding: '20px',
-                          borderRadius: '8px',
-                          border: '1px solid #3EA822',
-                          textAlign: 'center'
-                        }}>
-                          <div style={{ fontSize: '0.9rem', color: '#aaa', marginBottom: '8px' }}>
-                            Safety Rating
+                        {stats.safety_rating && (
+                          <div style={{
+                            backgroundColor: 'rgba(62, 168, 34, 0.1)',
+                            padding: '20px',
+                            borderRadius: '8px',
+                            border: '1px solid #3EA822',
+                            textAlign: 'center'
+                          }}>
+                            <div style={{ fontSize: '0.9rem', color: '#aaa', marginBottom: '8px' }}>
+                              Safety Rating
+                            </div>
+                            <div style={{ fontSize: '2rem', fontWeight: 'bold', color: '#3EA822' }}>
+                              {stats.safety_rating}
+                            </div>
                           </div>
-                          <div style={{ fontSize: '2rem', fontWeight: 'bold', color: '#3EA822' }}>
-                            {stats.safety_rating}
-                          </div>
-                        </div>
-                      )}
+                        )}
 
-                      {stats.license_class && (
-                        <div style={{
-                          backgroundColor: 'rgba(62, 168, 34, 0.1)',
-                          padding: '20px',
-                          borderRadius: '8px',
-                          border: '1px solid #3EA822',
-                          textAlign: 'center'
-                        }}>
-                          <div style={{ fontSize: '0.9rem', color: '#aaa', marginBottom: '8px' }}>
-                            License
+                        {stats.license_class && (
+                          <div style={{
+                            backgroundColor: 'rgba(62, 168, 34, 0.1)',
+                            padding: '20px',
+                            borderRadius: '8px',
+                            border: '1px solid #3EA822',
+                            textAlign: 'center'
+                          }}>
+                            <div style={{ fontSize: '0.9rem', color: '#aaa', marginBottom: '8px' }}>
+                              License
+                            </div>
+                            <div style={{ fontSize: '2rem', fontWeight: 'bold', color: '#3EA822' }}>
+                              {stats.license_class}
+                            </div>
                           </div>
-                          <div style={{ fontSize: '2rem', fontWeight: 'bold', color: '#3EA822' }}>
-                            {stats.license_class}
-                          </div>
-                        </div>
-                      )}
-                    </>
-                  );
-                })()}
+                        )}
+                      </>
+                    );
+                  })()}
+                </div>
               </div>
             ) : (
               <div style={{
