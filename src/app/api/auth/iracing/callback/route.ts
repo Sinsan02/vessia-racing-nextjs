@@ -94,7 +94,11 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    // Exchange authoode verifier length:', codeVerifier?.length);
+    // Exchange authorization code for access token
+    // Documentation: https://oauth.iracing.com/oauth2/book/token_endpoint.html
+    console.log('🔄 Exchanging authorization code for access token with PKCE...');
+    console.log('   Client ID:', clientId);
+    console.log('   Code verifier length:', codeVerifier?.length);
     
     // iRacing requires client_secret in body (masked) + NO Basic Auth
     console.log('   Sending masked client_secret in body (no Basic Auth)');
@@ -113,11 +117,7 @@ export async function GET(request: NextRequest) {
       method: 'POST',
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
-        // NO Authorization header - credentials in body/oauth.iracing.com/oauth2/token', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-        'Authorization': `Basic ${basicAuth}`,
+        // NO Authorization header - credentials in body
       },
       body: tokenBody,
     });
