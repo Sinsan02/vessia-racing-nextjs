@@ -49,8 +49,9 @@ export async function GET(request: NextRequest) {
     }
 
     // Exchange authorization code for access token
+    // Documentation: https://oauth.iracing.com/oauth2/book/token_endpoint.html
     console.log('🔄 Exchanging authorization code for access token...');
-    const tokenResponse = await fetch('https://members.iracing.com/oauth2/token', {
+    const tokenResponse = await fetch('https://oauth.iracing.com/oauth2/token', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
@@ -95,7 +96,7 @@ export async function GET(request: NextRequest) {
 
     // Fetch user info from iRacing
     console.log('🔄 Fetching user info from iRacing...');
-    const userInfoResponse = await fetch('https://members.iracing.com/oauth2/userinfo', {
+    const userInfoResponse = await fetch('https://oauth.iracing.com/oauth2/userinfo', {
       headers: {
         'Authorization': `Bearer ${accessToken}`,
       },

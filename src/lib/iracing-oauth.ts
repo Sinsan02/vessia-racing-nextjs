@@ -44,7 +44,7 @@ export async function refreshIRacingToken(userId: string): Promise<TokenRefreshR
     // Exchange refresh token for new access token
     console.log(`🔄 Refreshing iRacing token for user ${userId}...`);
     
-    const tokenResponse = await fetch('https://members.iracing.com/oauth2/token', {
+    const tokenResponse = await fetch('https://oauth.iracing.com/oauth2/token', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
