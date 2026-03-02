@@ -78,13 +78,16 @@ export async function GET(request: NextRequest) {
     console.log('   Client Secret (first 10 chars):', clientSecret?.substring(0, 10));
     console.log('   Code verifier length:', codeVerifier?.length);
     
-    // Try sending credentials in body with proper encoding
+    // Use Basic Authentication for client credentials (NOT in body)
+    const basicAuth = Buffer.from(`${clientId}:${clientSecret}`).toString('base64');
+    console.log('   Using Basic Auth (client_secret NOT in body)');
+    
     const tokenBody = new URLSearchParams();
     tokenBody.append('grant_type', 'authorization_code');
     tokenBody.append('code', code);
     tokenBody.append('redirect_uri', redirectUri);
-    tokenBody.append('client_id', clientId);
-    tokenBody.append('client_secret', clientSecret);
+    tokenBody.append('client_id', clientId); // Client ID required in body
+    // client_secret sent via Basic Auth header, NOT in body
     tokenBody.append('code_verifier', codeVerifier);
     
     console.log('   Token request body (URL encoded):', tokenBody.toString());
@@ -93,6 +96,7 @@ export async function GET(request: NextRequest) {
       method: 'POST',
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
+        'Authorization': `Basic ${basicAuth}`,
       },
       body: tokenBody,
     });
