@@ -160,13 +160,15 @@ export async function GET(request: NextRequest) {
     });
 
     if (!userInfoResponse.ok) {
-      console.error('Failed to fetch user info');
+      const errorText = await userInfoResponse.text();
+      console.error('❌ Failed to fetch user info:', userInfoResponse.status, errorText);
       return NextResponse.redirect(
         new URL('/profile?error=userinfo_failed', request.url)
       );
     }
 
     const userInfo = await userInfoResponse.json();
+    console.log('✅ User info received:', userInfo);
     const iracingCustomerId = userInfo.sub || userInfo.cust_id;
 
     if (!iracingCustomerId) {
