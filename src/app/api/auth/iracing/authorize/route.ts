@@ -22,8 +22,9 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    // Build authorization URL
-    const authUrl = new URL('https://members-ng.iracing.com/oauth2/authorize');
+    // Try with standard members.iracing.com first (without -ng)
+    // iRacing's documentation is at /authorize but doesn't specify the full domain
+    const authUrl = new URL('https://members.iracing.com/oauth2/authorize');
     authUrl.searchParams.set('client_id', clientId);
     authUrl.searchParams.set('redirect_uri', redirectUri);
     authUrl.searchParams.set('response_type', 'code');
