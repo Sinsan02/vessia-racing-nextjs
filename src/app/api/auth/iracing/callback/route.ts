@@ -242,7 +242,7 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    console.log(`✅ Successfully connected iRacing account for user ${user.id}`);
+    console.log(`✅ Successfully connected iRacing account for user ${authUser.userId}`);
     console.log(`   Customer ID: ${iracingCustomerId}`);
     console.log(`   Token expires at: ${expiresAt.toISOString()}`);
 
