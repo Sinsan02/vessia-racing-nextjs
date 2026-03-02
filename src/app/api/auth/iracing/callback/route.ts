@@ -8,11 +8,21 @@ export const dynamic = 'force-dynamic';
  * Exchanges authorization code for access token
  */
 export async function GET(request: NextRequest) {
+  console.log('🎯 ====== CALLBACK ENDPOINT CALLED ======');
+  console.log('   Request URL:', request.url);
+  console.log('   Request method:', request.method);
+  
   try {
     const searchParams = request.nextUrl.searchParams;
+    console.log('   All search params:', Array.from(searchParams.entries()));
+    
     const code = searchParams.get('code');
     const state = searchParams.get('state');
     const error = searchParams.get('error');
+
+    console.log('   Code:', code ? 'Present (length=' + code.length + ')' : 'Missing');
+    console.log('   State:', state ? 'Present' : 'Missing');
+    console.log('   Error:', error || 'None');
 
     // Check for authorization errors
     if (error) {
