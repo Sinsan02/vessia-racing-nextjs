@@ -84,25 +84,25 @@ export async function GET(request: NextRequest) {
     console.log('   Client Secret (first 10 chars):', clientSecret?.substring(0, 10));
     console.log('   Code verifier length:', codeVerifier?.length);
     
-    // Use Basic Authentication for client credentials (NOT in body)
-    const basicAuth = Buffer.from(`${clientId}:${clientSecret}`).toString('base64');
-    console.log('   Using Basic Auth (client_secret NOT in body)');
+    // Try sending credentials in body instead of Basic Auth
+    // OAuth 2.0 RFC 6749 Section 2.3.1 allows this alternative method
+    console.log('   Sending credentials in request body (not Basic Auth)');
     
     const tokenBody = new URLSearchParams();
     tokenBody.append('grant_type', 'authorization_code');
     tokenBody.append('code', code);
     tokenBody.append('redirect_uri', redirectUri);
-    tokenBody.append('client_id', clientId); // Client ID required in body
-    // client_secret sent via Basic Auth header, NOT in body
+    tokenBody.append('client_id', clientId);
+    tokenBody.append('client_secret', clientSecret);
     tokenBody.append('code_verifier', codeVerifier);
     
-    console.log('   Token request body (URL encoded):', tokenBody.toString());
+    console.log('   Token request body (URL encoded, client_secret hidden)');
     
     const tokenResponse = await fetch('https://oauth.iracing.com/oauth2/token', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
-        'Authorization': `Basic ${basicAuth}`,
+        // No Authorization header - credentials in body instead
       },
       body: tokenBody,
     });
