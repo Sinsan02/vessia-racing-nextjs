@@ -65,20 +65,17 @@ export async function GET(request: NextRequest) {
     // Documentation: https://oauth.iracing.com/oauth2/book/token_endpoint.html
     console.log('🔄 Exchanging authorization code for access token with PKCE...');
     
-    // iRacing requires Basic Authentication (client_id:client_secret encoded in base64)
-    const basicAuth = Buffer.from(`${clientId}:${clientSecret}`).toString('base64');
-    
     const tokenResponse = await fetch('https://oauth.iracing.com/oauth2/token', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
-        'Authorization': `Basic ${basicAuth}`,
       },
       body: new URLSearchParams({
         grant_type: 'authorization_code',
         code: code,
         redirect_uri: redirectUri,
-        client_id: clientId, // Required in body even with Basic Auth
+        client_id: clientId,
+        client_secret: clientSecret,
         code_verifier: codeVerifier, // PKCE code verifier
         audience: 'data-server', // Required for data API access
       }),
