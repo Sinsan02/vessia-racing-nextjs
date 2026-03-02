@@ -16,7 +16,11 @@ export async function GET(request: NextRequest) {
 
     // Check for authorization errors
     if (error) {
-      console.error('iRacing authorization error:', error);
+      console.error('❌ iRacing authorization error:', error);
+      const errorDescription = searchParams.get('error_description');
+      const errorUri = searchParams.get('error_uri');
+      console.error('   Error description:', errorDescription);
+      console.error('   Error URI:', errorUri);
       return NextResponse.redirect(
         new URL(`/profile?error=iracing_auth_failed&message=${error}`, request.url)
       );

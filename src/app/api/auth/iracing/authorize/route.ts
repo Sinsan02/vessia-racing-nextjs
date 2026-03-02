@@ -29,8 +29,7 @@ export async function GET(request: NextRequest) {
     authUrl.searchParams.set('client_id', clientId);
     authUrl.searchParams.set('redirect_uri', redirectUri);
     authUrl.searchParams.set('response_type', 'code');
-    authUrl.searchParams.set('scope', 'openid');
-    // Note: audience parameter removed - only needed for token exchange, not authorization
+    // Note: Trying without scope - iRacing might not require it for authorization
     
     // Generate and store state for CSRF protection
     const state = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
@@ -41,7 +40,6 @@ export async function GET(request: NextRequest) {
     console.log('   - client_id:', clientId);
     console.log('   - redirect_uri:', redirectUri);
     console.log('   - response_type: code');
-    console.log('   - scope: openid');
     console.log('   - state:', state);
     
     // Store state in cookie for verification later
