@@ -207,26 +207,20 @@ export async function GET(request: NextRequest) {
     const iracingCustomerId = userInfo.cust_id || userInfo.custId || userInfo.customer_id || userInfo.id;
 
     if (!iracingCustomerId) {
-      console.error('No customer ID in user info');
+      console.error('❌ No customer ID in user info');
       return NextResponse.redirect(
         new URL('/profile?error=no_customer_id', request.url)
       );
     }
 
-    // Get current user from session
-    const token = request.cookies.get('auth-token')?.value;
-    if (!token) {
-      return NextResponse.redirect(
-        new URL('/login?error=not_authenticated', request.url)
-      );
-    }
+    console.log('✅ Got iRacing customer ID:', iracingCustomerId);
 
-    // Verify token and get user
-    const { data: { user } } = await supabaseAdmin.auth.getUser(token);
-    if (!user) {
-      return NextResponse.redirect(
-        new URL('/login?error=invalid_session', request.url)
-      );
+    // Get current authenticated user from JWT
+    const authUser = getUserFromRequest(request);
+    
+    if (!authUser) {
+      console.error('❌ No authenticated user found');
+      return NextResponse.redirect(new URL('/login?error=not_authenticated', request.url));
     }
 
     // Update user's iRacing data with OAuth tokens
@@ -239,7 +233,7 @@ export async function GET(request: NextRequest) {
         iracing_token_expires_at: expiresAt.toISOString(),
         updated_at: new Date().toISOString()
       })
-      .eq('id', user.id);
+      .eq('id', authUser.userId);
 
     if (updateError) {
       console.error('Failed to update iRacing data:', updateError);
