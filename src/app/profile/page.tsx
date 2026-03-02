@@ -13,6 +13,15 @@ interface User {
   profile_picture?: string;
   iracing_customer_id?: string;
   iracing_data?: {
+    categories?: {
+      [key: string]: {
+        irating?: number;
+        safety_rating?: string;
+        license_class?: string;
+        license_level?: number;
+      };
+    };
+    // Legacy single category support
     irating?: number;
     safety_rating?: string;
     license_class?: string;
@@ -30,6 +39,7 @@ export default function Profile() {
   const [isSaving, setIsSaving] = useState(false);
   const [isDisconnecting, setIsDisconnecting] = useState(false);
   const [isSyncingStats, setIsSyncingStats] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState<string>('Road');
   const [isMobile, setIsMobile] = useState(typeof window !== 'undefined' ? window.innerWidth <= 768 : false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [successMessage, setSuccessMessage] = useState('');
@@ -95,6 +105,14 @@ export default function Profile() {
           email: userData.email || '',
           iracing_customer_id: userData.iracing_customer_id || ''
         });
+        
+        // Set default category to the first available one
+        if (userData.iracing_data?.categories) {
+          const categories = Object.keys(userData.iracing_data.categories);
+          if (categories.length > 0 && !categories.includes(selectedCategory)) {
+            setSelectedCategory(categories[0]);
+          }
+        }
       }
     } catch (error) {
       console.error('Failed to fetch user profile:', error);
@@ -694,24 +712,66 @@ export default function Profile() {
                       </div>
                       
                       {user.iracing_data ? (
-                        <div style={{display: 'grid', gap: '8px', marginBottom: '12px'}}>
-                          <div style={{display: 'flex', justifyContent: 'space-between', padding: '8px', backgroundColor: '#151515', borderRadius: '4px'}}>
-                            <span style={{color: '#888'}}>iRating:</span>
-                            <span style={{color: '#fff', fontWeight: 'bold'}}>{user.iracing_data.irating || 'N/A'}</span>
-                          </div>
-                          <div style={{display: 'flex', justifyContent: 'space-between', padding: '8px', backgroundColor: '#151515', borderRadius: '4px'}}>
-                            <span style={{color: '#888'}}>Safety Rating:</span>
-                            <span style={{color: '#fff', fontWeight: 'bold'}}>{user.iracing_data.safety_rating || 'N/A'}</span>
-                          </div>
-                          <div style={{display: 'flex', justifyContent: 'space-between', padding: '8px', backgroundColor: '#151515', borderRadius: '4px'}}>
-                            <span style={{color: '#888'}}>License:</span>
-                            <span style={{color: '#fff', fontWeight: 'bold'}}>{user.iracing_data.license_class || 'N/A'}</span>
-                          </div>
-                          {user.iracing_data_updated_at && (
-                            <p style={{color: '#666', fontSize: '0.75rem', marginTop: '4px', textAlign: 'right'}}>
-                              Last updated: {new Date(user.iracing_data_updated_at).toLocaleString('nb-NO')}
-                            </p>
+                        <div>
+                          {/* Category selector */}
+                          {user.iracing_data.categories && Object.keys(user.iracing_data.categories).length > 0 && (
+                            <div style={{marginBottom: '12px'}}>
+                              <label style={{color: '#888', fontSize: '0.85rem', display: 'block', marginBottom: '6px'}}>
+                                Kategori:
+                              </label>
+                              <select
+                                value={selectedCategory}
+                                onChange={(e) => setSelectedCategory(e.target.value)}
+                                style={{
+                                  width: '100%',
+                                  padding: '8px 12px',
+                                  backgroundColor: '#151515',
+                                  color: '#fff',
+                                  border: '1px solid #333',
+                                  borderRadius: '4px',
+                                  fontSize: '0.9rem',
+                                  cursor: 'pointer'
+                                }}
+                              >
+                                {Object.keys(user.iracing_data.categories).map((category) => (
+                                  <option key={category} value={category}>
+                                    {category}
+                                  </option>
+                                ))}
+                              </select>
+                            </div>
                           )}
+                          
+                          {/* Stats display */}
+                          {(() => {
+                            const stats = user.iracing_data.categories?.[selectedCategory] || {
+                              irating: user.iracing_data.irating,
+                              safety_rating: user.iracing_data.safety_rating,
+                              license_class: user.iracing_data.license_class
+                            };
+                            
+                            return (
+                              <div style={{display: 'grid', gap: '8px', marginBottom: '12px'}}>
+                                <div style={{display: 'flex', justifyContent: 'space-between', padding: '8px', backgroundColor: '#151515', borderRadius: '4px'}}>
+                                  <span style={{color: '#888'}}>iRating:</span>
+                                  <span style={{color: '#fff', fontWeight: 'bold'}}>{stats.irating || 'N/A'}</span>
+                                </div>
+                                <div style={{display: 'flex', justifyContent: 'space-between', padding: '8px', backgroundColor: '#151515', borderRadius: '4px'}}>
+                                  <span style={{color: '#888'}}>Safety Rating:</span>
+                                  <span style={{color: '#fff', fontWeight: 'bold'}}>{stats.safety_rating || 'N/A'}</span>
+                                </div>
+                                <div style={{display: 'flex', justifyContent: 'space-between', padding: '8px', backgroundColor: '#151515', borderRadius: '4px'}}>
+                                  <span style={{color: '#888'}}>License:</span>
+                                  <span style={{color: '#fff', fontWeight: 'bold'}}>{stats.license_class || 'N/A'}</span>
+                                </div>
+                                {user.iracing_data_updated_at && (
+                                  <p style={{color: '#666', fontSize: '0.75rem', marginTop: '4px', textAlign: 'right'}}>
+                                    Last updated: {new Date(user.iracing_data_updated_at).toLocaleString('nb-NO')}
+                                  </p>
+                                )}
+                              </div>
+                            );
+                          })()}
                         </div>
                       ) : (
                         <p style={{color: '#888', fontSize: '0.9rem', marginBottom: '12px'}}>

@@ -138,10 +138,8 @@ export async function POST(
       }
     );
 
-    let irating = 0;
-    let safetyRating = 'N/A';
-    let licenseClass = 'Rookie';
-    let licenseLevel = 1;
+    // Process stats for all categories
+    const categoryStats: any = {};
 
     if (careerInfoResponse.ok) {
       const careerInfoData = await careerInfoResponse.json();
@@ -159,23 +157,22 @@ export async function POST(
           console.log('📊 Career data structure:', JSON.stringify(careerData).substring(0, 500));
           
           if (careerData && careerData.stats && careerData.stats.length > 0) {
-            const roadStats = careerData.stats.find((s: any) => s.category === 'Road') || careerData.stats[0];
-            console.log('🏎️ Road stats:', JSON.stringify(roadStats).substring(0, 300));
-            
-            // Get iRating from road stats
-            if (roadStats.irating !== undefined) {
-              irating = roadStats.irating;
-            }
-            
-            if (roadStats.license_level !== undefined) {
-              licenseLevel = roadStats.license_level;
+            // Process each category
+            careerData.stats.forEach((categoryData: any) => {
+              const category = categoryData.category;
               const licenseClasses = ['Rookie', 'D', 'C', 'B', 'A', 'Pro', 'Pro/WC'];
-              licenseClass = licenseClasses[Math.min(licenseLevel, licenseClasses.length - 1)] || 'Rookie';
-            }
-
-            if (roadStats.safety_rating !== undefined) {
-              safetyRating = `${licenseClass} ${roadStats.safety_rating.toFixed(2)}`;
-            }
+              const licenseLevel = categoryData.license_level || 1;
+              const licenseClass = licenseClasses[Math.min(licenseLevel, licenseClasses.length - 1)] || 'Rookie';
+              
+              categoryStats[category] = {
+                irating: categoryData.irating || 0,
+                safety_rating: categoryData.safety_rating ? `${licenseClass} ${categoryData.safety_rating.toFixed(2)}` : 'N/A',
+                license_class: licenseClass,
+                license_level: licenseLevel
+              };
+            });
+            
+            console.log('✅ Processed stats for categories:', Object.keys(categoryStats).join(', '));
           } else {
             console.warn('⚠️ No stats found in career data');
           }
@@ -187,21 +184,14 @@ export async function POST(
       console.warn(`⚠️ Failed to fetch career info: ${careerInfoResponse.status}`);
     }
 
-    const stats = {
-      irating: irating,
-      safety_rating: safetyRating,
-      license_class: licenseClass,
-      license_level: licenseLevel,
-    };
+    console.log('✅ iRacing stats retrieved successfully for', Object.keys(categoryStats).length, 'categories');
 
-    console.log('✅ iRacing stats retrieved successfully:', stats);
-
-    // Update driver with new stats
+    // Update driver with new stats (all categories)
     const { error: updateError } = await supabaseAdmin
       .from('users')
       .update({
         iracing_data: {
-          ...stats,
+          categories: categoryStats,
           last_updated: new Date().toISOString()
         },
         iracing_data_updated_at: new Date().toISOString()
@@ -219,7 +209,7 @@ export async function POST(
     return NextResponse.json({
       success: true,
       message: 'iRacing stats updated successfully',
-      stats
+      stats: categoryStats
     });
   } catch (error) {
     console.error('Error refreshing iRacing stats:', error);
