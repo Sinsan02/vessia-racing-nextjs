@@ -123,10 +123,13 @@ async function fetchDriverStats(accessToken: string, customerId: string): Promis
           const profileData = await profileDataResponse.json();
           console.log('📊 Full profile data:', JSON.stringify(profileData));
           
-          if (profileData && profileData.licenses && profileData.licenses.length > 0) {
+          // Licenses are in member_info.licenses
+          const licenses = profileData.member_info?.licenses;
+          
+          if (licenses && licenses.length > 0) {
             // Process each license/category
-            profileData.licenses.forEach((licenseData: any) => {
-              const category = licenseData.category;
+            licenses.forEach((licenseData: any) => {
+              const category = licenseData.category_name; // Use category_name (e.g., "Sports Car") not category (e.g., "sports_car")
               const licenseClasses = ['Rookie', 'D', 'C', 'B', 'A', 'Pro', 'Pro/WC'];
               
               // Get license info
