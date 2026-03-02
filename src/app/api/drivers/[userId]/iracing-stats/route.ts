@@ -60,6 +60,7 @@ export async function POST(
     console.log(`🔍 Fetching stats for customer ID: ${driver.iracing_customer_id}`);
 
     // Fetch member info from iRacing Data API using OAuth token
+    // Note: iRacing API returns a link to S3-hosted data, not direct data
     const memberInfoResponse = await fetch(
       `https://members-ng.iracing.com/data/member/info?cust_ids=${driver.iracing_customer_id}`,
       {
@@ -78,10 +79,34 @@ export async function POST(
       );
     }
 
-    const memberData = await memberInfoResponse.json();
+    const memberInfoData = await memberInfoResponse.json();
+    console.log('📦 Member info response:', JSON.stringify(memberInfoData).substring(0, 200));
+    
+    // iRacing returns a link to the actual data hosted on S3
+    if (!memberInfoData.link) {
+      console.error(`❌ No data link in member info response for customer ID: ${driver.iracing_customer_id}`);
+      return NextResponse.json(
+        { error: 'Invalid response from iRacing API' },
+        { status: 500 }
+      );
+    }
+
+    console.log(`🔗 Fetching member data from S3 link...`);
+    const memberDataResponse = await fetch(memberInfoData.link);
+    
+    if (!memberDataResponse.ok) {
+      console.error(`❌ Failed to fetch member data from S3: ${memberDataResponse.status}`);
+      return NextResponse.json(
+        { error: 'Failed to fetch member data from iRacing' },
+        { status: 500 }
+      );
+    }
+
+    const memberData = await memberDataResponse.json();
+    console.log('✅ Member data fetched:', JSON.stringify(memberData).substring(0, 200));
     
     if (!memberData || !memberData.members || memberData.members.length === 0) {
-      console.error(`❌ No member data found for customer ID: ${driver.iracing_customer_id}`);
+      console.error(`❌ No members in data for customer ID: ${driver.iracing_customer_id}`);
       return NextResponse.json(
         { error: 'No iRacing data found for your account' },
         { status: 404 }
@@ -92,7 +117,8 @@ export async function POST(
     console.log(`✅ Member data retrieved: ${member.display_name || 'Unknown'}`);
 
     // Fetch career stats for license info
-    const careerResponse = await fetch(
+    // This also returns a link to S3 data
+    const careerInfoResponse = await fetch(
       `https://members-ng.iracing.com/data/stats/member_career?cust_id=${driver.iracing_customer_id}`,
       {
         headers: {
@@ -105,20 +131,32 @@ export async function POST(
     let licenseClass = 'Rookie';
     let licenseLevel = 1;
 
-    if (careerResponse.ok) {
-      const careerData = await careerResponse.json();
+    if (careerInfoResponse.ok) {
+      const careerInfoData = await careerInfoResponse.json();
       
-      if (careerData && careerData.stats && careerData.stats.length > 0) {
-        const roadStats = careerData.stats.find((s: any) => s.category === 'Road') || careerData.stats[0];
+      // Career stats also return a link to S3 data
+      if (careerInfoData.link) {
+        console.log(`🔗 Fetching career data from S3 link...`);
+        const careerDataResponse = await fetch(careerInfoData.link);
         
-        if (roadStats.license_level !== undefined) {
-          licenseLevel = roadStats.license_level;
-          const licenseClasses = ['Rookie', 'D', 'C', 'B', 'A', 'Pro', 'Pro/WC'];
-          licenseClass = licenseClasses[Math.min(licenseLevel, licenseClasses.length - 1)] || 'Rookie';
-        }
+        if (!careerDataResponse.ok) {
+          console.warn(`⚠️ Failed to fetch career data from S3: ${careerDataResponse.status}`);
+        } else {
+          const careerData = await careerDataResponse.json();
+          
+          if (careerData && careerData.stats && careerData.stats.length > 0) {
+            const roadStats = careerData.stats.find((s: any) => s.category === 'Road') || careerData.stats[0];
+            
+            if (roadStats.license_level !== undefined) {
+              licenseLevel = roadStats.license_level;
+              const licenseClasses = ['Rookie', 'D', 'C', 'B', 'A', 'Pro', 'Pro/WC'];
+              licenseClass = licenseClasses[Math.min(licenseLevel, licenseClasses.length - 1)] || 'Rookie';
+            }
 
-        if (roadStats.safety_rating !== undefined) {
-          safetyRating = `${licenseClass} ${roadStats.safety_rating.toFixed(2)}`;
+            if (roadStats.safety_rating !== undefined) {
+              safetyRating = `${licenseClass} ${roadStats.safety_rating.toFixed(2)}`;
+            }
+          }
         }
       }
     }

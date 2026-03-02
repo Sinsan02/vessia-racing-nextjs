@@ -41,8 +41,8 @@ async function fetchDriverStats(accessToken: string, customerId: string): Promis
   try {
     console.log(`🔍 Fetching stats for customer ID: ${customerId}`);
 
-    // Fetch member info
-    const memberResponse = await fetch(
+    // Fetch member info - returns a link to S3 data
+    const memberInfoResponse = await fetch(
       `https://members-ng.iracing.com/data/member/info?cust_ids=${customerId}`,
       {
         headers: {
@@ -51,22 +51,38 @@ async function fetchDriverStats(accessToken: string, customerId: string): Promis
       }
     );
 
-    if (!memberResponse.ok) {
-      console.error(`❌ Failed to fetch member info: ${memberResponse.status}`);
+    if (!memberInfoResponse.ok) {
+      console.error(`❌ Failed to fetch member info: ${memberInfoResponse.status}`);
       return null;
     }
 
-    const memberData: IRacingMemberInfo = await memberResponse.json();
+    const memberInfoData = await memberInfoResponse.json();
+    
+    // iRacing returns a link to the actual data hosted on S3
+    if (!memberInfoData.link) {
+      console.error(`❌ No data link in member info response for customer ID: ${customerId}`);
+      return null;
+    }
+
+    console.log(`🔗 Fetching member data from S3...`);
+    const memberDataResponse = await fetch(memberInfoData.link);
+    
+    if (!memberDataResponse.ok) {
+      console.error(`❌ Failed to fetch member data from S3: ${memberDataResponse.status}`);
+      return null;
+    }
+
+    const memberData: IRacingMemberInfo = await memberDataResponse.json();
     
     if (!memberData.members || memberData.members.length === 0) {
-      console.error(`❌ No member data found for customer ID: ${customerId}`);
+      console.error(`❌ No members in data for customer ID: ${customerId}`);
       return null;
     }
 
     const member = memberData.members[0];
 
-    // Fetch career stats
-    const careerResponse = await fetch(
+    // Fetch career stats - also returns a link to S3 data
+    const careerInfoResponse = await fetch(
       `https://members-ng.iracing.com/data/stats/member_career?cust_id=${customerId}`,
       {
         headers: {
@@ -79,20 +95,32 @@ async function fetchDriverStats(accessToken: string, customerId: string): Promis
     let licenseClass = 'Rookie';
     let licenseLevel = 1;
 
-    if (careerResponse.ok) {
-      const careerData: IRacingCareerStats = await careerResponse.json();
+    if (careerInfoResponse.ok) {
+      const careerInfoData = await careerInfoResponse.json();
       
-      if (careerData.stats && careerData.stats.length > 0) {
-        const roadStats = careerData.stats.find((s) => s.category === 'Road') || careerData.stats[0];
+      // Career stats also return a link to S3 data
+      if (careerInfoData.link) {
+        console.log(`🔗 Fetching career data from S3...`);
+        const careerDataResponse = await fetch(careerInfoData.link);
         
-        if (roadStats.license_level !== undefined) {
-          licenseLevel = roadStats.license_level;
-          const licenseClasses = ['Rookie', 'D', 'C', 'B', 'A', 'Pro', 'Pro/WC'];
-          licenseClass = licenseClasses[Math.min(licenseLevel, licenseClasses.length - 1)] || 'Rookie';
-        }
+        if (!careerDataResponse.ok) {
+          console.warn(`⚠️ Failed to fetch career data from S3: ${careerDataResponse.status}`);
+        } else {
+          const careerData: IRacingCareerStats = await careerDataResponse.json();
+          
+          if (careerData.stats && careerData.stats.length > 0) {
+            const roadStats = careerData.stats.find((s) => s.category === 'Road') || careerData.stats[0];
+            
+            if (roadStats.license_level !== undefined) {
+              licenseLevel = roadStats.license_level;
+              const licenseClasses = ['Rookie', 'D', 'C', 'B', 'A', 'Pro', 'Pro/WC'];
+              licenseClass = licenseClasses[Math.min(licenseLevel, licenseClasses.length - 1)] || 'Rookie';
+            }
 
-        if (roadStats.safety_rating !== undefined) {
-          safetyRating = `${licenseClass} ${roadStats.safety_rating.toFixed(2)}`;
+            if (roadStats.safety_rating !== undefined) {
+              safetyRating = `${licenseClass} ${roadStats.safety_rating.toFixed(2)}`;
+            }
+          }
         }
       }
     }
