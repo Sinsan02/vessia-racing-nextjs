@@ -75,30 +75,26 @@ export async function GET(request: NextRequest) {
     // Documentation: https://oauth.iracing.com/oauth2/book/token_endpoint.html
     console.log('🔄 Exchanging authorization code for access token with PKCE...');
     console.log('   Client ID:', clientId);
-    console.log('   Client ID length:', clientId?.length);
-    console.log('   Client Secret length:', clientSecret?.length);
+    console.log('   Client Secret (first 10 chars):', clientSecret?.substring(0, 10));
     console.log('   Code verifier length:', codeVerifier?.length);
     
-    // iRacing requires Basic Authentication (client_id:client_secret encoded in base64)
-    const basicAuth = Buffer.from(`${clientId}:${clientSecret}`).toString('base64');
-    console.log('   Basic Auth header (first 20 chars):', basicAuth.substring(0, 20) + '...');
+    // Try sending credentials in body with proper encoding
+    const tokenBody = new URLSearchParams();
+    tokenBody.append('grant_type', 'authorization_code');
+    tokenBody.append('code', code);
+    tokenBody.append('redirect_uri', redirectUri);
+    tokenBody.append('client_id', clientId);
+    tokenBody.append('client_secret', clientSecret);
+    tokenBody.append('code_verifier', codeVerifier);
     
-    const tokenBody = {
-      grant_type: 'authorization_code',
-      code: code,
-      redirect_uri: redirectUri,
-      client_id: clientId,
-      code_verifier: codeVerifier,
-    };
-    console.log('   Token request body:', JSON.stringify(tokenBody, null, 2));
+    console.log('   Token request body (URL encoded):', tokenBody.toString());
     
     const tokenResponse = await fetch('https://oauth.iracing.com/oauth2/token', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
-        'Authorization': `Basic ${basicAuth}`,
       },
-      body: new URLSearchParams(tokenBody),
+      body: tokenBody,
     });
 
     if (!tokenResponse.ok) {

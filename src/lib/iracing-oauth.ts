@@ -47,20 +47,18 @@ export async function refreshIRacingToken(userId: string): Promise<TokenRefreshR
     const clientId = process.env.IRACING_CLIENT_ID!;
     const clientSecret = process.env.IRACING_CLIENT_SECRET!;
     
-    // iRacing requires Basic Authentication
-    const basicAuth = Buffer.from(`${clientId}:${clientSecret}`).toString('base64');
+    const tokenBody = new URLSearchParams();
+    tokenBody.append('grant_type', 'refresh_token');
+    tokenBody.append('refresh_token', refreshToken);
+    tokenBody.append('client_id', clientId);
+    tokenBody.append('client_secret', clientSecret);
     
     const tokenResponse = await fetch('https://oauth.iracing.com/oauth2/token', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
-        'Authorization': `Basic ${basicAuth}`,
       },
-      body: new URLSearchParams({
-        grant_type: 'refresh_token',
-        refresh_token: refreshToken,
-        client_id: clientId,
-      }),
+      body: tokenBody,
     });
 
     if (!tokenResponse.ok) {
