@@ -54,6 +54,7 @@ export async function refreshIRacingToken(userId: string): Promise<TokenRefreshR
         refresh_token: refreshToken,
         client_id: process.env.IRACING_CLIENT_ID!,
         client_secret: process.env.IRACING_CLIENT_SECRET!,
+        audience: 'data-server', // Required for data API access
       }),
     });
 

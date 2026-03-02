@@ -62,6 +62,7 @@ export async function GET(request: NextRequest) {
         redirect_uri: redirectUri,
         client_id: clientId,
         client_secret: clientSecret,
+        audience: 'data-server', // Required for data API access
       }),
     });
 
