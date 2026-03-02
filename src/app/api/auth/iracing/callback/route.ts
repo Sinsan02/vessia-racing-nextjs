@@ -18,7 +18,7 @@ function maskClientSecret(secret: string, clientId: string): string {
 
 /**
  * Handle iRacing OAuth callback
- * Exchanges authorization code for access token
+ * Exchanges authorization code for access token using masked client_secret
  */
 export async function GET(request: NextRequest) {
   console.log('🎯 ====== CALLBACK ENDPOINT CALLED ======');
