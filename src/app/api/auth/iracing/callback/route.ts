@@ -78,6 +78,7 @@ export async function GET(request: NextRequest) {
         grant_type: 'authorization_code',
         code: code,
         redirect_uri: redirectUri,
+        client_id: clientId, // Required in body even with Basic Auth
         code_verifier: codeVerifier, // PKCE code verifier
         audience: 'data-server', // Required for data API access
       }),
