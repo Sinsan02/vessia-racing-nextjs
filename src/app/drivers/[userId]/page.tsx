@@ -39,8 +39,6 @@ export default function DriverProfile() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [isMobile, setIsMobile] = useState(typeof window !== 'undefined' ? window.innerWidth <= 768 : false);
-  const [refreshingStats, setRefreshingStats] = useState(false);
-  const [isAdmin, setIsAdmin] = useState(false);
 
   useEffect(() => {
     const checkScreenSize = () => {
@@ -51,21 +49,10 @@ export default function DriverProfile() {
     
     if (userId) {
       fetchDriverProfile();
-      checkAdmin();
     }
     
     return () => window.removeEventListener('resize', checkScreenSize);
   }, [userId]);
-
-  const checkAdmin = async () => {
-    try {
-      const res = await fetch("/api/auth/me", { credentials: "include" });
-      const data = await res.json();
-      setIsAdmin(data?.role === "admin");
-    } catch {
-      setIsAdmin(false);
-    }
-  };
 
   const fetchDriverProfile = async () => {
     try {
@@ -79,29 +66,6 @@ export default function DriverProfile() {
       setError(err.message || 'Failed to load driver profile');
     } finally {
       setLoading(false);
-    }
-  };
-
-  const refreshIRacingStats = async () => {
-    if (!driver?.iracing_customer_id || refreshingStats) return;
-    
-    setRefreshingStats(true);
-    try {
-      const response = await fetch(`/api/drivers/${userId}/iracing-stats`, {
-        method: 'POST',
-        credentials: 'include'
-      });
-      
-      if (response.ok) {
-        await fetchDriverProfile(); // Refresh the entire profile
-      } else {
-        const data = await response.json();
-        setError(data.error || 'Failed to refresh stats');
-      }
-    } catch (err) {
-      setError('Error refreshing iRacing stats');
-    } finally {
-      setRefreshingStats(false);
     }
   };
 
@@ -302,44 +266,14 @@ export default function DriverProfile() {
             marginBottom: '24px',
             border: '2px solid #3EA822'
           }}>
-            <div style={{
-              display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              marginBottom: '24px',
-              flexWrap: 'wrap',
-              gap: '12px'
+            <h2 style={{
+              fontSize: isMobile ? '1.5rem' : '2rem',
+              color: '#3EA822',
+              fontWeight: 'bold',
+              marginBottom: '24px'
             }}>
-              <h2 style={{
-                fontSize: isMobile ? '1.5rem' : '2rem',
-                color: '#3EA822',
-                fontWeight: 'bold',
-                margin: 0
-              }}>
-                iRacing Statistics
-              </h2>
-              
-              {isAdmin && (
-                <button
-                  onClick={refreshIRacingStats}
-                  disabled={refreshingStats}
-                  style={{
-                    padding: '8px 16px',
-                    backgroundColor: refreshingStats ? '#555' : '#3EA822',
-                    color: '#fff',
-                    border: 'none',
-                    borderRadius: '6px',
-                    fontSize: '0.9rem',
-                    cursor: refreshingStats ? 'not-allowed' : 'pointer',
-                    transition: 'background-color 0.3s ease'
-                  }}
-                  onMouseEnter={(e) => !refreshingStats && (e.currentTarget.style.backgroundColor = '#4db82e')}
-                  onMouseLeave={(e) => !refreshingStats && (e.currentTarget.style.backgroundColor = '#3EA822')}
-                >
-                  {refreshingStats ? '⟳ Refreshing...' : '⟳ Refresh Stats'}
-                </button>
-              )}
-            </div>
+              iRacing Statistics
+            </h2>
 
             {driver.iracing_data ? (
               <div style={{
@@ -406,11 +340,6 @@ export default function DriverProfile() {
                 fontSize: '1.1rem'
               }}>
                 No iRacing stats available yet
-                {isAdmin && (
-                  <div style={{ marginTop: '12px', fontSize: '0.9rem' }}>
-                    Click "Refresh Stats" to fetch data from iRacing
-                  </div>
-                )}
               </div>
             )}
 
@@ -425,24 +354,6 @@ export default function DriverProfile() {
               </div>
             )}
           </div>
-        ) : (
-          isAdmin && (
-            <div style={{
-              backgroundColor: 'rgba(26, 26, 26, 0.95)',
-              borderRadius: '12px',
-              padding: isMobile ? '24px' : '32px',
-              marginBottom: '24px',
-              border: '2px solid #f44',
-              textAlign: 'center'
-            }}>
-              <div style={{ fontSize: '1.2rem', color: '#f44', marginBottom: '8px' }}>
-                No iRacing Customer ID configured
-              </div>
-              <div style={{ fontSize: '0.9rem', color: '#888' }}>
-                Add an iRacing Customer ID to this user's profile to display stats
-              </div>
-            </div>
-          )
         )}
       </div>
     </div>

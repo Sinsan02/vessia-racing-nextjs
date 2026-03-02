@@ -29,6 +29,7 @@ export default function Profile() {
   const [hasChanges, setHasChanges] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [isDisconnecting, setIsDisconnecting] = useState(false);
+  const [isSyncingStats, setIsSyncingStats] = useState(false);
   const [isMobile, setIsMobile] = useState(typeof window !== 'undefined' ? window.innerWidth <= 768 : false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [successMessage, setSuccessMessage] = useState('');
@@ -56,9 +57,11 @@ export default function Profile() {
     const error = urlParams.get('error');
     
     if (success === 'iracing_connected') {
-      setSuccessMessage('🎉 Successfully connected to iRacing! Your stats will be synced automatically.');
+      setSuccessMessage('🎉 Successfully connected to iRacing! Fetching your stats...');
       // Clear URL params
       window.history.replaceState({}, '', '/profile');
+      // Automatically fetch stats after connection
+      setTimeout(() => syncIRacingStats(), 1000);
     } else if (error) {
       const errorMessages: { [key: string]: string } = {
         'iracing_auth_failed': '❌ Failed to connect to iRacing. Please try again.',
@@ -135,7 +138,35 @@ export default function Profile() {
       console.error('Error disconnecting iRacing:', error);
       setErrorMessage('❌ En feil oppstod. Prøv igjen.');
     } finally {
-      setIsDisconnecting(false);
+    
+
+  const syncIRacingStats = async () => {
+    if (!user?.id) return;
+
+    setIsSyncingStats(true);
+    setErrorMessage('');
+    setSuccessMessage('');
+
+    try {
+      const response = await fetch(`/api/drivers/${user.id}/iracing-stats`, {
+        method: 'POST'
+      });
+
+      if (response.ok) {
+        setSuccessMessage('✅ iRacing stats synkronisert!');
+        // Refresh user data to show new stats
+        await fetchUserProfile();
+      } else {
+        const errorData = await response.json();
+        setErrorMessage(errorData.error || '❌ Kunne ikke hente iRacing stats. Prøv igjen.');
+      }
+    } catch (error) {
+      console.error('Error syncing iRacing stats:', error);
+      setErrorMessage('❌ En feil oppstod ved synkronisering. Prøv igjen.');
+    } finally {
+      setIsSyncingStats(false);
+    }
+  };  setIsDisconnecting(false);
     }
   };
 
@@ -628,13 +659,35 @@ export default function Profile() {
                       <div style={{
                         padding: '15px',
                         backgroundColor: '#0a0a0a',
-                        borderRadius: '5px',
-                        marginBottom: '10px',
-                        border: '1px solid #2d2d2d'
-                      }}>
-                        <p style={{color: '#3EA822', fontWeight: 'bold', marginBottom: '10px'}}>
-                          ✅ Connected (ID: {user.iracing_customer_id})
-                        </p>
+                        bord⏳ Ingen stats ennå. Klikk &quot;Synkroniser nå&quot; for å hente dine stats.
+                          </p>
+                        )}
+                      </div>
+                      <div style={{display: 'flex', flexDirection: 'column', gap: '10px'}}>
+                        <button
+                          onClick={syncIRacingStats}
+                          disabled={isSyncingStats}
+                          style={{
+                            width: '100%',
+                            padding: '10px 16px',
+                            backgroundColor: isSyncingStats ? '#666' : '#3EA822',
+                            color: '#fff',
+                            border: 'none',
+                            borderRadius: '5px',
+                            fontSize: '0.9rem',
+                            fontWeight: 'bold',
+                            cursor: isSyncingStats ? 'not-allowed' : 'pointer',
+                            transition: 'background-color 0.3s ease',
+                            opacity: isSyncingStats ? 0.6 : 1,
+                            marginBottom: '5px'
+                          }}
+                          onMouseEnter={(e) => !isSyncingStats && (e.currentTarget.style.backgroundColor = '#2d8518')}
+                          onMouseLeave={(e) => !isSyncingStats && (e.currentTarget.style.backgroundColor = '#3EA822')}
+                        >
+                          {isSyncingStats ? '⏳ Synkroniserer...' : '🔄 Synkroniser nå'}
+                        </button>
+                        <p style={{color: '#888', fontSize: '0.85rem'}}>
+                          📊 Stats oppdateres automatisk hver natt kl 02:00
                         
                         {user.iracing_data ? (
                           <div style={{display: 'grid', gap: '8px', marginTop: '12px'}}>
