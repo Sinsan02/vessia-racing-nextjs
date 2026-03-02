@@ -62,6 +62,7 @@ export default function Profile() {
     } else if (error) {
       const errorMessages: { [key: string]: string } = {
         'iracing_auth_failed': '❌ Failed to connect to iRacing. Please try again.',
+        'iracing_config_error': '❌ iRacing OAuth not configured on server. Contact administrator.',
         'token_exchange_failed': '❌ Authentication failed. Please try again.',
         'no_access_token': '❌ Failed to receive access token. Please try again.',
         'userinfo_failed': '❌ Could not fetch iRacing profile. Please try again.',

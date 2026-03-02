@@ -16,9 +16,10 @@ export async function GET(request: NextRequest) {
     console.log('   Redirect URI:', redirectUri);
 
     if (!clientId || !redirectUri) {
-      return NextResponse.json(
-        { error: 'iRacing OAuth not configured' },
-        { status: 500 }
+      console.error('❌ iRacing OAuth environment variables not configured!');
+      console.error('   Missing:', !clientId ? 'IRACING_CLIENT_ID' : '', !redirectUri ? 'IRACING_REDIRECT_URI' : '');
+      return NextResponse.redirect(
+        new URL('/profile?error=iracing_config_error', request.url)
       );
     }
 
@@ -55,10 +56,9 @@ export async function GET(request: NextRequest) {
 
     return response;
   } catch (error) {
-    console.error('Error starting iRacing OAuth:', error);
-    return NextResponse.json(
-      { error: 'Failed to start authorization' },
-      { status: 500 }
+    console.error('❌ Error starting iRacing OAuth:', error);
+    return NextResponse.redirect(
+      new URL('/profile?error=iracing_auth_failed', request.url)
     );
   }
 }
