@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { supabaseAdmin } from '@/lib/supabase';
+import { getUserFromRequest } from '@/lib/auth';
 import crypto from 'crypto';
 
 export const dynamic = 'force-dynamic';
@@ -165,18 +166,14 @@ export async function GET(request: NextRequest) {
     if (!userInfoResponse.ok) {
       const errorText = await userInfoResponse.text();
       console.error('❌ Failed to fetch user info from Data API:', userInfoResponse.status, errorText);
-      console.log('⚠️ Trying alternative: decode access token for customer ID...');
+      console.log('⚠️ Proceeding without customer ID - will fetch on profile page after tokens are saved');
       
-      // Alternative: Try to get customer ID from token response or decode JWT
-      // For now, let's save the tokens and redirect - user can manually sync later
-      console.log('⚠️ Proceeding without customer ID - will try to fetch on profile page');
+      // Get current authenticated user from JWT
+      const authUser = getUserFromRequest(request);
       
-      // Get current user from our database
-      const { data: { user }, error: authError } = await supabaseAdmin.auth.getUser(request.cookies.get('auth_token')?.value || '');
-      
-      if (authError || !user) {
-        console.error('❌ Could not get authenticated user:', authError);
-        return NextResponse.redirect(new URL('/profile?error=auth_required', request.url));
+      if (!authUser) {
+        console.error('❌ No authenticated user found');
+        return NextResponse.redirect(new URL('/login?error=auth_required', request.url));
       }
 
       // Save tokens without customer ID for now
@@ -187,15 +184,17 @@ export async function GET(request: NextRequest) {
           iracing_refresh_token: refreshToken,
           iracing_token_expires_at: expiresAt.toISOString(),
         })
-        .eq('id', user.id);
+        .eq('id', authUser.userId);
 
       if (updateError) {
         console.error('❌ Failed to save iRacing tokens:', updateError);
         return NextResponse.redirect(new URL('/profile?error=save_failed', request.url));
       }
 
+      console.log('✅ Tokens saved - customer ID will be fetched on profile page');
+      
       // Clear OAuth cookies
-      const response = NextResponse.redirect(new URL('/profile?warning=partial_success', request.url));
+      const response = NextResponse.redirect(new URL('/profile?success=iracing_connected', request.url));
       response.cookies.delete('iracing_oauth_state');
       response.cookies.delete('iracing_code_verifier');
       return response;

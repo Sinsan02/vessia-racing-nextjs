@@ -52,7 +52,7 @@ export async function GET(request: NextRequest) {
     authUrl.searchParams.set('response_type', 'code');
     authUrl.searchParams.set('code_challenge', codeChallenge);
     authUrl.searchParams.set('code_challenge_method', 'S256');
-    authUrl.searchParams.set('scope', 'iracing.profile'); // Request profile scope for user info
+    authUrl.searchParams.set('scope', 'iracing.auth'); // Required for Data API access
     
     // Generate and store state for CSRF protection
     const state = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
@@ -64,7 +64,7 @@ export async function GET(request: NextRequest) {
     console.log('   - redirect_uri:', redirectUri);
     console.log('   - response_type: code');
     console.log('   - code_challenge_method: S256');
-    console.log('   - scope: iracing.profile');
+    console.log('   - scope: iracing.auth');
     console.log('   - state:', state);
     
     // Store state and code_verifier in cookies for verification later
