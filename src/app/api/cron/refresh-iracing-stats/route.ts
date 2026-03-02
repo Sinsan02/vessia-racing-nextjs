@@ -72,14 +72,27 @@ async function fetchDriverStats(accessToken: string, customerId: string): Promis
       return null;
     }
 
-    const memberData: IRacingMemberInfo = await memberDataResponse.json();
+    const s3Data = await memberDataResponse.json();
+    console.log('📊 S3 data structure:', JSON.stringify(s3Data).substring(0, 300));
     
-    if (!memberData.members || memberData.members.length === 0) {
-      console.error(`❌ No members in data for customer ID: ${customerId}`);
+    // S3 data might have different formats
+    let member;
+    if (s3Data.members && Array.isArray(s3Data.members) && s3Data.members.length > 0) {
+      // Format 1: { members: [...] }
+      member = s3Data.members[0];
+    } else if (Array.isArray(s3Data) && s3Data.length > 0) {
+      // Format 2: Direct array
+      member = s3Data[0];
+    } else if (s3Data.cust_id || s3Data.display_name) {
+      // Format 3: Direct member object
+      member = s3Data;
+    } else {
+      console.error(`❌ Unexpected S3 data format for customer ID: ${customerId}`);
+      console.error('S3 data:', JSON.stringify(s3Data));
       return null;
     }
 
-    const member = memberData.members[0];
+    console.log(`✅ Member: ${member.display_name || 'Unknown'}, iRating: ${member.irating || 'N/A'}`);
 
     // Fetch career stats - also returns a link to S3 data
     const careerInfoResponse = await fetch(
