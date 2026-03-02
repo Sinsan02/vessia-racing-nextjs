@@ -39,6 +39,9 @@ export default function Admin() {
   const [stats, setStats] = useState({ totalUsers: 0, totalAdmins: 0, totalDrivers: 0 });
   const [activeTab, setActiveTab] = useState('user-management');
   const [selectedLeague, setSelectedLeague] = useState('');
+  const [iracingUsers, setIracingUsers] = useState<any[]>([]);
+  const [isRefreshing, setIsRefreshing] = useState(false);
+  const [refreshMessage, setRefreshMessage] = useState('');
   
   // Form states
   const [leagueName, setLeagueName] = useState('');
@@ -62,6 +65,7 @@ export default function Admin() {
     fetchUsers();
     fetchLeagues();
     fetchAchievements();
+    fetchIracingUsers();
   }, []);
 
   const fetchUsers = async () => {
@@ -94,6 +98,49 @@ export default function Admin() {
       }
     } catch (error) {
       console.error('Failed to fetch leagues:', error);
+    }
+  };
+
+  const fetchIracingUsers = async () => {
+    try {
+      const response = await fetch('/api/admin/users', {
+        credentials: 'include'
+      });
+      const data = await response.json();
+      if (data.users) {
+        // Filter users with iRacing connections
+        const iracingConnected = data.users.filter((u: any) => u.iracing_customer_id);
+        setIracingUsers(iracingConnected);
+      }
+    } catch (error) {
+      console.error('Failed to fetch iRacing users:', error);
+    }
+  };
+
+  const refreshAllIracingStats = async () => {
+    setIsRefreshing(true);
+    setRefreshMessage('');
+    
+    try {
+      const response = await fetch('/api/cron/refresh-iracing-stats', {
+        method: 'POST',
+        credentials: 'include'
+      });
+      
+      const data = await response.json();
+      
+      if (data.success) {
+        setRefreshMessage(`✅ Successfully updated ${data.updated} of ${data.total} drivers`);
+        // Refresh the list
+        await fetchIracingUsers();
+      } else {
+        setRefreshMessage(`❌ Failed: ${data.error || 'Unknown error'}`);
+      }
+    } catch (error) {
+      console.error('Failed to refresh iRacing stats:', error);
+      setRefreshMessage('❌ Failed to refresh stats');
+    } finally {
+      setIsRefreshing(false);
     }
   };
 
@@ -793,6 +840,24 @@ export default function Admin() {
               }}
             >
               🏆 Accomplishment Management
+            </button>
+            <button 
+              className={`tab-button ${activeTab === 'iracing-management' ? 'active' : ''}`}
+              onClick={() => setActiveTab('iracing-management')}
+              style={{
+                padding: '12px 20px',
+                backgroundColor: activeTab === 'iracing-management' ? '#3EA822' : '#2a2a2a',
+                color: '#fff',
+                border: 'none',
+                borderRadius: '8px',
+                cursor: 'pointer',
+                fontSize: '1rem',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '8px'
+              }}
+            >
+              🏁 iRacing Stats
             </button>
           </div>
 
@@ -1827,6 +1892,165 @@ export default function Admin() {
                     ))}
                   </div>
                 )}
+              </div>
+            </div>
+          )}
+
+          {/* iRacing Stats Management Tab */}
+          {activeTab === 'iracing-management' && (
+            <div className="tab-content">
+              <div style={{maxWidth: '1200px', margin: '0 auto'}}>
+                <h2 style={{color: '#3EA822', textAlign: 'center', marginBottom: '30px', fontSize: '2rem'}}>
+                  🏁 iRacing Stats Management
+                </h2>
+
+                {/* Refresh All Button */}
+                <div style={{marginBottom: '30px', textAlign: 'center'}}>
+                  <button
+                    onClick={refreshAllIracingStats}
+                    disabled={isRefreshing}
+                    style={{
+                      padding: '15px 30px',
+                      backgroundColor: isRefreshing ? '#666' : '#3EA822',
+                      color: '#fff',
+                      border: 'none',
+                      borderRadius: '8px',
+                      fontSize: '1.1rem',
+                      fontWeight: 'bold',
+                      cursor: isRefreshing ? 'not-allowed' : 'pointer',
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '10px',
+                      opacity: isRefreshing ? 0.6 : 1
+                    }}
+                  >
+                    {isRefreshing ? '⏳ Refreshing...' : '🔄 Refresh All iRacing Stats'}
+                  </button>
+                  
+                  {refreshMessage && (
+                    <p style={{
+                      marginTop: '15px',
+                      color: refreshMessage.includes('✅') ? '#3EA822' : '#ff4444',
+                      fontSize: '1rem',
+                      fontWeight: 'bold'
+                    }}>
+                      {refreshMessage}
+                    </p>
+                  )}
+                </div>
+
+                {/* Info Box */}
+                <div style={{
+                  backgroundColor: '#1a1a1a',
+                  padding: '20px',
+                  borderRadius: '10px',
+                  marginBottom: '30px',
+                  border: '1px solid #3EA822'
+                }}>
+                  <h3 style={{color: '#3EA822', marginBottom: '15px', display: 'flex', alignItems: 'center', gap: '10px'}}>
+                    ℹ️ Information
+                  </h3>
+                  <ul style={{color: '#ccc', lineHeight: '1.8', margin: 0, paddingLeft: '20px'}}>
+                    <li>Stats are automatically updated every night at 2:00 AM UTC</li>
+                    <li>Manual refresh fetches latest data from iRacing for all connected users</li>
+                    <li>Only users with active OAuth connections will be updated</li>
+                    <li>Refresh tokens are used to authenticate without re-login</li>
+                    <li>Total connected users: <strong style={{color: '#3EA822'}}>{iracingUsers.length}</strong></li>
+                  </ul>
+                </div>
+
+                {/* Connected Users List */}
+                <div style={{
+                  backgroundColor: '#1a1a1a',
+                  padding: '20px',
+                  borderRadius: '10px',
+                  border: '1px solid #2a2a2a'
+                }}>
+                  <h3 style={{color: '#3EA822', marginBottom: '20px'}}>
+                    Connected Users ({iracingUsers.length})
+                  </h3>
+
+                  {iracingUsers.length === 0 ? (
+                    <p style={{color: '#888', textAlign: 'center', padding: '40px 0'}}>
+                      No users have connected their iRacing accounts yet.
+                    </p>
+                  ) : (
+                    <div style={{display: 'grid', gap: '15px'}}>
+                      {iracingUsers.map((user: any) => (
+                        <div
+                          key={user.id}
+                          style={{
+                            backgroundColor: '#0a0a0a',
+                            padding: '20px',
+                            borderRadius: '8px',
+                            border: '1px solid #2a2a2a',
+                            display: 'flex',
+                            justifyContent: 'space-between',
+                            alignItems: 'center',
+                            flexWrap: 'wrap',
+                            gap: '15px'
+                          }}
+                        >
+                          <div style={{flex: '1', minWidth: '200px'}}>
+                            <h4 style={{color: '#fff', margin: '0 0 8px 0', fontSize: '1.1rem'}}>
+                              {user.name}
+                            </h4>
+                            <p style={{color: '#888', margin: '0', fontSize: '0.9rem'}}>
+                              🆔 iRacing ID: {user.iracing_customer_id || 'N/A'}
+                            </p>
+                            {user.iracing_data_updated_at && (
+                              <p style={{color: '#666', margin: '5px 0 0 0', fontSize: '0.85rem'}}>
+                                Last updated: {new Date(user.iracing_data_updated_at).toLocaleString('nb-NO')}
+                              </p>
+                            )}
+                          </div>
+
+                          {user.iracing_data && (
+                            <div style={{
+                              display: 'flex',
+                              gap: '15px',
+                              flexWrap: 'wrap'
+                            }}>
+                              <div style={{
+                                backgroundColor: '#151515',
+                                padding: '10px 15px',
+                                borderRadius: '6px',
+                                textAlign: 'center'
+                              }}>
+                                <div style={{color: '#888', fontSize: '0.8rem', marginBottom: '4px'}}>iRating</div>
+                                <div style={{color: '#3EA822', fontWeight: 'bold', fontSize: '1.1rem'}}>
+                                  {user.iracing_data.irating || 'N/A'}
+                                </div>
+                              </div>
+                              <div style={{
+                                backgroundColor: '#151515',
+                                padding: '10px 15px',
+                                borderRadius: '6px',
+                                textAlign: 'center'
+                              }}>
+                                <div style={{color: '#888', fontSize: '0.8rem', marginBottom: '4px'}}>Safety</div>
+                                <div style={{color: '#3EA822', fontWeight: 'bold', fontSize: '1.1rem'}}>
+                                  {user.iracing_data.safety_rating || 'N/A'}
+                                </div>
+                              </div>
+                              <div style={{
+                                backgroundColor: '#151515',
+                                padding: '10px 15px',
+                                borderRadius: '6px',
+                                textAlign: 'center'
+                              }}>
+                                <div style={{color: '#888', fontSize: '0.8rem', marginBottom: '4px'}}>License</div>
+                                <div style={{color: '#3EA822', fontWeight: 'bold', fontSize: '1.1rem'}}>
+                                  {user.iracing_data.license_class || 'N/A'}
+                                </div>
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
           )}

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { supabaseAdmin } from '@/lib/supabase';
 import { getValidIRacingToken } from '@/lib/iracing-oauth';
+import { getUserFromRequest } from '@/lib/auth';
 
 /**
  * Cron job endpoint to refresh iRacing stats for all drivers
@@ -111,13 +112,32 @@ async function fetchDriverStats(accessToken: string, customerId: string): Promis
 
 export async function GET(request: NextRequest) {
   try {
-    // Verify the request is authorized (cron secret or admin)
+    // Verify the request is authorized (cron secret or admin user)
     const authHeader = request.headers.get('authorization');
     const cronSecret = process.env.CRON_SECRET;
     
-    // Check if it's a cron job (with secret) or admin request
-    if (cronSecret && authHeader !== `Bearer ${cronSecret}`) {
-      // If CRON_SECRET is set but doesn't match, reject
+    let isAuthorized = false;
+    
+    // Check if it's a cron job with valid secret
+    if (cronSecret && authHeader === `Bearer ${cronSecret}`) {
+      isAuthorized = true;
+    } else {
+      // Check if it's an admin user request
+      const userPayload = getUserFromRequest(request);
+      if (userPayload) {
+        const { data: user } = await supabaseAdmin
+          .from('users')
+          .select('role')
+          .eq('id', userPayload.userId)
+          .single();
+        
+        if (user && user.role === 'admin') {
+          isAuthorized = true;
+        }
+      }
+    }
+    
+    if (!isAuthorized) {
       return NextResponse.json(
         { error: 'Unauthorized' },
         { status: 401 }

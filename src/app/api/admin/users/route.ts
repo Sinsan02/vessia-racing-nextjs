@@ -8,7 +8,7 @@ export async function GET(request: NextRequest) {
 
     const { data: users, error } = await supabaseAdmin
       .from('users')
-      .select('id, full_name, email, gamertag, experience_level, role, is_driver, created_at')
+      .select('id, full_name, email, gamertag, experience_level, role, is_driver, created_at, iracing_customer_id, iracing_data, iracing_data_updated_at')
       .order('created_at', { ascending: false });
 
     if (error) {
@@ -25,7 +25,10 @@ export async function GET(request: NextRequest) {
       experience: user.experience_level,
       role: user.role,
       is_driver: user.is_driver,
-      created_at: user.created_at
+      created_at: user.created_at,
+      iracing_customer_id: user.iracing_customer_id,
+      iracing_data: user.iracing_data,
+      iracing_data_updated_at: user.iracing_data_updated_at
     }));
 
     return NextResponse.json({ users: transformedUsers });

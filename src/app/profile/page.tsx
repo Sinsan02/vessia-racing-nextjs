@@ -28,6 +28,7 @@ export default function Profile() {
   const [isEditing, setIsEditing] = useState(false);
   const [hasChanges, setHasChanges] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
+  const [isDisconnecting, setIsDisconnecting] = useState(false);
   const [isMobile, setIsMobile] = useState(typeof window !== 'undefined' ? window.innerWidth <= 768 : false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [successMessage, setSuccessMessage] = useState('');
@@ -105,6 +106,35 @@ export default function Profile() {
       [field]: value
     }));
     setHasChanges(true);
+  };
+
+  const handleDisconnectIRacing = async () => {
+    if (!confirm('Er du sikker på at du vil koble fra iRacing? All synkronisert data vil bli fjernet.')) {
+      return;
+    }
+
+    setIsDisconnecting(true);
+    setErrorMessage('');
+    setSuccessMessage('');
+
+    try {
+      const response = await fetch('/api/auth/iracing/disconnect', {
+        method: 'POST'
+      });
+
+      if (response.ok) {
+        setSuccessMessage('✅ iRacing-koblingen er fjernet');
+        // Refresh user data
+        await fetchUserProfile();
+      } else {
+        setErrorMessage('❌ Kunne ikke fjerne iRacing-kobling. Prøv igjen.');
+      }
+    } catch (error) {
+      console.error('Error disconnecting iRacing:', error);
+      setErrorMessage('❌ En feil oppstod. Prøv igjen.');
+    } finally {
+      setIsDisconnecting(false);
+    }
   };
 
   const handleImageUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -630,9 +660,32 @@ export default function Profile() {
                           </p>
                         )}
                       </div>
-                      <p style={{color: '#888', fontSize: '0.85rem'}}>
-                        📊 Stats are automatically updated daily at 2:00 AM
-                      </p>
+                      <div style={{display: 'flex', flexDirection: 'column', gap: '10px'}}>
+                        <p style={{color: '#888', fontSize: '0.85rem'}}>
+                          📊 Stats are automatically updated daily at 2:00 AM
+                        </p>
+                        <button
+                          onClick={handleDisconnectIRacing}
+                          disabled={isDisconnecting}
+                          style={{
+                            width: '100%',
+                            padding: '10px 16px',
+                            backgroundColor: isDisconnecting ? '#666' : '#d32f2f',
+                            color: '#fff',
+                            border: 'none',
+                            borderRadius: '5px',
+                            fontSize: '0.9rem',
+                            fontWeight: 'bold',
+                            cursor: isDisconnecting ? 'not-allowed' : 'pointer',
+                            transition: 'background-color 0.3s ease',
+                            opacity: isDisconnecting ? 0.6 : 1
+                          }}
+                          onMouseEnter={(e) => !isDisconnecting && (e.currentTarget.style.backgroundColor = '#b71c1c')}
+                          onMouseLeave={(e) => !isDisconnecting && (e.currentTarget.style.backgroundColor = '#d32f2f')}
+                        >
+                          {isDisconnecting ? '⏳ Fjerner...' : '🔌 Koble fra iRacing'}
+                        </button>
+                      </div>
                     </div>
                   ) : (
                     <div>
