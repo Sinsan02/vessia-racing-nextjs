@@ -24,22 +24,6 @@ const rajdhani = Rajdhani({
 export const metadata: Metadata = {
   title: "Vessia Racing",
   description: "Professional racing team and league management",
-  icons: {
-    icon: '/viper_scull_black_bg.png',
-    apple: '/viper_scull_black_bg.png',
-  },
-  openGraph: {
-    title: "Vessia Racing",
-    description: "Professional racing team and league management",
-    images: ['/viper_scull_black_bg.png'],
-    type: 'website',
-  },
-  twitter: {
-    card: 'summary',
-    title: "Vessia Racing",
-    description: "Professional racing team and league management",
-    images: ['/viper_scull_black_bg.png'],
-  },
 };
 
 export const viewport = {
@@ -59,12 +43,7 @@ export default function RootLayout({
   return (
     <html lang="en" style={{ backgroundColor: '#0a0a0a', height: '100%' }}>
       <head>
-        <link rel="icon" href="/viper_scull_black_bg.png?v=2" type="image/png" />
-        <link rel="shortcut icon" href="/viper_scull_black_bg.png?v=2" type="image/png" />
         <meta name="theme-color" content="#0a0a0a" />
-        <meta property="og:image" content="/viper_scull_black_bg.png" />
-        <meta name="twitter:image" content="/viper_scull_black_bg.png" />
-        <link rel="apple-touch-icon" href="/viper_scull_black_bg.png?v=2" />
         <link rel="preload" as="image" href="/images/decorative/Screenshot_2025-11-23_180245.png" />
         <link rel="preload" as="image" href="/images/decorative/Screenshot_2025-10-11_170801.png" />
         <link rel="preload" as="image" href="/images/decorative/Screenshot_2025-11-15_150823.png" />
