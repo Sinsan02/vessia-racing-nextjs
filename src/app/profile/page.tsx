@@ -111,11 +111,17 @@ export default function Profile() {
           iracing_customer_id: userData.iracing_customer_id || ''
         });
         
-        // Set default category to the first available one
+        // Set default category - prioritize Sports Car, then Formula Car, then first available
         if (userData.iracing_data?.categories) {
           const categories = Object.keys(userData.iracing_data.categories);
           if (categories.length > 0 && !categories.includes(selectedCategory)) {
-            setSelectedCategory(categories[0]);
+            if (categories.includes('Sports Car')) {
+              setSelectedCategory('Sports Car');
+            } else if (categories.includes('Formula Car')) {
+              setSelectedCategory('Formula Car');
+            } else {
+              setSelectedCategory(categories[0]);
+            }
           }
         }
       }
@@ -722,7 +728,7 @@ export default function Profile() {
                           {user.iracing_data.categories && Object.keys(user.iracing_data.categories).length > 0 && (
                             <div style={{marginBottom: '12px'}}>
                               <label style={{color: '#888', fontSize: '0.85rem', display: 'block', marginBottom: '6px'}}>
-                                Kategori:
+                                Category:
                               </label>
                               <select
                                 value={selectedCategory}
@@ -738,7 +744,14 @@ export default function Profile() {
                                   cursor: 'pointer'
                                 }}
                               >
-                                {Object.keys(user.iracing_data.categories).map((category) => (
+                                {Object.keys(user.iracing_data.categories).sort((a, b) => {
+                                  // Sports Car first, Formula Car second, rest alphabetically
+                                  if (a === 'Sports Car') return -1;
+                                  if (b === 'Sports Car') return 1;
+                                  if (a === 'Formula Car') return -1;
+                                  if (b === 'Formula Car') return 1;
+                                  return a.localeCompare(b);
+                                }).map((category) => (
                                   <option key={category} value={category}>
                                     {getCategoryDisplayName(category)}
                                   </option>
@@ -763,11 +776,9 @@ export default function Profile() {
                                 </div>
                                 <div style={{display: 'flex', justifyContent: 'space-between', padding: '8px', backgroundColor: '#151515', borderRadius: '4px'}}>
                                   <span style={{color: '#888'}}>Safety Rating:</span>
-                                  <span style={{color: '#fff', fontWeight: 'bold'}}>{stats.safety_rating || 'N/A'}</span>
-                                </div>
-                                <div style={{display: 'flex', justifyContent: 'space-between', padding: '8px', backgroundColor: '#151515', borderRadius: '4px'}}>
-                                  <span style={{color: '#888'}}>License:</span>
-                                  <span style={{color: '#fff', fontWeight: 'bold'}}>{stats.license_class || 'N/A'}</span>
+                                  <span style={{color: '#fff', fontWeight: 'bold'}}>
+                                    {stats.license_class && stats.safety_rating ? `${stats.license_class} ${stats.safety_rating}` : (stats.safety_rating || 'N/A')}
+                                  </span>
                                 </div>
                                 {user.iracing_data_updated_at && (
                                   <p style={{color: '#666', fontSize: '0.75rem', marginTop: '4px', textAlign: 'right'}}>

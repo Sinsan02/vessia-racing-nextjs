@@ -2011,39 +2011,56 @@ export default function Admin() {
                               gap: '15px',
                               flexWrap: 'wrap'
                             }}>
-                              <div style={{
-                                backgroundColor: '#151515',
-                                padding: '10px 15px',
-                                borderRadius: '6px',
-                                textAlign: 'center'
-                              }}>
-                                <div style={{color: '#888', fontSize: '0.8rem', marginBottom: '4px'}}>iRating</div>
-                                <div style={{color: '#3EA822', fontWeight: 'bold', fontSize: '1.1rem'}}>
-                                  {user.iracing_data.irating || 'N/A'}
-                                </div>
-                              </div>
-                              <div style={{
-                                backgroundColor: '#151515',
-                                padding: '10px 15px',
-                                borderRadius: '6px',
-                                textAlign: 'center'
-                              }}>
-                                <div style={{color: '#888', fontSize: '0.8rem', marginBottom: '4px'}}>Safety</div>
-                                <div style={{color: '#3EA822', fontWeight: 'bold', fontSize: '1.1rem'}}>
-                                  {user.iracing_data.safety_rating || 'N/A'}
-                                </div>
-                              </div>
-                              <div style={{
-                                backgroundColor: '#151515',
-                                padding: '10px 15px',
-                                borderRadius: '6px',
-                                textAlign: 'center'
-                              }}>
-                                <div style={{color: '#888', fontSize: '0.8rem', marginBottom: '4px'}}>License</div>
-                                <div style={{color: '#3EA822', fontWeight: 'bold', fontSize: '1.1rem'}}>
-                                  {user.iracing_data.license_class || 'N/A'}
-                                </div>
-                              </div>
+                              {(() => {
+                                // Get first available category stats (prioritize Sports Car, then Formula Car)
+                                let stats = user.iracing_data;
+                                
+                                if (user.iracing_data.categories) {
+                                  const categories = Object.keys(user.iracing_data.categories);
+                                  let selectedCategory = '';
+                                  
+                                  if (categories.includes('Sports Car')) {
+                                    selectedCategory = 'Sports Car';
+                                  } else if (categories.includes('Formula Car')) {
+                                    selectedCategory = 'Formula Car';
+                                  } else if (categories.length > 0) {
+                                    selectedCategory = categories[0];
+                                  }
+                                  
+                                  if (selectedCategory) {
+                                    stats = user.iracing_data.categories[selectedCategory];
+                                  }
+                                }
+                                
+                                return (
+                                  <>
+                                    <div style={{
+                                      backgroundColor: '#151515',
+                                      padding: '10px 15px',
+                                      borderRadius: '6px',
+                                      textAlign: 'center'
+                                    }}>
+                                      <div style={{color: '#888', fontSize: '0.8rem', marginBottom: '4px'}}>iRating</div>
+                                      <div style={{color: '#3EA822', fontWeight: 'bold', fontSize: '1.1rem'}}>
+                                        {stats.irating || 'N/A'}
+                                      </div>
+                                    </div>
+                                    <div style={{
+                                      backgroundColor: '#151515',
+                                      padding: '10px 15px',
+                                      borderRadius: '6px',
+                                      textAlign: 'center'
+                                    }}>
+                                      <div style={{color: '#888', fontSize: '0.8rem', marginBottom: '4px'}}>Safety</div>
+                                      <div style={{color: '#3EA822', fontWeight: 'bold', fontSize: '1.1rem'}}>
+                                        {stats.license_class && stats.safety_rating 
+                                          ? `${stats.license_class} ${stats.safety_rating}` 
+                                          : (stats.safety_rating || 'N/A')}
+                                      </div>
+                                    </div>
+                                  </>
+                                );
+                              })()}
                             </div>
                           )}
                         </div>
