@@ -72,11 +72,17 @@ export default function DriverProfile() {
       const data = await response.json();
       setDriver(data.driver);
       
-      // Set default category to the first available one
+      // Set default category - prioritize Sports Car, then Formula Car, then first available
       if (data.driver.iracing_data?.categories) {
         const categories = Object.keys(data.driver.iracing_data.categories);
         if (categories.length > 0) {
-          setSelectedCategory(categories[0]);
+          if (categories.includes('Sports Car')) {
+            setSelectedCategory('Sports Car');
+          } else if (categories.includes('Formula Car')) {
+            setSelectedCategory('Formula Car');
+          } else {
+            setSelectedCategory(categories[0]);
+          }
         }
       }
     } catch (err: any) {
@@ -341,7 +347,14 @@ export default function DriverProfile() {
                         outline: 'none'
                       }}
                     >
-                      {Object.keys(driver.iracing_data.categories).map((category) => (
+                      {Object.keys(driver.iracing_data.categories).sort((a, b) => {
+                        // Sports Car first, Formula Car second, rest alphabetically
+                        if (a === 'Sports Car') return -1;
+                        if (b === 'Sports Car') return 1;
+                        if (a === 'Formula Car') return -1;
+                        if (b === 'Formula Car') return 1;
+                        return a.localeCompare(b);
+                      }).map((category) => (
                         <option key={category} value={category}>
                           {category}
                         </option>
@@ -384,7 +397,7 @@ export default function DriverProfile() {
                           </div>
                         )}
 
-                        {stats.safety_rating && (
+                        {stats.safety_rating && stats.license_class && (
                           <div style={{
                             backgroundColor: 'rgba(62, 168, 34, 0.1)',
                             padding: '20px',
@@ -396,24 +409,7 @@ export default function DriverProfile() {
                               Safety Rating
                             </div>
                             <div style={{ fontSize: '2rem', fontWeight: 'bold', color: '#3EA822' }}>
-                              {stats.safety_rating}
-                            </div>
-                          </div>
-                        )}
-
-                        {stats.license_class && (
-                          <div style={{
-                            backgroundColor: 'rgba(62, 168, 34, 0.1)',
-                            padding: '20px',
-                            borderRadius: '8px',
-                            border: '1px solid #3EA822',
-                            textAlign: 'center'
-                          }}>
-                            <div style={{ fontSize: '0.9rem', color: '#aaa', marginBottom: '8px' }}>
-                              License
-                            </div>
-                            <div style={{ fontSize: '2rem', fontWeight: 'bold', color: '#3EA822' }}>
-                              {stats.license_class}
+                              {stats.license_class} {stats.safety_rating}
                             </div>
                           </div>
                         )}
