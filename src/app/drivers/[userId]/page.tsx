@@ -329,7 +329,7 @@ export default function DriverProfile() {
                 {driver.iracing_data.categories && Object.keys(driver.iracing_data.categories).length > 0 && (
                   <div style={{marginBottom: '24px'}}>
                     <label style={{color: '#888', fontSize: '0.9rem', display: 'block', marginBottom: '8px'}}>
-                      Kategori:
+                      Category:
                     </label>
                     <select
                       value={selectedCategory}
