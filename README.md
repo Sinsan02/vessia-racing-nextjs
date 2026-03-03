@@ -21,6 +21,16 @@ A comprehensive racing league management platform built with Next.js 15 and Supa
 - **Styling**: Tailwind CSS
 - **Authentication**: JWT with bcrypt password hashing
 - **File Storage**: Supabase Storage for profile pictures
+- **iRacing Integration**: OAuth 2.0 with PKCE for live stats synchronization
+
+## Documentation
+
+All setup guides, database schemas, and technical documentation are located in the [`docs/`](./docs) folder:
+
+- 📖 [Setup Guide](./docs/SETUP.md) - Complete project setup instructions
+- 🗄️ [Database Setup](./docs/SUPABASE_SETUP.md) - Supabase configuration guide
+- 🏁 [iRacing Integration](./docs/IRACING_SETUP.md) - OAuth setup for iRacing stats
+- 📊 Database schemas and SQL setup files
 
 ## Getting Started
 
@@ -60,8 +70,10 @@ NEXT_PUBLIC_APP_URL=http://localhost:3000
 
 4. Set up Supabase database
 - Create a new Supabase project
-- Run the SQL schema from `supabase-schema.sql` in your Supabase SQL editor
+- Run the SQL schema from `docs/supabase-schema.sql` in your Supabase SQL editor
 - Set up Storage bucket named "profile-pictures" for image uploads
+
+For detailed setup instructions, see the [docs folder](./docs/README.md).
 
 ### Development
 
