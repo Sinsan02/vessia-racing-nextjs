@@ -57,6 +57,12 @@ export default function Events() {
     
     return () => {
       window.removeEventListener('resize', checkScreenSize);
+    };
+  }, []);
+
+  // Cleanup blob URLs when component unmounts or preview changes
+  useEffect(() => {
+    return () => {
       if (previewUrl && previewUrl.startsWith('blob:')) {
         URL.revokeObjectURL(previewUrl);
       }
@@ -206,6 +212,11 @@ export default function Events() {
   };
 
   const handleCancel = () => {
+    // Cleanup blob URL if exists
+    if (previewUrl && previewUrl.startsWith('blob:')) {
+      URL.revokeObjectURL(previewUrl);
+    }
+    
     setShowCreateForm(false);
     setEditingEvent(null);
     setSelectedFile(null);
@@ -394,6 +405,12 @@ export default function Events() {
                         accept="image/*"
                         onChange={(e) => {
                           const file = e.target.files?.[0] || null;
+                          
+                          // Cleanup old blob URL before creating new one
+                          if (previewUrl && previewUrl.startsWith('blob:')) {
+                            URL.revokeObjectURL(previewUrl);
+                          }
+                          
                           setSelectedFile(file);
                           
                           // Create preview URL
@@ -641,6 +658,13 @@ export default function Events() {
                       📅 {formatDate(event.event_date)}
                       {event.event_time && ` at ${event.event_time.substring(0, 5)}`}
                     </p>
+
+                    {/* Track Name */}
+                    {event.track_name && (
+                      <p style={{color: '#ccc', marginBottom: '8px'}}>
+                        🏁 {event.track_name}
+                      </p>
+                    )}
 
                     {/* Description */}
                     {event.description && (

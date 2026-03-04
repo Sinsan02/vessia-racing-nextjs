@@ -7,6 +7,7 @@ CREATE TABLE IF NOT EXISTS public.events (
   name TEXT NOT NULL,
   description TEXT,
   event_date DATE NOT NULL,
+  event_time TIME,
   image_url TEXT,
   track_name TEXT,
   created_by INTEGER NOT NULL,
