@@ -563,19 +563,41 @@ export default function Events() {
                   {/* Event Image */}
                   {event.image_url ? (
                     <div style={{position: 'relative', height: '200px', width: '100%'}}>
-                      <Image
-                        src={event.image_url}
-                        alt={event.name}
-                        fill
-                        style={{objectFit: 'contain', backgroundColor: '#222'}}
-                        onError={(e) => {
-                          console.error('Image load failed for:', event.name, event.image_url);
-                          (e.target as HTMLImageElement).style.display = 'none';
-                        }}
-                        onLoad={() => {
-                          console.log('Image loaded successfully for:', event.name, event.image_url);
-                        }}
-                      />
+                      {event.image_url.startsWith('data:') ? (
+                        // Use regular img tag for base64 data URLs
+                        <img
+                          src={event.image_url}
+                          alt={event.name}
+                          style={{
+                            width: '100%',
+                            height: '100%',
+                            objectFit: 'contain',
+                            backgroundColor: '#222'
+                          }}
+                          onError={(e) => {
+                            console.error('Image load failed for:', event.name);
+                            (e.target as HTMLImageElement).style.display = 'none';
+                          }}
+                          onLoad={() => {
+                            console.log('Image loaded successfully for:', event.name);
+                          }}
+                        />
+                      ) : (
+                        // Use Next.js Image component for external URLs
+                        <Image
+                          src={event.image_url}
+                          alt={event.name}
+                          fill
+                          style={{objectFit: 'contain', backgroundColor: '#222'}}
+                          onError={(e) => {
+                            console.error('Image load failed for:', event.name, event.image_url);
+                            (e.target as HTMLImageElement).style.display = 'none';
+                          }}
+                          onLoad={() => {
+                            console.log('Image loaded successfully for:', event.name, event.image_url);
+                          }}
+                        />
+                      )}
                     </div>
                   ) : (
                     <div style={{
