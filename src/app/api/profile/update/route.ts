@@ -9,7 +9,7 @@ export async function PUT(request: NextRequest) {
     if (!user) {
       return NextResponse.json({ error: 'Authentication required' }, { status: 401 });
     }
-    const { name, gamertag, experience, bio, email, iracing_customer_id } = await request.json();
+    const { name, experience, bio, email, iracing_customer_id } = await request.json();
 
     // Validate required fields
     if (!name || !email) {
@@ -17,23 +17,6 @@ export async function PUT(request: NextRequest) {
         success: false, 
         error: 'Name and email are required' 
       }, { status: 400 });
-    }
-
-    // Check if gamertag is unique (exclude current user) - only if gamertag is provided
-    if (gamertag && gamertag.trim()) {
-      const { data: existingUser } = await supabaseAdmin
-        .from('users')
-        .select('id')
-        .eq('gamertag', gamertag)
-        .neq('id', user.userId)
-        .single();
-      
-      if (existingUser) {
-        return NextResponse.json({ 
-          success: false, 
-          error: 'Gamertag is already taken' 
-        }, { status: 400 });
-      }
     }
 
     // Check if email is unique (exclude current user)
@@ -56,7 +39,6 @@ export async function PUT(request: NextRequest) {
       .from('users')
       .update({
         full_name: name,
-        gamertag: gamertag || null,
         experience_level: experience,
         bio: bio,
         email: email,
@@ -64,7 +46,7 @@ export async function PUT(request: NextRequest) {
         updated_at: new Date().toISOString()
       })
       .eq('id', user.userId)
-      .select('id, full_name, email, gamertag, experience_level, bio, role, profile_picture, created_at, iracing_customer_id')
+      .select('id, full_name, email, experience_level, bio, role, profile_picture, created_at, iracing_customer_id')
       .single();
 
     if (error || !updatedUser) {
@@ -79,7 +61,6 @@ export async function PUT(request: NextRequest) {
       id: updatedUser.id,
       name: updatedUser.full_name,
       email: updatedUser.email,
-      gamertag: updatedUser.gamertag,
       experience: updatedUser.experience_level,
       bio: updatedUser.bio,
       role: updatedUser.role,

@@ -25,7 +25,6 @@ export interface Database {
           full_name: string
           email: string
           password_hash: string
-          gamertag: string | null
           experience_level: string
           role: string
           is_driver: number
@@ -38,7 +37,6 @@ export interface Database {
           full_name: string
           email: string
           password_hash: string
-          gamertag?: string | null
           experience_level?: string
           role?: string
           is_driver?: number
@@ -49,7 +47,6 @@ export interface Database {
           full_name?: string
           email?: string
           password_hash?: string
-          gamertag?: string | null
           experience_level?: string
           role?: string
           is_driver?: number

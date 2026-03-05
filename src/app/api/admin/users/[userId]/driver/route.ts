@@ -16,7 +16,7 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
     // Get user info
     const { data: userInfo, error: fetchError } = await supabaseAdmin
       .from('users')
-      .select('full_name, gamertag, bio, profile_picture')
+      .select('full_name, bio, profile_picture')
       .eq('id', userId)
       .single();
       
@@ -24,7 +24,7 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
       return NextResponse.json({ success: false, error: 'User not found' }, { status: 404 });
     }
 
-    const displayName = userInfo.gamertag || userInfo.full_name;
+    const displayName = userInfo.full_name;
 
     // Update driver status
     const updateData: any = { is_driver: isDriver ? 1 : 0 };

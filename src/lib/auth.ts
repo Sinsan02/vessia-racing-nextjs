@@ -14,7 +14,6 @@ export interface User {
   id: number;
   name: string;
   email: string;
-  gamertag: string;
   experience: string;
   role: string;
   is_driver: boolean;
