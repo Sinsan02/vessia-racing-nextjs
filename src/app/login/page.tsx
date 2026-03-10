@@ -11,10 +11,12 @@ export default function Login() {
   });
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
-  const [isMobile, setIsMobile] = useState(typeof window !== 'undefined' ? window.innerWidth <= 768 : false);
+  const [isMobile, setIsMobile] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
+    setIsMounted(true);
     const checkScreenSize = () => {
       setIsMobile(window.innerWidth <= 768);
     };
@@ -66,18 +68,30 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen" style={{
-      backgroundImage: `linear-gradient(rgba(10,10,10,${isMobile ? '0.75' : '0.85'}), rgba(10,10,10,${isMobile ? '0.75' : '0.85'})), url('/images/decorative/ChatGPT Image 30. jan. 2026, 22_05_23.png')`,
-      backgroundColor: '#0a0a0a',
-      backgroundSize: 'cover',
-      backgroundPosition: 'center',
-      backgroundAttachment: 'scroll',
-      backgroundRepeat: 'no-repeat',
-      minHeight: '100vh',
-      paddingBottom: '40px',
-      position: 'relative',
-      transform: isMobile ? 'translate3d(0,0,0)' : undefined
-    }}>
+    <>
+      {/* Fixed background covering entire viewport */}
+      <div style={{
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        backgroundImage: `linear-gradient(rgba(10,10,10,${isMobile ? '0.75' : '0.85'}), rgba(10,10,10,${isMobile ? '0.75' : '0.85'})), url('/images/decorative/ChatGPT Image 30. jan. 2026, 22_05_23.png')`,
+        backgroundColor: '#0a0a0a',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundAttachment: 'fixed',
+        backgroundRepeat: 'no-repeat',
+        zIndex: -1,
+        transform: isMobile ? 'translate3d(0,0,0)' : undefined
+      }} />
+      
+      <div className="min-h-screen" style={{
+        minHeight: '100vh',
+        paddingTop: '20px',
+        paddingBottom: '40px',
+        position: 'relative'
+      }}>
       <div className="form-container">
         <h2 className="form-title">✓ Sign In</h2>
         
@@ -124,5 +138,6 @@ export default function Login() {
         </div>
       </div>
     </div>
+    </>
   );
 }
