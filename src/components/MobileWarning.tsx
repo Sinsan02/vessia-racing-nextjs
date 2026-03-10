@@ -4,8 +4,12 @@ import { useEffect, useState } from 'react';
 
 export default function MobileWarning() {
   const [isMobile, setIsMobile] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
+    // Mark as mounted to prevent hydration issues
+    setIsMounted(true);
+    
     const checkIfMobile = () => {
       const userAgent = navigator.userAgent.toLowerCase();
       const mobileKeywords = ['android', 'iphone', 'ipad', 'ipod', 'blackberry', 'windows phone', 'mobile'];
@@ -38,7 +42,8 @@ export default function MobileWarning() {
     };
   }, [isMobile]);
 
-  if (!isMobile) return null;
+  // Don't render anything until mounted to avoid hydration mismatch
+  if (!isMounted || !isMobile) return null;
 
   return (
     <div style={{

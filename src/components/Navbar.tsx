@@ -18,12 +18,16 @@ export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
   const hasCheckedAuth = useRef(false);
   const router = useRouter();
   const pathname = usePathname();
   const isHomePage = pathname === '/';
 
   useEffect(() => {
+    // Mark as mounted
+    setIsMounted(true);
+    
     // Check screen size
     const checkScreenSize = () => {
       setIsMobile(window.innerWidth <= 768);
@@ -35,7 +39,7 @@ export default function Navbar() {
     return () => {
       window.removeEventListener('resize', checkScreenSize);
     };
-  }, [isMobile]);
+  }, []);
 
   useEffect(() => {
     // Prevent double mounting in StrictMode

@@ -10,11 +10,15 @@ export default function Home() {
   const [achievements, setAchievements] = useState<any[]>([]);
   const [achievementsLoading, setAchievementsLoading] = useState(true);
   const [user, setUser] = useState<any>(null);
-  const [isMobile, setIsMobile] = useState(typeof window !== 'undefined' ? window.innerWidth <= 768 : false);
+  const [isMobile, setIsMobile] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
   const hasFetchedData = useRef(false);
 
   
   useEffect(() => {
+    // Mark component as mounted to prevent hydration issues
+    setIsMounted(true);
+    
     // Prevent double mounting in StrictMode
     if (hasFetchedData.current) return;
     hasFetchedData.current = true;
