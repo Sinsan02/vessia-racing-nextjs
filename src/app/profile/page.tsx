@@ -1,6 +1,13 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
+import Link from 'next/link';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import {
+  faUser, faPen, faCamera, faCircleCheck, faCircleXmark, faCircleInfo,
+  faArrowsRotate, faSpinner, faPlug, faFlagCheckered,
+  faXmark, faFloppyDisk, faChartLine, faShieldHalved
+} from '@fortawesome/free-solid-svg-icons';
 
 interface User {
   id: number;
@@ -29,6 +36,7 @@ interface User {
     last_updated?: string;
   };
   iracing_data_updated_at?: string;
+  privacy_accepted_at?: string | null;
 }
 
 export default function Profile() {
@@ -44,6 +52,7 @@ export default function Profile() {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [successMessage, setSuccessMessage] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
+  const [isAcceptingPrivacy, setIsAcceptingPrivacy] = useState(false);
   
   // iRacing returns category names directly - no translation needed
   const getCategoryDisplayName = (category: string): string => {
@@ -72,25 +81,25 @@ export default function Profile() {
     const error = urlParams.get('error');
     
     if (success === 'iracing_connected') {
-      setSuccessMessage('🎉 Successfully connected to iRacing! Click "Synkroniser nå" to fetch your stats.');
+      setSuccessMessage('Successfully connected to iRacing! Click "Synkroniser nå" to fetch your stats.');
       // Clear URL params
       window.history.replaceState({}, '', '/profile');
     } else if (error) {
       const errorMessages: { [key: string]: string } = {
-        'iracing_auth_failed': '❌ Failed to connect to iRacing. Please try again.',
-        'iracing_config_error': '❌ iRacing OAuth not configured on server. Contact administrator.',
-        'pkce_missing': '❌ Security verification failed. Please try again.',
-        'token_exchange_failed': '❌ Authentication failed. Please try again.',
-        'no_access_token': '❌ Failed to receive access token. Please try again.',
-        'userinfo_failed': '❌ Could not fetch iRacing profile. Please try again.',
-        'no_customer_id': '❌ Could not find iRacing Customer ID.',
-        'not_authenticated': '❌ Please log in first.',
-        'invalid_session': '❌ Your session expired. Please log in again.',
-        'update_failed': '❌ Failed to save iRacing connection.',
-        'state_mismatch': '❌ Security validation failed. Please try again.',
-        'callback_error': '❌ Something went wrong. Please try again.'
+        'iracing_auth_failed': 'Failed to connect to iRacing. Please try again.',
+        'iracing_config_error': 'iRacing OAuth not configured on server. Contact administrator.',
+        'pkce_missing': 'Security verification failed. Please try again.',
+        'token_exchange_failed': 'Authentication failed. Please try again.',
+        'no_access_token': 'Failed to receive access token. Please try again.',
+        'userinfo_failed': 'Could not fetch iRacing profile. Please try again.',
+        'no_customer_id': 'Could not find iRacing Customer ID.',
+        'not_authenticated': 'Please log in first.',
+        'invalid_session': 'Your session expired. Please log in again.',
+        'update_failed': 'Failed to save iRacing connection.',
+        'state_mismatch': 'Security validation failed. Please try again.',
+        'callback_error': 'Something went wrong. Please try again.'
       };
-      setErrorMessage(errorMessages[error] || '❌ An error occurred. Please try again.');
+      setErrorMessage(errorMessages[error] || 'An error occurred. Please try again.');
       // Clear URL params
       window.history.replaceState({}, '', '/profile');
     }
@@ -140,6 +149,24 @@ export default function Profile() {
     setHasChanges(true);
   };
 
+  const handleAcceptPrivacy = async () => {
+    setIsAcceptingPrivacy(true);
+    try {
+      const response = await fetch('/api/auth/accept-privacy', { method: 'POST' });
+      if (response.ok) {
+        const data = await response.json();
+        setUser(prev => prev ? { ...prev, privacy_accepted_at: data.privacy_accepted_at } : null);
+      } else {
+        alert('Kunne ikke registrere godkjenning. Prøv igjen.');
+      }
+    } catch (error) {
+      console.error('Error accepting privacy policy:', error);
+      alert('Kunne ikke registrere godkjenning. Prøv igjen.');
+    } finally {
+      setIsAcceptingPrivacy(false);
+    }
+  };
+
   const handleDisconnectIRacing = async () => {
     if (!confirm('Er du sikker på at du vil koble fra iRacing? All synkronisert data vil bli fjernet.')) {
       return;
@@ -155,15 +182,15 @@ export default function Profile() {
       });
 
       if (response.ok) {
-        setSuccessMessage('✅ iRacing-koblingen er fjernet');
+        setSuccessMessage('iRacing-koblingen er fjernet');
         // Refresh user data
         await fetchUserProfile();
       } else {
-        setErrorMessage('❌ Kunne ikke fjerne iRacing-kobling. Prøv igjen.');
+        setErrorMessage('Kunne ikke fjerne iRacing-kobling. Prøv igjen.');
       }
     } catch (error) {
       console.error('Error disconnecting iRacing:', error);
-      setErrorMessage('❌ En feil oppstod. Prøv igjen.');
+      setErrorMessage('En feil oppstod. Prøv igjen.');
     } finally {
       setIsDisconnecting(false);
     }
@@ -182,16 +209,16 @@ export default function Profile() {
       });
 
       if (response.ok) {
-        setSuccessMessage('✅ iRacing stats synkronisert!');
+        setSuccessMessage('iRacing stats synkronisert!');
         // Refresh user data to show new stats
         await fetchUserProfile();
       } else {
         const errorData = await response.json();
-        setErrorMessage(errorData.error || '❌ Kunne ikke hente iRacing stats. Prøv igjen.');
+        setErrorMessage(errorData.error || 'Kunne ikke hente iRacing stats. Prøv igjen.');
       }
     } catch (error) {
       console.error('Error syncing iRacing stats:', error);
-      setErrorMessage('❌ En feil oppstod ved synkronisering. Prøv igjen.');
+      setErrorMessage('En feil oppstod ved synkronisering. Prøv igjen.');
     } finally {
       setIsSyncingStats(false);
     }
@@ -288,7 +315,7 @@ export default function Profile() {
     return (
       <div className="min-h-screen" style={{backgroundColor: '#0a0a0a', paddingTop: '100px'}}>
         <div style={{textAlign: 'center', color: '#888', padding: '40px'}}>
-          <div style={{fontSize: '2rem', marginBottom: '15px'}}>⏳</div>
+          <div style={{fontSize: '2rem', marginBottom: '15px'}}><FontAwesomeIcon icon={faSpinner} spin /></div>
           <p>Loading profile...</p>
         </div>
       </div>
@@ -317,9 +344,55 @@ export default function Profile() {
         <div className="container" style={{maxWidth: '1200px', margin: '0 auto', padding: '0', boxSizing: 'border-box', width: '100%'}}>
           <div style={{textAlign: 'center', marginBottom: '30px'}}>
             <h1 style={{color: '#3EA822', fontSize: '2.5rem', marginBottom: '1rem'}}>
-              👤 Min Profil
+              <FontAwesomeIcon icon={faUser} /> Min Profil
             </h1>
             <p style={{color: '#ccc', fontSize: '1.1rem'}}>Manage your Vessia Racing profile</p>
+
+            {!user.privacy_accepted_at && (
+              <div style={{
+                backgroundColor: 'rgba(255, 193, 7, 0.1)',
+                border: '2px solid #ffc107',
+                color: '#ffc107',
+                padding: '15px',
+                borderRadius: '8px',
+                marginTop: '20px',
+                textAlign: 'left',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '10px'
+              }}>
+                <div>
+                  <FontAwesomeIcon icon={faShieldHalved} style={{marginRight: '8px'}} />
+                  Vi har innført en personvernerklæring som forklarer hvordan vi lagrer og bruker
+                  personopplysningene dine (som navn og e-post). Les{' '}
+                  <Link href="/personvern" target="_blank" style={{color: '#ffc107', textDecoration: 'underline'}}>
+                    personvernerklæringen
+                  </Link>
+                  {' '}og godkjenn den for å fortsette å bruke kontoen din.
+                </div>
+                <button
+                  onClick={handleAcceptPrivacy}
+                  disabled={isAcceptingPrivacy}
+                  style={{
+                    alignSelf: 'flex-start',
+                    backgroundColor: '#ffc107',
+                    color: '#0a0a0a',
+                    border: 'none',
+                    padding: '8px 18px',
+                    borderRadius: '5px',
+                    cursor: isAcceptingPrivacy ? 'not-allowed' : 'pointer',
+                    fontWeight: 'bold',
+                    opacity: isAcceptingPrivacy ? 0.6 : 1
+                  }}
+                >
+                  {isAcceptingPrivacy ? (
+                    <><FontAwesomeIcon icon={faSpinner} spin /> Registrerer...</>
+                  ) : (
+                    <><FontAwesomeIcon icon={faCircleCheck} /> Jeg godtar personvernerklæringen</>
+                  )}
+                </button>
+              </div>
+            )}
             
             {/* Success/Error Messages */}
             {successMessage && (
@@ -333,6 +406,7 @@ export default function Profile() {
                 marginBottom: '10px',
                 textAlign: 'left'
               }}>
+                <FontAwesomeIcon icon={faCircleCheck} style={{marginRight: '8px'}} />
                 {successMessage}
                 <button
                   onClick={() => setSuccessMessage('')}
@@ -362,6 +436,7 @@ export default function Profile() {
                 marginBottom: '10px',
                 textAlign: 'left'
               }}>
+                <FontAwesomeIcon icon={faCircleXmark} style={{marginRight: '8px'}} />
                 {errorMessage}
                 <button
                   onClick={() => setErrorMessage('')}
@@ -395,7 +470,7 @@ export default function Profile() {
                   fontWeight: 'bold'
                 }}
               >
-                ✏️ Edit Profile
+<FontAwesomeIcon icon={faPen} /> Edit Profile
               </button>
             )}
           </div>
@@ -563,7 +638,7 @@ export default function Profile() {
                         fontSize: '1.2rem'
                       }}
                     >
-                      📷
+                      <FontAwesomeIcon icon={faCamera} />
                     </button>
                   )}
                 </div>
@@ -691,7 +766,7 @@ export default function Profile() {
                         border: '1px solid #3EA822'
                       }}>
                         <p style={{color: '#3EA822', margin: 0}}>
-                          ✅ Connected • Customer ID: {user.iracing_customer_id}
+                          <FontAwesomeIcon icon={faCircleCheck} /> Connected • Customer ID: {user.iracing_customer_id}
                         </p>
                       </div>
                       
@@ -715,10 +790,14 @@ export default function Profile() {
                           onMouseEnter={(e) => !isSyncingStats && (e.currentTarget.style.backgroundColor = '#2d8518')}
                           onMouseLeave={(e) => !isSyncingStats && (e.currentTarget.style.backgroundColor = '#3EA822')}
                         >
-                          {isSyncingStats ? '⏳ Synkroniserer...' : '🔄 Synkroniser nå'}
+                          {isSyncingStats ? (
+                            <><FontAwesomeIcon icon={faSpinner} spin /> Synkroniserer...</>
+                          ) : (
+                            <><FontAwesomeIcon icon={faArrowsRotate} /> Synkroniser nå</>
+                          )}
                         </button>
                         <p style={{color: '#888', fontSize: '0.85rem', margin: 0}}>
-                          📊 Stats oppdateres automatisk hver natt kl 02:00
+                          <FontAwesomeIcon icon={faChartLine} /> Stats oppdateres automatisk hver natt kl 02:00
                         </p>
                       </div>
                       
@@ -791,7 +870,7 @@ export default function Profile() {
                         </div>
                       ) : (
                         <p style={{color: '#888', fontSize: '0.9rem', marginBottom: '12px'}}>
-                          ⏳ Ingen stats ennå. Klikk "Synkroniser nå" for å hente dine stats.
+<FontAwesomeIcon icon={faCircleInfo} /> Ingen stats ennå. Klikk &quot;Synkroniser nå&quot; for å hente dine stats.
                         </p>
                       )}
                       
@@ -815,7 +894,11 @@ export default function Profile() {
                           onMouseEnter={(e) => !isDisconnecting && (e.currentTarget.style.backgroundColor = '#b71c1c')}
                           onMouseLeave={(e) => !isDisconnecting && (e.currentTarget.style.backgroundColor = '#d32f2f')}
                         >
-                          {isDisconnecting ? '⏳ Fjerner...' : '🔌 Koble fra iRacing'}
+                          {isDisconnecting ? (
+                            <><FontAwesomeIcon icon={faSpinner} spin /> Fjerner...</>
+                          ) : (
+                            <><FontAwesomeIcon icon={faPlug} /> Koble fra iRacing</>
+                          )}
                         </button>
                       </div>
                     </div>
@@ -842,7 +925,7 @@ export default function Profile() {
                         onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#ff3344'}
                         onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#e8202f'}
                       >
-                        <span style={{fontSize: '1.2rem'}}>🏁</span>
+                        <FontAwesomeIcon icon={faFlagCheckered} style={{fontSize: '1.2rem'}} />
                         Connect with iRacing
                       </button>
                       <p style={{color: '#888', fontSize: '0.85rem', marginTop: '8px'}}>
@@ -881,7 +964,7 @@ export default function Profile() {
                       fontWeight: 'bold'
                     }}
                   >
-                    ❌ Cancel
+<FontAwesomeIcon icon={faXmark} /> Cancel
                   </button>
                 </div>
               )}
@@ -919,7 +1002,11 @@ export default function Profile() {
               gap: '10px'
             }}
           >
-            {isSaving ? '⏳ Saving...' : '💾 Save Changes'}
+            {isSaving ? (
+              <><FontAwesomeIcon icon={faSpinner} spin /> Saving...</>
+            ) : (
+              <><FontAwesomeIcon icon={faFloppyDisk} /> Save Changes</>
+            )}
           </button>
         </div>
       )}

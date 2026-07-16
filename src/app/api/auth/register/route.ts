@@ -4,12 +4,19 @@ import { hashPassword, generateToken } from '@/lib/auth';
 
 export async function POST(request: NextRequest) {
   try {
-    const { name, email, password, experience } = await request.json();
+    const { name, email, password, experience, privacyAccepted } = await request.json();
 
     // Validate input
     if (!name || !email || !password || !experience) {
       return NextResponse.json(
         { error: 'All fields are required' },
+        { status: 400 }
+      );
+    }
+
+    if (!privacyAccepted) {
+      return NextResponse.json(
+        { error: 'Du må godta personvernerklæringen for å opprette en bruker' },
         { status: 400 }
       );
     }
@@ -26,6 +33,7 @@ export async function POST(request: NextRequest) {
         password_hash: hashedPassword,
         experience_level: experience,
         role: 'user',
+        privacy_accepted_at: new Date().toISOString(),
         created_at: new Date().toISOString()
       })
       .select()

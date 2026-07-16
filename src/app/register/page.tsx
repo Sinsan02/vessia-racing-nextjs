@@ -3,6 +3,8 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCheck } from '@fortawesome/free-solid-svg-icons';
 
 export default function Register() {
   const [formData, setFormData] = useState({
@@ -12,6 +14,7 @@ export default function Register() {
     confirmPassword: '',
     experience: 'beginner'
   });
+  const [privacyAccepted, setPrivacyAccepted] = useState(false);
   const [successMessage, setSuccessMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
@@ -43,6 +46,12 @@ export default function Register() {
       return;
     }
 
+    if (!privacyAccepted) {
+      setError('Du må godta personvernerklæringen for å opprette en bruker');
+      setIsLoading(false);
+      return;
+    }
+
     try {
       const response = await fetch('/api/auth/register', {
         method: 'POST',
@@ -53,7 +62,8 @@ export default function Register() {
           name: formData.name,
           email: formData.email,
           password: formData.password,
-          experience: formData.experience
+          experience: formData.experience,
+          privacyAccepted
         }),
       });
 
@@ -66,6 +76,7 @@ export default function Register() {
           confirmPassword: '',
           experience: 'beginner'
         });
+        setPrivacyAccepted(false);
       } else {
         const data = await response.json();
         setError(data.error || 'Registration failed');
@@ -133,7 +144,7 @@ export default function Register() {
         position: 'relative'
       }}>
       <div className="form-container">
-        <h2 className="form-title">✓ Become a Member</h2>
+        <h2 className="form-title"><FontAwesomeIcon icon={faCheck} /> Become a Member</h2>
         
         {successMessage && (
           <div style={{backgroundColor: '#28a745', color: 'white', padding: '10px', borderRadius: '5px', marginBottom: '1rem', textAlign: 'center'}}>
@@ -212,11 +223,29 @@ export default function Register() {
               <option value="professional">Professional</option>
             </select>
           </div>
-          <button 
-            type="submit" 
-            className="btn btn-primary" 
+          <div className="form-group" style={{display: 'flex', alignItems: 'flex-start', gap: '10px'}}>
+            <input
+              type="checkbox"
+              id="privacyAccepted"
+              name="privacyAccepted"
+              checked={privacyAccepted}
+              onChange={(e) => setPrivacyAccepted(e.target.checked)}
+              required
+              style={{width: '18px', height: '18px', marginTop: '3px', flexShrink: 0}}
+            />
+            <label htmlFor="privacyAccepted" style={{color: '#ccc', fontSize: '0.9rem', lineHeight: '1.4'}}>
+              Jeg har lest og godtar{' '}
+              <Link href="/personvern" target="_blank" style={{color: '#3EA822', textDecoration: 'underline'}}>
+                personvernerklæringen
+              </Link>
+              . Vi lagrer navn og e-post kun for innlogging og kontoadministrasjon.
+            </label>
+          </div>
+          <button
+            type="submit"
+            className="btn btn-primary"
             style={{width: '100%'}}
-            disabled={isLoading}
+            disabled={isLoading || !privacyAccepted}
           >
             {isLoading ? 'Creating account...' : 'Join Team'}
           </button>
