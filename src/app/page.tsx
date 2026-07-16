@@ -134,7 +134,7 @@ export default function Home() {
 
   return (
     <div style={{
-      backgroundImage: `linear-gradient(rgba(10,10,10,0.3), rgba(10,10,10,0.3)), url('/images/decorative/Screenshot_2025-11-23_180245-bg.webp')`,
+      backgroundImage: isMobile ? 'none' : `linear-gradient(rgba(10,10,10,0.3), rgba(10,10,10,0.3)), url('/images/decorative/Screenshot_2025-11-23_180245-bg.webp')`,
       backgroundColor: '#0a0a0a',
       backgroundSize: 'cover',
       backgroundPosition: 'center',
@@ -159,11 +159,13 @@ export default function Home() {
 
       {/* Hero Section */}
       <section className="hero" style={{
-        backgroundImage: `linear-gradient(rgba(10,10,10,0.3), rgba(10,10,10,0.6)), url('/images/decorative/Screenshot_2025-11-23_180245-bg.webp')`,
+        backgroundImage: isMobile
+          ? `url('/images/decorative/Screenshot_2025-11-23_180245-bg.webp')`
+          : `linear-gradient(rgba(10,10,10,0.3), rgba(10,10,10,0.6)), url('/images/decorative/Screenshot_2025-11-23_180245-bg.webp')`,
         backgroundColor: '#0a0a0a',
         backgroundSize: 'cover',
         backgroundPosition: 'center',
-        backgroundAttachment: 'fixed',
+        backgroundAttachment: isMobile ? 'scroll' : 'fixed',
         backgroundRepeat: 'no-repeat',
         paddingBottom: '5px',
         paddingTop: '5px',
@@ -174,6 +176,18 @@ export default function Home() {
         position: 'relative',
         WebkitBackgroundSize: 'cover'
       }}>
+        {isMobile && (
+          <div style={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            backgroundColor: 'rgba(10,10,10,0.5)',
+            pointerEvents: 'none',
+            zIndex: 1
+          }} />
+        )}
         <div className="hero-content" style={{position: 'relative', zIndex: 2}}>
           <Image 
             src="/Vessia_Logo.png" 
@@ -210,11 +224,13 @@ export default function Home() {
 
       {/* Achievements Section */}
       <section id="achievements" className="section" style={{
-        backgroundImage: `linear-gradient(rgba(10,10,10,0.7), rgba(10,10,10,0.8)), url('/images/decorative/Screenshot_2025-10-11_170801-bg.webp')`,
+        backgroundImage: isMobile
+          ? `url('/images/decorative/Screenshot_2025-10-11_170801-bg.webp')`
+          : `linear-gradient(rgba(10,10,10,0.7), rgba(10,10,10,0.8)), url('/images/decorative/Screenshot_2025-10-11_170801-bg.webp')`,
         backgroundColor: '#0a0a0a',
         backgroundSize: 'cover',
         backgroundPosition: 'center',
-        backgroundAttachment: 'fixed',
+        backgroundAttachment: isMobile ? 'scroll' : 'fixed',
         backgroundRepeat: 'no-repeat',
         minHeight: '100vh',
         position: 'relative',
@@ -222,6 +238,18 @@ export default function Home() {
         paddingBottom: '5px',
         WebkitBackgroundSize: 'cover'
       }}>
+        {isMobile && (
+          <div style={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            backgroundColor: 'rgba(10,10,10,0.6)',
+            pointerEvents: 'none',
+            zIndex: 1
+          }} />
+        )}
         <div className="container" style={{
           maxWidth: '1200px',
           margin: '0 auto',
@@ -445,11 +473,13 @@ export default function Home() {
 
       {/* Upcoming Event Section */}
       <section id="results" className="section section-dark" style={{
-        backgroundImage: `linear-gradient(rgba(10,10,10,0.7), rgba(10,10,10,0.8)), url('/images/decorative/Screenshot_2025-11-15_150823-bg.webp')`,
+        backgroundImage: isMobile
+          ? `url('/images/decorative/Screenshot_2025-11-15_150823-bg.webp')`
+          : `linear-gradient(rgba(10,10,10,0.7), rgba(10,10,10,0.8)), url('/images/decorative/Screenshot_2025-11-15_150823-bg.webp')`,
         backgroundColor: '#0a0a0a',
         backgroundSize: 'cover',
         backgroundPosition: 'center',
-        backgroundAttachment: 'fixed',
+        backgroundAttachment: isMobile ? 'scroll' : 'fixed',
         backgroundRepeat: 'no-repeat',
         minHeight: '100vh',
         position: 'relative',
@@ -457,6 +487,18 @@ export default function Home() {
         paddingBottom: '5px',
         WebkitBackgroundSize: 'cover'
       }}>
+        {isMobile && (
+          <div style={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            backgroundColor: 'rgba(10,10,10,0.6)',
+            pointerEvents: 'none',
+            zIndex: 1
+          }} />
+        )}
         <div className="container" style={{
           maxWidth: '1200px',
           margin: '0 auto',
@@ -591,11 +633,13 @@ export default function Home() {
 
       {/* Join Our Team Section */}
       <section className="section" style={{
-        backgroundImage: `linear-gradient(rgba(10,10,10,0.7), rgba(10,10,10,0.8)), url('/images/decorative/Screenshot_2025-05-18_205724-bg.webp')`,
+        backgroundImage: isMobile
+          ? `url('/images/decorative/Screenshot_2025-05-18_205724-bg.webp')`
+          : `linear-gradient(rgba(10,10,10,0.7), rgba(10,10,10,0.8)), url('/images/decorative/Screenshot_2025-05-18_205724-bg.webp')`,
         backgroundColor: '#0a0a0a',
         backgroundSize: 'cover',
         backgroundPosition: 'center',
-        backgroundAttachment: 'fixed',
+        backgroundAttachment: isMobile ? 'scroll' : 'fixed',
         backgroundRepeat: 'no-repeat',
         minHeight: '100vh',
         position: 'relative',
@@ -606,6 +650,18 @@ export default function Home() {
         paddingBottom: '5px',
         WebkitBackgroundSize: 'cover'
       }}>
+        {isMobile && (
+          <div style={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            backgroundColor: 'rgba(10,10,10,0.6)',
+            pointerEvents: 'none',
+            zIndex: 1
+          }} />
+        )}
         <div className="container" style={{
           maxWidth: '1200px',
           margin: '0 auto',
