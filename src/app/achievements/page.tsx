@@ -2,6 +2,25 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faTrophy, faFlagCheckered, faLocationDot, faCalendar, faCar, faMedal, faCrown, faBolt } from '@fortawesome/free-solid-svg-icons';
+
+const ACHIEVEMENT_ICON_MAP: Record<string, any> = {
+  trophy: faTrophy, 'medal-gold': faMedal, 'medal-silver': faMedal,
+  'medal-bronze': faMedal, crown: faCrown, 'flag-checkered': faFlagCheckered,
+  bolt: faBolt, fire: faBolt,
+  '🏆': faTrophy, '🥇': faMedal, '🥈': faMedal, '🥉': faMedal,
+  '👑': faCrown, '🏁': faFlagCheckered, '⚡': faBolt, '🔥': faBolt,
+};
+const ACHIEVEMENT_ICON_COLOR: Record<string, string> = {
+  'medal-gold': '#FFD700', 'medal-silver': '#C0C0C0', 'medal-bronze': '#CD7F32',
+  '🥇': '#FFD700', '🥈': '#C0C0C0', '🥉': '#CD7F32',
+};
+function AchievementIcon({ icon }: { icon: string }) {
+  const fa = ACHIEVEMENT_ICON_MAP[icon] || faTrophy;
+  const color = ACHIEVEMENT_ICON_COLOR[icon];
+  return <FontAwesomeIcon icon={fa} style={color ? { color } : undefined} />;
+}
 
 export default function Achievements() {
   const [achievements, setAchievements] = useState<any[]>([]);
@@ -41,7 +60,7 @@ export default function Achievements() {
         minHeight: '60vh',
         flexDirection: 'column'
       }}>
-        <div style={{fontSize: '3rem', marginBottom: '20px'}}>🏆</div>
+        <div style={{fontSize: '3rem', marginBottom: '20px'}}><FontAwesomeIcon icon={faTrophy} /></div>
         <p style={{color: '#888'}}>Loading accomplishments...</p>
       </div>
     );
@@ -105,7 +124,7 @@ export default function Achievements() {
           maxWidth: '100%',
           boxSizing: 'border-box'
         }}>
-          <div style={{fontSize: '5rem', marginBottom: '25px'}}>🏆</div>
+          <div style={{fontSize: '5rem', marginBottom: '25px'}}><FontAwesomeIcon icon={faTrophy} /></div>
           <h2 style={{color: '#ccc', marginBottom: '15px', fontSize: '1.8rem'}}>No accomplishments yet</h2>
           <p style={{fontSize: '1.1rem', marginBottom: '30px'}}>Our victories will be showcased here as we compete and win!</p>
           <Link
@@ -213,7 +232,8 @@ export default function Achievements() {
                     fontWeight: 'bold',
                     boxShadow: '0 2px 8px rgba(0,0,0,0.3)'
                   }}>
-                    {achievement.position === 1 ? '🥇 1st' : achievement.position === 2 ? '🥈 2nd' : '🥉 3rd'} Place
+                    <FontAwesomeIcon icon={faMedal} style={{color: achievement.position === 1 ? '#FFD700' : achievement.position === 2 ? '#C0C0C0' : '#CD7F32', marginRight: '4px'}} />
+                    {achievement.position === 1 ? '1st' : achievement.position === 2 ? '2nd' : '3rd'} Place
                   </div>
                 )}
 
@@ -232,7 +252,7 @@ export default function Achievements() {
                   boxShadow: '0 8px 25px rgba(62, 168, 34, 0.4)',
                   border: '3px solid rgba(62, 168, 34, 0.3)'
                 }}>
-                  {achievement.icon}
+                  <AchievementIcon icon={achievement.icon} />
                 </div>
 
                 <h3 style={{
@@ -252,7 +272,7 @@ export default function Achievements() {
                   marginBottom: '12px',
                   fontWeight: '600'
                 }}>
-                  🏁 {achievement.race_name}
+                  <FontAwesomeIcon icon={faFlagCheckered} /> {achievement.race_name}
                 </p>
 
                 {achievement.track_name && (
@@ -261,7 +281,7 @@ export default function Achievements() {
                     fontSize: '1rem',
                     marginBottom: '12px'
                   }}>
-                    📍 {achievement.track_name}
+                    <FontAwesomeIcon icon={faLocationDot} /> {achievement.track_name}
                   </p>
                 )}
 
@@ -271,7 +291,7 @@ export default function Achievements() {
                   marginBottom: '18px',
                   fontWeight: '500'
                 }}>
-                  📅 {new Date(achievement.achievement_date).toLocaleDateString('en-US', {
+                  <FontAwesomeIcon icon={faCalendar} /> {new Date(achievement.achievement_date).toLocaleDateString('en-US', {
                     year: 'numeric',
                     month: 'long',
                     day: 'numeric'
@@ -288,7 +308,7 @@ export default function Achievements() {
                   }}>
                     {achievement.description.split(', ').filter((d: string) => d.trim()).map((driver: string, idx: number) => (
                       <div key={idx} style={{marginBottom: '5px'}}>
-                        🏎️ {driver}
+                        <FontAwesomeIcon icon={faCar} /> {driver}
                       </div>
                     ))}
                   </div>

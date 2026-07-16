@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { Orbitron, Racing_Sans_One, Rajdhani } from "next/font/google";
 import "./globals.css";
 import Navbar from '@/components/Navbar';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faInstagram } from '@fortawesome/free-brands-svg-icons';
 
 const orbitron = Orbitron({
   variable: "--font-orbitron",
@@ -114,7 +116,7 @@ export default function RootLayout({
                 }}
                 className="hover:text-[#2d7a19]"
               >
-                📷 Follow us on Instagram
+<FontAwesomeIcon icon={faInstagram} /> Follow us on Instagram
               </a>
             </div>
           </div>

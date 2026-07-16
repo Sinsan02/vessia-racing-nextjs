@@ -4,6 +4,8 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { useState, useEffect, useRef } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faBars, faXmark, faChevronDown, faUser, faGear, faRightFromBracket } from '@fortawesome/free-solid-svg-icons';
 
 interface User {
   id: number;
@@ -159,7 +161,7 @@ export default function Navbar() {
             onClick={() => setIsMenuOpen(!isMenuOpen)}
             aria-label="Toggle menu"
           >
-            {isMenuOpen ? '✕' : '☰'}
+            <FontAwesomeIcon icon={isMenuOpen ? faXmark : faBars} />
           </button>
           
           <div className={`nav-menu ${isMenuOpen ? 'active' : ''}`}>
@@ -220,7 +222,7 @@ export default function Navbar() {
                       )}
                     </div>
                     <span style={{color: '#fff', fontWeight: '500'}}>{user.name}</span>
-                    <span style={{color: '#3EA822', marginLeft: '8px', fontSize: '12px'}}>▼</span>
+                    <FontAwesomeIcon icon={faChevronDown} style={{color: '#3EA822', marginLeft: '8px', fontSize: '12px'}} />
                     
                     {isDropdownOpen && (
                       <div 
@@ -256,7 +258,7 @@ export default function Navbar() {
                           onMouseEnter={(e) => (e.target as any).style.backgroundColor = '#333'}
                           onMouseLeave={(e) => (e.target as any).style.backgroundColor = 'transparent'}
                         >
-                          👤 Min Profil
+                          <FontAwesomeIcon icon={faUser} style={{marginRight: '8px'}} /> Min Profil
                         </Link>
                         {user.role === 'admin' && (
                           <Link 
@@ -277,7 +279,7 @@ export default function Navbar() {
                             onMouseEnter={(e) => (e.target as any).style.backgroundColor = '#333'}
                             onMouseLeave={(e) => (e.target as any).style.backgroundColor = 'transparent'}
                           >
-                            ⚙️ Admin Panel
+                            <FontAwesomeIcon icon={faGear} style={{marginRight: '8px'}} /> Admin Panel
                           </Link>
                         )}
                         <button 
@@ -301,7 +303,7 @@ export default function Navbar() {
                           onMouseEnter={(e) => (e.target as any).style.backgroundColor = '#333'}
                           onMouseLeave={(e) => (e.target as any).style.backgroundColor = 'transparent'}
                         >
-                          🚪 Sign Out
+                          <FontAwesomeIcon icon={faRightFromBracket} style={{marginRight: '8px'}} /> Sign Out
                         </button>
                       </div>
                     )}

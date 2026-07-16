@@ -2,6 +2,8 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faXmark, faPencil, faBolt, faChevronUp, faChevronDown } from '@fortawesome/free-solid-svg-icons';
 
 const getPlaceholderColor = (name: string) => {
   const colors = [
@@ -131,7 +133,7 @@ export default function Drivers() {
                   e.currentTarget.style.backgroundColor = isEditMode ? "#c00" : "#3EA822";
                 }}
               >
-                {isEditMode ? "✕ Lukk redigering" : "✏️ Endre rekkefølge"}
+                {isEditMode ? <><FontAwesomeIcon icon={faXmark} /> Lukk redigering</> : <><FontAwesomeIcon icon={faPencil} /> Endre rekkefølge</>}
               </button>
             </div>
           )}
@@ -148,7 +150,7 @@ export default function Drivers() {
           }}>
             {loading ? (
               <div style={{textAlign: 'center', color: '#888', padding: '40px', gridColumn: '1 / -1'}}>
-                <div style={{fontSize: '2rem', marginBottom: '15px'}}>⚡</div>
+                <div style={{fontSize: '2rem', marginBottom: '15px'}}><FontAwesomeIcon icon={faBolt} /></div>
                 <p>Loading drivers...</p>
               </div>
             ) : drivers.length === 0 ? (
@@ -209,7 +211,7 @@ export default function Drivers() {
                           fontWeight: 'bold'
                         }}
                       >
-                        ▲
+                        <FontAwesomeIcon icon={faChevronUp} />
                       </button>
                       <button
                         onClick={() => handleReorder(driver.id, 'down')}
@@ -225,7 +227,7 @@ export default function Drivers() {
                           fontWeight: 'bold'
                         }}
                       >
-                        ▼
+                        <FontAwesomeIcon icon={faChevronDown} />
                       </button>
                     </div>
                   )}

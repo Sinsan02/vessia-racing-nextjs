@@ -1,6 +1,8 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faDesktop } from '@fortawesome/free-solid-svg-icons';
 
 export default function MobileWarning() {
   const [isMobile, setIsMobile] = useState(false);
@@ -78,7 +80,7 @@ export default function MobileWarning() {
         <div style={{
           fontSize: '4rem',
           marginBottom: '20px'
-        }}>🖥️</div>
+        }}><FontAwesomeIcon icon={faDesktop} /></div>
         
         <h1 style={{
           color: '#3EA822',

@@ -3,6 +3,25 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { useState, useEffect, useRef } from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faTrophy, faFlagCheckered, faLocationDot, faCalendar, faCar, faRocket, faMedal, faCrown, faBolt } from '@fortawesome/free-solid-svg-icons';
+
+const ACHIEVEMENT_ICON_MAP: Record<string, any> = {
+  trophy: faTrophy, 'medal-gold': faMedal, 'medal-silver': faMedal,
+  'medal-bronze': faMedal, crown: faCrown, 'flag-checkered': faFlagCheckered,
+  bolt: faBolt, fire: faBolt,
+  '🏆': faTrophy, '🥇': faMedal, '🥈': faMedal, '🥉': faMedal,
+  '👑': faCrown, '🏁': faFlagCheckered, '⚡': faBolt, '🔥': faBolt,
+};
+const ACHIEVEMENT_ICON_COLOR: Record<string, string> = {
+  'medal-gold': '#FFD700', 'medal-silver': '#C0C0C0', 'medal-bronze': '#CD7F32',
+  '🥇': '#FFD700', '🥈': '#C0C0C0', '🥉': '#CD7F32',
+};
+function AchievementIcon({ icon }: { icon: string }) {
+  const fa = ACHIEVEMENT_ICON_MAP[icon] || faTrophy;
+  const color = ACHIEVEMENT_ICON_COLOR[icon];
+  return <FontAwesomeIcon icon={fa} style={color ? { color } : undefined} />;
+}
 
 export default function Home() {
   const [welcomeMessage, setWelcomeMessage] = useState('');
@@ -314,7 +333,7 @@ export default function Home() {
                     e.currentTarget.style.transform = 'scale(1) rotateY(0deg)';
                     e.currentTarget.style.boxShadow = '0 5px 15px rgba(62, 168, 34, 0.3)';
                   }}>
-                    {achievement.icon}
+                    <AchievementIcon icon={achievement.icon} />
                   </div>
 
                   {achievement.position <= 3 && (
@@ -350,7 +369,7 @@ export default function Home() {
                     marginBottom: isMobile ? '4px' : '10px',
                     fontWeight: '500'
                   }}>
-                    🏁 {achievement.race_name}
+                    <FontAwesomeIcon icon={faFlagCheckered} /> {achievement.race_name}
                   </p>
 
                   {achievement.track_name && (
@@ -359,7 +378,7 @@ export default function Home() {
                       fontSize: isMobile ? '0.7rem' : '0.9rem',
                       marginBottom: isMobile ? '4px' : '10px'
                     }}>
-                      📍 {achievement.track_name}
+                      <FontAwesomeIcon icon={faLocationDot} /> {achievement.track_name}
                     </p>
                   )}
 
@@ -368,7 +387,7 @@ export default function Home() {
                     fontSize: isMobile ? '0.65rem' : '0.9rem',
                     marginBottom: isMobile ? '6px' : '15px'
                   }}>
-                    📅 {new Date(achievement.achievement_date).toLocaleDateString('en-US', {
+                    <FontAwesomeIcon icon={faCalendar} /> {new Date(achievement.achievement_date).toLocaleDateString('en-US', {
                       year: 'numeric',
                       month: 'long',
                       day: 'numeric'
@@ -386,7 +405,7 @@ export default function Home() {
                     }}>
                       {achievement.description.split(', ').filter((d: string) => d.trim()).map((driver: string, idx: number) => (
                         <div key={idx} style={{marginBottom: '4px'}}>
-                          🏎️ {driver}
+                          <FontAwesomeIcon icon={faCar} /> {driver}
                         </div>
                       ))}
                     </div>
@@ -415,7 +434,7 @@ export default function Home() {
               color: '#b0b0b0',
               padding: '60px 20px'
             }}>
-              <div style={{fontSize: '4rem', marginBottom: '20px'}}>🏆</div>
+              <div style={{fontSize: '4rem', marginBottom: '20px'}}><FontAwesomeIcon icon={faTrophy} /></div>
               <h3 style={{color: '#ccc', marginBottom: '10px'}}>No accomplishments yet</h3>
               <p>Our victories will be showcased here as we compete and win!</p>
             </div>
@@ -530,14 +549,14 @@ export default function Home() {
                 fontSize: isMobile ? '1.1rem' : '1.8rem',
                 marginBottom: isMobile ? '5px' : '10px'
               }}>
-                🏁 {latestEvent.name}
+                <FontAwesomeIcon icon={faFlagCheckered} /> {latestEvent.name}
               </h3>
               <p style={{
                 color: '#ccc',
                 fontSize: isMobile ? '0.75rem' : '1.1rem',
                 marginBottom: isMobile ? '4px' : '8px'
               }}>
-                📅 {new Date(latestEvent.event_date).toLocaleDateString('en-US', {
+                <FontAwesomeIcon icon={faCalendar} /> {new Date(latestEvent.event_date).toLocaleDateString('en-US', {
                   year: 'numeric',
                   month: 'long',
                   day: 'numeric'
@@ -550,7 +569,7 @@ export default function Home() {
                   fontSize: isMobile ? '0.7rem' : '1rem',
                   marginBottom: isMobile ? '6px' : '15px'
                 }}>
-                  🏁 {latestEvent.track_name}
+                  <FontAwesomeIcon icon={faFlagCheckered} /> {latestEvent.track_name}
                 </p>
               )}
               {latestEvent.description && (
@@ -589,7 +608,7 @@ export default function Home() {
               color: '#b0b0b0',
               padding: '40px'
             }}>
-              <div style={{fontSize: '3rem', marginBottom: '15px'}}>📅</div>
+              <div style={{fontSize: '3rem', marginBottom: '15px'}}><FontAwesomeIcon icon={faCalendar} /></div>
               <p>No upcoming events scheduled at the moment.</p>
               <p style={{fontSize: '0.9rem', marginTop: '10px', color: '#888'}}>Check back soon for new racing events!</p>
               <Link
@@ -665,7 +684,7 @@ export default function Home() {
             margin: '0 auto',
             boxSizing: 'border-box'
           }}>
-            <div style={{fontSize: isMobile ? '1.5rem' : '2.5rem', marginBottom: isMobile ? '6px' : '15px'}}>🚀</div>
+            <div style={{fontSize: isMobile ? '1.5rem' : '2.5rem', marginBottom: isMobile ? '6px' : '15px'}}><FontAwesomeIcon icon={faRocket} /></div>
             <h3 style={{color: '#3EA822', marginBottom: isMobile ? '6px' : '10px', fontSize: isMobile ? '1.1rem' : '2rem', fontWeight: 'bold'}}>
               Want to join our winning team?
             </h3>

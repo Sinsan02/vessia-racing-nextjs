@@ -2,6 +2,8 @@
 
 import { useState, useEffect } from "react";
 import Image from "next/image";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faXmark, faPencil, faTrash, faChevronUp, faChevronDown } from '@fortawesome/free-solid-svg-icons';
 
 export default function GalleryPage() {
   const [images, setImages] = useState<any[]>([]);
@@ -302,7 +304,7 @@ export default function GalleryPage() {
                 e.currentTarget.style.backgroundColor = isEditMode ? "#c00" : "#3EA822";
               }}
             >
-              {isEditMode ? "✕ Close Edit" : "✏️ Edit Gallery"}
+              {isEditMode ? <><FontAwesomeIcon icon={faXmark} /> Close Edit</> : <><FontAwesomeIcon icon={faPencil} /> Edit Gallery</>}
             </button>
           </div>
         )}
@@ -544,7 +546,7 @@ export default function GalleryPage() {
                           onMouseEnter={(e) => e.currentTarget.style.backgroundColor = "#4db82e"}
                           onMouseLeave={(e) => e.currentTarget.style.backgroundColor = "#3EA822"}
                         >
-                          ▲
+                          <FontAwesomeIcon icon={faChevronUp} />
                         </button>
                         <button
                           onClick={() => handleReorderCategory(cat.id, 'down')}
@@ -561,7 +563,7 @@ export default function GalleryPage() {
                           onMouseEnter={(e) => e.currentTarget.style.backgroundColor = "#4db82e"}
                           onMouseLeave={(e) => e.currentTarget.style.backgroundColor = "#3EA822"}
                         >
-                          ▼
+                          <FontAwesomeIcon icon={faChevronDown} />
                         </button>
                         <button
                           onClick={() => handleEditCategory(cat)}
@@ -578,7 +580,7 @@ export default function GalleryPage() {
                           onMouseEnter={(e) => e.currentTarget.style.backgroundColor = "#42A5F5"}
                           onMouseLeave={(e) => e.currentTarget.style.backgroundColor = "#2196F3"}
                         >
-                          ✏️ Edit
+                          <FontAwesomeIcon icon={faPencil} /> Edit
                         </button>
                         <button
                           onClick={() => handleDeleteCategory(cat.id, cat.name)}
@@ -595,7 +597,7 @@ export default function GalleryPage() {
                           onMouseEnter={(e) => e.currentTarget.style.backgroundColor = "#ff5555"}
                           onMouseLeave={(e) => e.currentTarget.style.backgroundColor = "#f44"}
                         >
-                          🗑️ Delete
+                          <FontAwesomeIcon icon={faTrash} /> Delete
                         </button>
                       </div>
                     )}

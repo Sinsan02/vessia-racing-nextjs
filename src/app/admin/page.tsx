@@ -1,6 +1,25 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faGear, faUsers, faTrophy, faMedal, faFlagCheckered, faCrown, faCar, faUser, faTrash, faPlus, faList, faRotate, faCircleCheck, faXmark, faHouse, faPencil, faCircleInfo, faIdCard, faBolt, faHourglass, faCheck, faArrowRotateLeft } from '@fortawesome/free-solid-svg-icons';
+
+const ACHIEVEMENT_ICON_MAP: Record<string, any> = {
+  trophy: faTrophy, 'medal-gold': faMedal, 'medal-silver': faMedal,
+  'medal-bronze': faMedal, crown: faCrown, 'flag-checkered': faFlagCheckered,
+  bolt: faBolt, fire: faBolt,
+  '🏆': faTrophy, '🥇': faMedal, '🥈': faMedal, '🥉': faMedal,
+  '👑': faCrown, '🏁': faFlagCheckered, '⚡': faBolt, '🔥': faBolt,
+};
+const ACHIEVEMENT_ICON_COLOR: Record<string, string> = {
+  'medal-gold': '#FFD700', 'medal-silver': '#C0C0C0', 'medal-bronze': '#CD7F32',
+  '🥇': '#FFD700', '🥈': '#C0C0C0', '🥉': '#CD7F32',
+};
+function AchievementIcon({ icon }: { icon: string }) {
+  const fa = ACHIEVEMENT_ICON_MAP[icon] || faTrophy;
+  const color = ACHIEVEMENT_ICON_COLOR[icon];
+  return <FontAwesomeIcon icon={fa} style={color ? { color } : undefined} />;
+}
 
 interface User {
   id: number;
@@ -58,7 +77,7 @@ export default function Admin() {
   const [achievementDate, setAchievementDate] = useState('');
   const [achievementPosition, setAchievementPosition] = useState('1');
   const [achievementCategory, setAchievementCategory] = useState('Race Victory');
-  const [achievementIcon, setAchievementIcon] = useState('🏆');
+  const [achievementIcon, setAchievementIcon] = useState('trophy');
   const [editingAchievementId, setEditingAchievementId] = useState<number | null>(null);
 
   useEffect(() => {
@@ -130,15 +149,15 @@ export default function Admin() {
       const data = await response.json();
       
       if (data.success) {
-        setRefreshMessage(`✅ Successfully updated ${data.updated} of ${data.total} drivers`);
+        setRefreshMessage(`Successfully updated ${data.updated} of ${data.total} drivers`);
         // Refresh the list
         await fetchIracingUsers();
       } else {
-        setRefreshMessage(`❌ Failed: ${data.error || 'Unknown error'}`);
+        setRefreshMessage(`Failed: ${data.error || 'Unknown error'}`);
       }
     } catch (error) {
       console.error('Failed to refresh iRacing stats:', error);
-      setRefreshMessage('❌ Failed to refresh stats');
+      setRefreshMessage('Failed to refresh stats');
     } finally {
       setIsRefreshing(false);
     }
@@ -272,7 +291,7 @@ export default function Admin() {
         setAchievementDate('');
         setAchievementPosition('1');
         setAchievementCategory('Race Victory');
-        setAchievementIcon('🏆');
+        setAchievementIcon('trophy');
         fetchAchievements();
       } else {
         alert('Error creating accomplishment: ' + data.error);
@@ -317,7 +336,7 @@ export default function Admin() {
         setAchievementDate('');
         setAchievementPosition('1');
         setAchievementCategory('Race Victory');
-        setAchievementIcon('🏆');
+        setAchievementIcon('trophy');
         setEditingAchievementId(null);
         fetchAchievements();
       } else {
@@ -762,7 +781,7 @@ export default function Admin() {
         <div className="container">
           <div className="admin-header" style={{textAlign: 'center', marginBottom: '30px'}}>
             <h1 style={{color: '#3EA822', fontSize: '2.5rem', marginBottom: '1rem'}}>
-              ⚙️ Administration Panel
+              <FontAwesomeIcon icon={faGear} /> Administration Panel
             </h1>
             <p style={{color: '#ccc', fontSize: '1.1rem'}}>Manage users, leagues, and points for Vessia Racing</p>
           </div>
@@ -785,9 +804,9 @@ export default function Admin() {
                 gap: '8px'
               }}
             >
-              👥 User Management
+              <FontAwesomeIcon icon={faUsers} /> User Management
             </button>
-            <button 
+            <button
               className={`tab-button ${activeTab === 'league-management' ? 'active' : ''}`}
               onClick={() => setActiveTab('league-management')}
               style={{
@@ -803,7 +822,7 @@ export default function Admin() {
                 gap: '8px'
               }}
             >
-              🏆 League Management
+              <FontAwesomeIcon icon={faTrophy} /> League Management
             </button>
             <button 
               className={`tab-button ${activeTab === 'points-management' ? 'active' : ''}`}
@@ -821,7 +840,7 @@ export default function Admin() {
                 gap: '8px'
               }}
             >
-              🏅 Points Management
+              <FontAwesomeIcon icon={faMedal} /> Points Management
             </button>
             <button 
               className={`tab-button ${activeTab === 'achievement-management' ? 'active' : ''}`}
@@ -839,9 +858,9 @@ export default function Admin() {
                 gap: '8px'
               }}
             >
-              🏆 Accomplishment Management
+              <FontAwesomeIcon icon={faTrophy} /> Accomplishment Management
             </button>
-            <button 
+            <button
               className={`tab-button ${activeTab === 'iracing-management' ? 'active' : ''}`}
               onClick={() => setActiveTab('iracing-management')}
               style={{
@@ -857,7 +876,7 @@ export default function Admin() {
                 gap: '8px'
               }}
             >
-              🏁 iRacing Stats
+              <FontAwesomeIcon icon={faFlagCheckered} /> iRacing Stats
             </button>
           </div>
 
@@ -867,17 +886,17 @@ export default function Admin() {
               {/* Admin Stats */}
               <div className="admin-stats" style={{display: 'flex', gap: '20px', marginBottom: '30px', justifyContent: 'center', flexWrap: 'wrap'}}>
                 <div className="stat-card" style={{backgroundColor: '#1a1a1a', padding: '20px', borderRadius: '10px', minWidth: '150px', textAlign: 'center'}}>
-                  <div style={{fontSize: '2rem', marginBottom: '10px'}}>👥</div>
+                  <div style={{fontSize: '2rem', marginBottom: '10px'}}><FontAwesomeIcon icon={faUsers} /></div>
                   <h3 style={{color: '#3EA822', fontSize: '2rem', margin: '0'}}>{stats.totalUsers}</h3>
                   <p style={{color: '#ccc', margin: '5px 0 0'}}>Total Users</p>
                 </div>
                 <div className="stat-card" style={{backgroundColor: '#1a1a1a', padding: '20px', borderRadius: '10px', minWidth: '150px', textAlign: 'center'}}>
-                  <div style={{fontSize: '2rem', marginBottom: '10px'}}>👑</div>
+                  <div style={{fontSize: '2rem', marginBottom: '10px'}}><FontAwesomeIcon icon={faCrown} /></div>
                   <h3 style={{color: '#3EA822', fontSize: '2rem', margin: '0'}}>{stats.totalAdmins}</h3>
                   <p style={{color: '#ccc', margin: '5px 0 0'}}>Administrators</p>
                 </div>
                 <div className="stat-card" style={{backgroundColor: '#1a1a1a', padding: '20px', borderRadius: '10px', minWidth: '150px', textAlign: 'center'}}>
-                  <div style={{fontSize: '2rem', marginBottom: '10px'}}>🏎️</div>
+                  <div style={{fontSize: '2rem', marginBottom: '10px'}}><FontAwesomeIcon icon={faCar} /></div>
                   <h3 style={{color: '#3EA822', fontSize: '2rem', margin: '0'}}>{stats.totalDrivers}</h3>
                   <p style={{color: '#ccc', margin: '5px 0 0'}}>Team Drivers</p>
                 </div>
@@ -886,7 +905,7 @@ export default function Admin() {
               {/* Users Management */}
               <div className="admin-section" style={{backgroundColor: '#1a1a1a', padding: '25px', borderRadius: '15px'}}>
                 <h2 style={{color: '#3EA822', marginBottom: '20px', fontSize: '1.5rem', display: 'flex', alignItems: 'center', gap: '10px'}}>
-                  👥 User Management
+                  <FontAwesomeIcon icon={faUsers} /> User Management
                 </h2>
                 
                 {loading ? (
@@ -973,7 +992,7 @@ export default function Admin() {
                                   }}
                                   title={user.role === 'admin' ? 'Remove Admin' : 'Make Admin'}
                                 >
-                                  {user.role === 'admin' ? '👤 Remove Admin' : '👑 Make Admin'}
+                                  {user.role === 'admin' ? <><FontAwesomeIcon icon={faUser} /> Remove Admin</> : <><FontAwesomeIcon icon={faCrown} /> Make Admin</>}
                                 </button>
                                 <button
                                   onClick={() => updateDriverStatus(user.id, user.is_driver)}
@@ -988,7 +1007,7 @@ export default function Admin() {
                                   }}
                                   title={user.is_driver ? 'Remove Driver' : 'Make Driver'}
                                 >
-                                  {user.is_driver ? '🏎️ Remove Driver' : '🏎️ Make Driver'}
+                                  {user.is_driver ? <><FontAwesomeIcon icon={faCar} /> Remove Driver</> : <><FontAwesomeIcon icon={faCar} /> Make Driver</>}
                                 </button>
                                 <button
                                   onClick={() => deleteUser(user.id, user.name)}
@@ -1003,7 +1022,7 @@ export default function Admin() {
                                   }}
                                   title="Delete User"
                                 >
-                                  🗑️ Delete
+                                  <FontAwesomeIcon icon={faTrash} /> Delete
                                 </button>
                               </div>
                             </td>
@@ -1023,7 +1042,7 @@ export default function Admin() {
               {/* Create New League */}
               <div style={{backgroundColor: '#1a1a1a', borderRadius: '10px', padding: '20px', marginBottom: '30px'}}>
                 <h3 style={{color: '#3EA822', marginBottom: '20px', display: 'flex', alignItems: 'center', gap: '8px'}}>
-                  ➕ Create New League
+                  <FontAwesomeIcon icon={faPlus} /> Create New League
                 </h3>
                 <form onSubmit={createLeague} style={{display: 'flex', alignItems: 'flex-end', gap: '30px'}}>
                   <div style={{flex: '1', maxWidth: '200px'}}>
@@ -1049,7 +1068,7 @@ export default function Admin() {
                   </div>
                   <div style={{flex: '0 0 auto'}}>
                     <button type="submit" className="btn" style={{padding: '10px 20px', backgroundColor: '#28a745', color: '#fff', border: 'none', borderRadius: '5px', cursor: 'pointer', whiteSpace: 'nowrap'}}>
-                      ➕ Create League
+                      <FontAwesomeIcon icon={faPlus} /> Create League
                     </button>
                   </div>
                 </form>
@@ -1058,7 +1077,7 @@ export default function Admin() {
               {/* Existing Leagues */}
               <div style={{backgroundColor: '#1a1a1a', borderRadius: '10px', padding: '20px'}}>
                 <h3 style={{color: '#17a2b8', marginBottom: '20px', display: 'flex', alignItems: 'center', gap: '8px'}}>
-                  📋 Existing Leagues
+                  <FontAwesomeIcon icon={faList} /> Existing Leagues
                 </h3>
                 <div>
                   {leagues.length === 0 ? (
@@ -1077,7 +1096,7 @@ export default function Admin() {
                               onClick={() => deleteLeague(league.id, league.name)}
                               style={{padding: '8px 12px', backgroundColor: '#dc3545', color: '#fff', border: 'none', borderRadius: '5px', cursor: 'pointer'}}
                             >
-                              🗑️ Delete
+                              <FontAwesomeIcon icon={faTrash} /> Delete
                             </button>
                           </div>
                         </div>
@@ -1090,7 +1109,7 @@ export default function Admin() {
               {/* Driver League Management */}
               <div style={{backgroundColor: '#1a1a1a', borderRadius: '10px', padding: '20px', marginTop: '30px'}}>
                 <h3 style={{color: '#ffc107', marginBottom: '20px', display: 'flex', alignItems: 'center', gap: '8px'}}>
-                  🏎️ Driver League Management
+                  <FontAwesomeIcon icon={faCar} /> Driver League Management
                 </h3>
                 
                 {/* League Selection for Driver Management */}
@@ -1145,7 +1164,7 @@ export default function Admin() {
                                 <h5 style={{margin: '0', color: '#fff', fontSize: '1.1rem'}}>{driver.name}</h5>
                                 <p style={{margin: '2px 0 0 0', color: '#ccc', fontSize: '0.9rem'}}>{driver.name}</p>
                                 <small style={{color: isInLeague ? '#28a745' : '#888'}}>
-                                  {isInLeague ? '✅ In League' : '⚫ Not in League'}
+                                  {isInLeague ? <><FontAwesomeIcon icon={faCircleCheck} /> In League</> : 'Not in League'}
                                 </small>
                               </div>
                             </div>
@@ -1164,7 +1183,7 @@ export default function Admin() {
                                     fontWeight: 'bold'
                                   }}
                                 >
-                                  ❌ Remove from League
+                                  <FontAwesomeIcon icon={faXmark} /> Remove from League
                                 </button>
                               ) : (
                                 <button
@@ -1180,7 +1199,7 @@ export default function Admin() {
                                     fontWeight: 'bold'
                                   }}
                                 >
-                                  ➕ Add to League
+                                  <FontAwesomeIcon icon={faPlus} /> Add to League
                                 </button>
                               )}
                             </div>
@@ -1232,7 +1251,7 @@ export default function Admin() {
                         cursor: selectedLeague ? 'pointer' : 'not-allowed'
                       }}
                     >
-                      🔄 Reset All Points
+                      <FontAwesomeIcon icon={faRotate} /> Reset All Points
                     </button>
                   </div>
                   <div>
@@ -1248,7 +1267,7 @@ export default function Admin() {
                         cursor: selectedLeague ? 'pointer' : 'not-allowed'
                       }}
                     >
-                      ↶ Undo Last Action
+                      <FontAwesomeIcon icon={faArrowRotateLeft} /> Undo Last Action
                     </button>
                   </div>
                 </div>
@@ -1259,7 +1278,7 @@ export default function Admin() {
                   {/* Quick Points Assignment */}
                   <div style={{backgroundColor: '#1a1a1a', borderRadius: '10px', padding: '20px', marginBottom: '30px'}}>
                     <h3 style={{color: '#ffc107', marginBottom: '20px', display: 'flex', alignItems: 'center', gap: '8px'}}>
-                      ➕ Quick Points Assignment
+                      <FontAwesomeIcon icon={faPlus} /> Quick Points Assignment
                     </h3>
                     <div style={{display: 'flex', alignItems: 'flex-end', gap: '15px', flexWrap: 'wrap'}}>
                       <div style={{flex: '2', maxWidth: '250px'}}>
@@ -1275,7 +1294,7 @@ export default function Admin() {
                             const hasPoints = leaguePoints.some(lp => lp.id === driver.id);
                             return (
                               <option key={driver.id} value={driver.id}>
-                                {driver.name} {hasPoints ? '✓' : ''}
+                                {driver.name} {hasPoints ? '✔' : ''}
                               </option>
                             );
                           })}
@@ -1336,7 +1355,7 @@ export default function Admin() {
                   {/* Points Standings */}
                   <div style={{backgroundColor: '#1a1a1a', borderRadius: '10px', padding: '20px'}}>
                     <h3 style={{color: '#28a745', marginBottom: '20px', display: 'flex', alignItems: 'center', gap: '8px'}}>
-                      🏆 Current Standings
+                      <FontAwesomeIcon icon={faTrophy} /> Current Standings
                     </h3>
                     {pointsDrivers.length === 0 ? (
                       <p style={{color: '#888', textAlign: 'center'}}>No drivers found in this league.</p>
@@ -1405,7 +1424,7 @@ export default function Admin() {
           {/* Accomplishment Management Tab */}
           {activeTab === 'achievement-management' && (
             <div className="tab-content">
-              <h2 style={{color: '#3EA822', textAlign: 'center', marginBottom: '20px'}}>🏆 Accomplishment Management</h2>
+              <h2 style={{color: '#3EA822', textAlign: 'center', marginBottom: '20px'}}><FontAwesomeIcon icon={faTrophy} /> Accomplishment Management</h2>
               
               {/* Info Box */}
               <div style={{
@@ -1417,7 +1436,7 @@ export default function Admin() {
                 textAlign: 'center'
               }}>
                 <p style={{color: '#3EA822', margin: '0', fontSize: '0.9rem', fontWeight: 'bold'}}>
-                  🏠 Homepage Control: Use the toggle buttons to select up to 3 accomplishments for homepage display
+                  <FontAwesomeIcon icon={faHouse} /> Homepage Control: Use the toggle buttons to select up to 3 accomplishments for homepage display
                 </p>
               </div>
               
@@ -1567,14 +1586,14 @@ export default function Admin() {
                         color: '#fff'
                       }}
                     >
-                      <option value="🏆">🏆 Trophy</option>
-                      <option value="🥇">🥇 Gold Medal</option>
-                      <option value="🥈">🥈 Silver Medal</option>
-                      <option value="🥉">🥉 Bronze Medal</option>
-                      <option value="👑">👑 Crown</option>
-                      <option value="🏁">🏁 Checkered Flag</option>
-                      <option value="⚡">⚡ Lightning</option>
-                      <option value="🔥">🔥 Fire</option>
+                      <option value="trophy">Trophy</option>
+                      <option value="medal-gold">Gold Medal</option>
+                      <option value="medal-silver">Silver Medal</option>
+                      <option value="medal-bronze">Bronze Medal</option>
+                      <option value="crown">Crown</option>
+                      <option value="flag-checkered">Checkered Flag</option>
+                      <option value="bolt">Lightning</option>
+                      <option value="fire">Fire</option>
                     </select>
                   </div>
                 </div>
@@ -1652,7 +1671,7 @@ export default function Admin() {
                       transition: 'background-color 0.3s ease'
                     }}
                   >
-                    {editingAchievementId ? '✏️ Update Accomplishment' : '🏆 Create Accomplishment'}
+                    {editingAchievementId ? <><FontAwesomeIcon icon={faPencil} /> Update Accomplishment</> : <><FontAwesomeIcon icon={faTrophy} /> Create Accomplishment</>}
                   </button>
                   {editingAchievementId && (
                     <button
@@ -1670,7 +1689,7 @@ export default function Admin() {
                         transition: 'background-color 0.3s ease'
                       }}
                     >
-                      ❌ Cancel
+                      <FontAwesomeIcon icon={faXmark} /> Cancel
                     </button>
                   )}
                 </div>
@@ -1690,7 +1709,7 @@ export default function Admin() {
                     backgroundColor: '#1a1a1a',
                     borderRadius: '10px'
                   }}>
-                    <div style={{fontSize: '4rem', marginBottom: '20px'}}>🏆</div>
+                    <div style={{fontSize: '4rem', marginBottom: '20px'}}><FontAwesomeIcon icon={faTrophy} /></div>
                     <h3 style={{color: '#ccc', marginBottom: '10px'}}>No accomplishments yet</h3>
                     <p>Create your first accomplishment using the form above!</p>
                   </div>
@@ -1726,7 +1745,7 @@ export default function Admin() {
                           }}
                           title="Edit Accomplishment"
                         >
-                          ✏️
+                          <FontAwesomeIcon icon={faPencil} />
                         </button>
 
                         {/* Delete Button */}
@@ -1768,7 +1787,7 @@ export default function Admin() {
                           }}
                           title={achievement.show_on_homepage ? 'Remove from homepage' : 'Show on homepage'}
                         >
-                          {achievement.show_on_homepage ? '🏠 ON' : '🏠 OFF'}
+                          <FontAwesomeIcon icon={faHouse} /> {achievement.show_on_homepage ? 'ON' : 'OFF'}
                         </button>
 
                         {/* Achievement Icon */}
@@ -1777,7 +1796,7 @@ export default function Admin() {
                           textAlign: 'center',
                           marginBottom: '15px'
                         }}>
-                          {achievement.icon}
+                          <AchievementIcon icon={achievement.icon} />
                         </div>
 
                         {/* Position Badge */}
@@ -1812,7 +1831,7 @@ export default function Admin() {
                           marginBottom: '8px',
                           fontWeight: '500'
                         }}>
-                          🏁 {achievement.race_name}
+                          <FontAwesomeIcon icon={faFlagCheckered} /> {achievement.race_name}
                         </p>
 
                         {achievement.track_name && (
@@ -1822,7 +1841,7 @@ export default function Admin() {
                             marginBottom: '8px',
                             fontSize: '0.9rem'
                           }}>
-                            📍 {achievement.track_name}
+                            <FontAwesomeIcon icon={faIdCard} style={{marginRight: '4px'}} />{achievement.track_name}
                           </p>
                         )}
 
@@ -1832,7 +1851,7 @@ export default function Admin() {
                           marginBottom: '10px',
                           fontSize: '0.9rem'
                         }}>
-                          📅 {new Date(achievement.achievement_date).toLocaleDateString()}
+                          <FontAwesomeIcon icon={faCheck} style={{marginRight: '4px'}} />{new Date(achievement.achievement_date).toLocaleDateString()}
                         </p>
 
                         {achievement.description && (
@@ -1846,7 +1865,7 @@ export default function Admin() {
                           }}>
                             {achievement.description.split(', ').filter((d: string) => d.trim()).map((driver: string, idx: number) => (
                               <div key={idx} style={{marginBottom: '5px'}}>
-                                🏎️ {driver}
+                                <FontAwesomeIcon icon={faCar} /> {driver}
                               </div>
                             ))}
                           </div>
@@ -1885,7 +1904,7 @@ export default function Admin() {
                             alignItems: 'center',
                             gap: '3px'
                           }}>
-                            🏠 HOMEPAGE
+                            <FontAwesomeIcon icon={faHouse} /> HOMEPAGE
                           </div>
                         )}
                       </div>
@@ -1901,7 +1920,7 @@ export default function Admin() {
             <div className="tab-content">
               <div style={{maxWidth: '1200px', margin: '0 auto'}}>
                 <h2 style={{color: '#3EA822', textAlign: 'center', marginBottom: '30px', fontSize: '2rem'}}>
-                  🏁 iRacing Stats Management
+                  <FontAwesomeIcon icon={faFlagCheckered} /> iRacing Stats Management
                 </h2>
 
                 {/* Refresh All Button */}
@@ -1924,13 +1943,13 @@ export default function Admin() {
                       opacity: isRefreshing ? 0.6 : 1
                     }}
                   >
-                    {isRefreshing ? '⏳ Refreshing...' : '🔄 Refresh All iRacing Stats'}
+                    {isRefreshing ? <><FontAwesomeIcon icon={faHourglass} /> Refreshing...</> : <><FontAwesomeIcon icon={faRotate} /> Refresh All iRacing Stats</>}
                   </button>
                   
                   {refreshMessage && (
                     <p style={{
                       marginTop: '15px',
-                      color: refreshMessage.includes('✅') ? '#3EA822' : '#ff4444',
+                      color: refreshMessage.startsWith('Successfully') ? '#3EA822' : '#ff4444',
                       fontSize: '1rem',
                       fontWeight: 'bold'
                     }}>
@@ -1948,7 +1967,7 @@ export default function Admin() {
                   border: '1px solid #3EA822'
                 }}>
                   <h3 style={{color: '#3EA822', marginBottom: '15px', display: 'flex', alignItems: 'center', gap: '10px'}}>
-                    ℹ️ Information
+                    <FontAwesomeIcon icon={faCircleInfo} /> Information
                   </h3>
                   <ul style={{color: '#ccc', lineHeight: '1.8', margin: 0, paddingLeft: '20px'}}>
                     <li>Stats are automatically updated every night at 2:00 AM UTC</li>
@@ -1996,7 +2015,7 @@ export default function Admin() {
                               {user.name}
                             </h4>
                             <p style={{color: '#888', margin: '0', fontSize: '0.9rem'}}>
-                              🆔 iRacing ID: {user.iracing_customer_id || 'N/A'}
+                              <FontAwesomeIcon icon={faIdCard} /> iRacing ID: {user.iracing_customer_id || 'N/A'}
                             </p>
                             {user.iracing_data_updated_at && (
                               <p style={{color: '#666', margin: '5px 0 0 0', fontSize: '0.85rem'}}>

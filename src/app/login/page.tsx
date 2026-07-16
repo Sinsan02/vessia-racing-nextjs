@@ -3,6 +3,8 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCheck } from '@fortawesome/free-solid-svg-icons';
 
 export default function Login() {
   const [formData, setFormData] = useState({
@@ -42,7 +44,7 @@ export default function Login() {
       if (response.ok) {
         const data = await response.json();
         // Show popup with user's name from login response
-        alert(`Velkommen ${data.user.name}! 🏁`);
+        alert(`Velkommen ${data.user.name}!`);
         // Redirect to home and force a full page reload to ensure auth status updates
         router.push('/');
         // Force reload after a brief delay to ensure navigation completes
@@ -93,7 +95,7 @@ export default function Login() {
         position: 'relative'
       }}>
       <div className="form-container">
-        <h2 className="form-title">✓ Sign In</h2>
+        <h2 className="form-title"><FontAwesomeIcon icon={faCheck} /> Sign In</h2>
         
         {error && (
           <div style={{backgroundColor: '#dc3545', color: 'white', padding: '10px', borderRadius: '5px', marginBottom: '1rem', textAlign: 'center'}}>

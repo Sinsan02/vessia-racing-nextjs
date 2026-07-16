@@ -2,6 +2,8 @@
 
 import { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 
 interface DriverProfile {
   id: number;
@@ -182,7 +184,7 @@ export default function DriverProfile() {
             e.currentTarget.style.color = '#3EA822';
           }}
         >
-          ← Back to Drivers
+<FontAwesomeIcon icon={faArrowLeft} /> Back to Drivers
         </button>
 
         {/* Profile Header */}

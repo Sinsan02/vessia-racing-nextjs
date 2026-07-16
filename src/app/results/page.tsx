@@ -1,6 +1,8 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faTrophy, faFlagCheckered, faMedal } from '@fortawesome/free-solid-svg-icons';
 
 interface League {
   id: number;
@@ -116,7 +118,7 @@ export default function Results() {
           {/* Header */}
           <div className="results-header" style={{textAlign: 'center', marginBottom: '30px', padding: '0'}}>
             <h1 style={{color: '#3EA822', fontSize: isMobile ? '2rem' : '2.5rem', marginBottom: '1rem'}}>
-              🏆 Championship Results
+              <FontAwesomeIcon icon={faTrophy} /> Championship Results
             </h1>
             <p style={{color: '#ccc', fontSize: isMobile ? '1rem' : '1.1rem', marginTop: '15px'}}>
               View championship standings and driver performances
@@ -172,7 +174,7 @@ export default function Results() {
               
               {pointsLoading ? (
                 <div style={{textAlign: 'center', color: '#888', padding: '40px'}}>
-                  <div style={{fontSize: '2rem', marginBottom: '15px'}}>🏁</div>
+                  <div style={{fontSize: '2rem', marginBottom: '15px'}}><FontAwesomeIcon icon={faFlagCheckered} /></div>
                   <p>Loading standings...</p>
                 </div>
               ) : points.length === 0 ? (
@@ -215,7 +217,7 @@ export default function Results() {
                               fontWeight: 'bold',
                               color: getRankColor(index + 1)
                             }}>
-                              {index === 0 ? '🥇' : index === 1 ? '🥈' : index === 2 ? '🥉' : `${index + 1}`}
+                              {index <= 2 ? <FontAwesomeIcon icon={faMedal} style={{color: index === 0 ? '#FFD700' : index === 1 ? '#C0C0C0' : '#CD7F32'}} /> : `${index + 1}`}
                             </div>
                           </td>
                           <td style={{padding: isMobile ? '8px 6px' : '15px'}}>
@@ -294,7 +296,7 @@ export default function Results() {
               borderRadius: '10px',
               border: '1px solid #333'
             }}>
-              <div style={{fontSize: '2rem', marginBottom: '15px'}}>🏁</div>
+              <div style={{fontSize: '2rem', marginBottom: '15px'}}><FontAwesomeIcon icon={faFlagCheckered} /></div>
               <p>Please select a league to view championship standings.</p>
             </div>
           )}

@@ -2,6 +2,8 @@
 
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faFlagCheckered, faCalendar, faPencil, faTrash, faCircleCheck } from '@fortawesome/free-solid-svg-icons';
 
 interface Event {
   id: number;
@@ -279,7 +281,7 @@ export default function Events() {
           {/* Header */}
           <div className="events-header" style={{textAlign: 'center', marginBottom: '30px', padding: isMobile ? '0 10px' : '0'}}>
             <h1 style={{color: '#3EA822', fontSize: '2.5rem', marginBottom: '1rem'}}>
-              🏁 Racing Events
+              <FontAwesomeIcon icon={faFlagCheckered} /> Racing Events
             </h1>
             <p style={{color: '#ccc', fontSize: '1.1rem', marginTop: '15px'}}>
               Stay updated with all Vessia Racing events and competitions
@@ -304,7 +306,7 @@ export default function Events() {
                 onMouseEnter={(e) => (e.target as HTMLButtonElement).style.backgroundColor = '#2d7a1a'}
                 onMouseLeave={(e) => (e.target as HTMLButtonElement).style.backgroundColor = '#3EA822'}
               >
-                📅 Create New Event
+                <FontAwesomeIcon icon={faCalendar} /> Create New Event
               </button>
             </div>
           )}
@@ -322,7 +324,7 @@ export default function Events() {
               width: '100%'
             }}>
               <h2 style={{color: '#3EA822', marginBottom: '20px', fontSize: '1.5rem'}}>
-                {editingEvent ? '✏️ Edit Event' : '📅 Create New Event'}
+                {editingEvent ? <><FontAwesomeIcon icon={faPencil} /> Edit Event</> : <><FontAwesomeIcon icon={faCalendar} /> Create New Event</>}
               </h2>
               
               <form onSubmit={handleSubmit}>
@@ -540,7 +542,7 @@ export default function Events() {
           {/* Events List */}
           {loading ? (
             <div style={{textAlign: 'center', color: '#888', padding: '40px'}}>
-              <div style={{fontSize: '2rem', marginBottom: '15px'}}>🏁</div>
+              <div style={{fontSize: '2rem', marginBottom: '15px'}}><FontAwesomeIcon icon={faFlagCheckered} /></div>
               <p>Loading events...</p>
             </div>
           ) : events.length === 0 ? (
@@ -627,7 +629,7 @@ export default function Events() {
                       color: '#666'
                     }}>
                       <div style={{textAlign: 'center'}}>
-                        <div style={{fontSize: '2rem', marginBottom: '8px'}}>🏁</div>
+                        <div style={{fontSize: '2rem', marginBottom: '8px'}}><FontAwesomeIcon icon={faFlagCheckered} /></div>
                         <div>No image</div>
                       </div>
                     </div>
@@ -644,7 +646,7 @@ export default function Events() {
                         backgroundColor: isEventPast(event.event_date, event.event_time) ? '#dc3545' : '#3EA822',
                         color: 'white'
                       }}>
-                        {isEventPast(event.event_date, event.event_time) ? '✅ Completed' : '📅 Upcoming'}
+                        {isEventPast(event.event_date, event.event_time) ? <><FontAwesomeIcon icon={faCircleCheck} /> Completed</> : <><FontAwesomeIcon icon={faCalendar} /> Upcoming</>}
                       </span>
                     </div>
 
@@ -655,14 +657,14 @@ export default function Events() {
 
                     {/* Event Date */}
                     <p style={{color: '#ccc', marginBottom: '8px'}}>
-                      📅 {formatDate(event.event_date)}
+                      <FontAwesomeIcon icon={faCalendar} /> {formatDate(event.event_date)}
                       {event.event_time && ` at ${event.event_time.substring(0, 5)}`}
                     </p>
 
                     {/* Track Name */}
                     {event.track_name && (
                       <p style={{color: '#ccc', marginBottom: '8px'}}>
-                        🏁 {event.track_name}
+                        <FontAwesomeIcon icon={faFlagCheckered} /> {event.track_name}
                       </p>
                     )}
 
@@ -693,7 +695,7 @@ export default function Events() {
                             cursor: 'pointer'
                           }}
                         >
-                          ✏️ Edit
+                          <FontAwesomeIcon icon={faPencil} /> Edit
                         </button>
                         <button
                           onClick={() => handleDelete(event.id, event.name)}
@@ -707,7 +709,7 @@ export default function Events() {
                             cursor: 'pointer'
                           }}
                         >
-                          🗑️ Delete
+                          <FontAwesomeIcon icon={faTrash} /> Delete
                         </button>
                       </div>
                     )}
