@@ -32,8 +32,58 @@ export default function Home() {
   const [isMobile, setIsMobile] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
   const hasFetchedData = useRef(false);
+  const heroBgRef = useRef<HTMLDivElement>(null);
+  const achievementsBgRef = useRef<HTMLDivElement>(null);
+  const eventBgRef = useRef<HTMLDivElement>(null);
+  const joinBgRef = useRef<HTMLDivElement>(null);
 
-  
+  // Scroll-driven parallax for the decorative section backgrounds (desktop and mobile alike).
+  // Uses transforms on an oversized absolutely-positioned layer instead of
+  // `background-attachment: fixed`, which previously caused crashes on iPhone.
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+    const bgRefs = [heroBgRef, achievementsBgRef, eventBgRef, joinBgRef];
+    const speed = 0.15;
+    const maxOffset = 150;
+    let ticking = false;
+
+    const updateParallax = () => {
+      bgRefs.forEach((ref) => {
+        const el = ref.current;
+        const parent = el?.parentElement;
+        if (!el || !parent) return;
+        const rect = parent.getBoundingClientRect();
+        const offset = Math.max(-maxOffset, Math.min(maxOffset, rect.top * speed));
+        el.style.transform = `translate3d(0, ${offset}px, 0)`;
+      });
+      ticking = false;
+    };
+
+    const onScroll = () => {
+      if (!ticking) {
+        window.requestAnimationFrame(updateParallax);
+        ticking = true;
+      }
+    };
+
+    // This app scrolls inside <body> (globals.css gives html/body their own
+    // overflow-y: auto), not the window — so the scroll event fires on body
+    // and does not bubble. Listen on body directly; keep window as a
+    // harmless fallback in case that layout ever changes.
+    updateParallax();
+    document.body.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll, { passive: true });
+    return () => {
+      document.body.removeEventListener('scroll', onScroll);
+      window.removeEventListener('scroll', onScroll);
+      window.removeEventListener('resize', onScroll);
+    };
+  }, []);
+
+
   useEffect(() => {
     // Mark component as mounted to prevent hydration issues
     setIsMounted(true);
@@ -134,12 +184,7 @@ export default function Home() {
 
   return (
     <div style={{
-      backgroundImage: isMobile ? 'none' : `linear-gradient(rgba(10,10,10,0.3), rgba(10,10,10,0.3)), url('/images/decorative/Screenshot_2025-11-23_180245.png')`,
       backgroundColor: '#0a0a0a',
-      backgroundSize: 'cover',
-      backgroundPosition: 'center',
-      backgroundAttachment: 'fixed',
-      backgroundRepeat: 'no-repeat',
       minHeight: '100vh',
       width: '100%',
       position: 'relative'
@@ -159,14 +204,7 @@ export default function Home() {
 
       {/* Hero Section */}
       <section className="hero" style={{
-        backgroundImage: isMobile 
-          ? `url('/images/decorative/Screenshot_2025-11-23_180245.png')`
-          : `linear-gradient(rgba(10,10,10,0.3), rgba(10,10,10,0.6)), url('/images/decorative/Screenshot_2025-11-23_180245.png')`,
         backgroundColor: '#0a0a0a',
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        backgroundAttachment: isMobile ? 'scroll' : 'fixed',
-        backgroundRepeat: 'no-repeat',
         paddingBottom: '5px',
         paddingTop: '5px',
         minHeight: '100vh',
@@ -174,20 +212,29 @@ export default function Home() {
         alignItems: 'center',
         justifyContent: 'center',
         position: 'relative',
-        WebkitBackgroundSize: 'cover'
+        overflow: 'hidden'
       }}>
-        {isMobile && (
-          <div style={{
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            backgroundColor: 'rgba(10,10,10,0.5)',
-            pointerEvents: 'none',
-            zIndex: 1
-          }} />
-        )}
+        <div ref={heroBgRef} style={{position: 'absolute', top: '-20%', left: 0, right: 0, height: '140%', willChange: 'transform', zIndex: 0}}>
+          <Image
+            src="/images/decorative/Screenshot_2025-11-23_180245.png"
+            alt=""
+            fill
+            sizes="100vw"
+            quality={68}
+            priority
+            style={{objectFit: 'cover'}}
+          />
+        </div>
+        <div style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          background: 'linear-gradient(rgba(10,10,10,0.35), rgba(10,10,10,0.55))',
+          pointerEvents: 'none',
+          zIndex: 1
+        }} />
         <div className="hero-content" style={{position: 'relative', zIndex: 2}}>
           <Image 
             src="/Vessia_Logo.png" 
@@ -224,32 +271,33 @@ export default function Home() {
 
       {/* Achievements Section */}
       <section id="achievements" className="section" style={{
-        backgroundImage: isMobile 
-          ? `url('/images/decorative/Screenshot_2025-10-11_170801.png')`
-          : `linear-gradient(rgba(10,10,10,0.7), rgba(10,10,10,0.8)), url('/images/decorative/Screenshot_2025-10-11_170801.png')`,
         backgroundColor: '#0a0a0a',
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        backgroundAttachment: isMobile ? 'scroll' : 'fixed',
-        backgroundRepeat: 'no-repeat',
         minHeight: '100vh',
         position: 'relative',
         paddingTop: '5px',
         paddingBottom: '5px',
-        WebkitBackgroundSize: 'cover'
+        overflow: 'hidden'
       }}>
-        {isMobile && (
-          <div style={{
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            backgroundColor: 'rgba(10,10,10,0.6)',
-            pointerEvents: 'none',
-            zIndex: 1
-          }} />
-        )}
+        <div ref={achievementsBgRef} style={{position: 'absolute', top: '-20%', left: 0, right: 0, height: '140%', willChange: 'transform', zIndex: 0}}>
+          <Image
+            src="/images/decorative/Screenshot_2025-10-11_170801.png"
+            alt=""
+            fill
+            sizes="100vw"
+            quality={65}
+            style={{objectFit: 'cover'}}
+          />
+        </div>
+        <div style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          background: 'linear-gradient(rgba(10,10,10,0.7), rgba(10,10,10,0.8))',
+          pointerEvents: 'none',
+          zIndex: 1
+        }} />
         <div className="container" style={{
           maxWidth: '1200px',
           margin: '0 auto',
@@ -473,32 +521,33 @@ export default function Home() {
 
       {/* Upcoming Event Section */}
       <section id="results" className="section section-dark" style={{
-        backgroundImage: isMobile 
-          ? `url('/images/decorative/Screenshot_2025-11-15_150823.png')`
-          : `linear-gradient(rgba(10,10,10,0.7), rgba(10,10,10,0.8)), url('/images/decorative/Screenshot_2025-11-15_150823.png')`,
         backgroundColor: '#0a0a0a',
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        backgroundAttachment: isMobile ? 'scroll' : 'fixed',
-        backgroundRepeat: 'no-repeat',
         minHeight: '100vh',
         position: 'relative',
         paddingTop: '5px',
         paddingBottom: '5px',
-        WebkitBackgroundSize: 'cover'
+        overflow: 'hidden'
       }}>
-        {isMobile && (
-          <div style={{
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            backgroundColor: 'rgba(10,10,10,0.6)',
-            pointerEvents: 'none',
-            zIndex: 1
-          }} />
-        )}
+        <div ref={eventBgRef} style={{position: 'absolute', top: '-20%', left: 0, right: 0, height: '140%', willChange: 'transform', zIndex: 0}}>
+          <Image
+            src="/images/decorative/Screenshot_2025-11-15_150823.png"
+            alt=""
+            fill
+            sizes="100vw"
+            quality={65}
+            style={{objectFit: 'cover'}}
+          />
+        </div>
+        <div style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          background: 'linear-gradient(rgba(10,10,10,0.7), rgba(10,10,10,0.8))',
+          pointerEvents: 'none',
+          zIndex: 1
+        }} />
         <div className="container" style={{
           maxWidth: '1200px',
           margin: '0 auto',
@@ -633,14 +682,7 @@ export default function Home() {
 
       {/* Join Our Team Section */}
       <section className="section" style={{
-        backgroundImage: isMobile 
-          ? `url('/images/decorative/Screenshot_2025-05-18_205724.png')`
-          : `linear-gradient(rgba(10,10,10,0.7), rgba(10,10,10,0.8)), url('/images/decorative/Screenshot_2025-05-18_205724.png')`,
         backgroundColor: '#0a0a0a',
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        backgroundAttachment: isMobile ? 'scroll' : 'fixed',
-        backgroundRepeat: 'no-repeat',
         minHeight: '100vh',
         position: 'relative',
         display: 'flex',
@@ -648,20 +690,28 @@ export default function Home() {
         justifyContent: 'center',
         paddingTop: '5px',
         paddingBottom: '5px',
-        WebkitBackgroundSize: 'cover'
+        overflow: 'hidden'
       }}>
-        {isMobile && (
-          <div style={{
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            backgroundColor: 'rgba(10,10,10,0.6)',
-            pointerEvents: 'none',
-            zIndex: 1
-          }} />
-        )}
+        <div ref={joinBgRef} style={{position: 'absolute', top: '-20%', left: 0, right: 0, height: '140%', willChange: 'transform', zIndex: 0}}>
+          <Image
+            src="/images/decorative/Screenshot_2025-05-18_205724.png"
+            alt=""
+            fill
+            sizes="100vw"
+            quality={65}
+            style={{objectFit: 'cover'}}
+          />
+        </div>
+        <div style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          background: 'linear-gradient(rgba(10,10,10,0.7), rgba(10,10,10,0.8))',
+          pointerEvents: 'none',
+          zIndex: 1
+        }} />
         <div className="container" style={{
           maxWidth: '1200px',
           margin: '0 auto',
