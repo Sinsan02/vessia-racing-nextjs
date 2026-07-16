@@ -46,10 +46,10 @@ export default function RootLayout({
     <html lang="en" style={{ backgroundColor: '#0a0a0a', height: '100%' }}>
       <head>
         <meta name="theme-color" content="#0a0a0a" />
-        <link rel="preload" as="image" href="/images/decorative/Screenshot_2025-11-23_180245.png" />
-        <link rel="preload" as="image" href="/images/decorative/Screenshot_2025-10-11_170801.png" />
-        <link rel="preload" as="image" href="/images/decorative/Screenshot_2025-11-15_150823.png" />
-        <link rel="preload" as="image" href="/images/decorative/Screenshot_2025-05-18_205724.png" />
+        <link rel="preload" as="image" href="/images/decorative/Screenshot_2025-11-23_180245-bg.webp" />
+        <link rel="preload" as="image" href="/images/decorative/Screenshot_2025-10-11_170801-bg.webp" />
+        <link rel="preload" as="image" href="/images/decorative/Screenshot_2025-11-15_150823-bg.webp" />
+        <link rel="preload" as="image" href="/images/decorative/Screenshot_2025-05-18_205724-bg.webp" />
       </head>
       <body
         className={`${orbitron.variable} ${racingSansOne.variable} ${rajdhani.variable} font-segoe bg-background-dark text-text-primary antialiased`}
