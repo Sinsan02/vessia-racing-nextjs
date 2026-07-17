@@ -6,7 +6,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faUser, faPen, faCamera, faCircleCheck, faCircleXmark, faCircleInfo,
   faArrowsRotate, faSpinner, faPlug, faFlagCheckered,
-  faXmark, faFloppyDisk, faChartLine, faShieldHalved
+  faXmark, faFloppyDisk, faChartLine, faShieldHalved, faTrash, faTriangleExclamation
 } from '@fortawesome/free-solid-svg-icons';
 
 interface User {
@@ -53,7 +53,9 @@ export default function Profile() {
   const [successMessage, setSuccessMessage] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
   const [isAcceptingPrivacy, setIsAcceptingPrivacy] = useState(false);
-  
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [isDeletingAccount, setIsDeletingAccount] = useState(false);
+
   // iRacing returns category names directly - no translation needed
   const getCategoryDisplayName = (category: string): string => {
     return category;
@@ -193,6 +195,29 @@ export default function Profile() {
       setErrorMessage('An error occurred. Please try again.');
     } finally {
       setIsDisconnecting(false);
+    }
+  };
+
+  const handleDeleteAccount = async () => {
+    setIsDeletingAccount(true);
+    setErrorMessage('');
+
+    try {
+      const response = await fetch('/api/profile/delete', { method: 'DELETE' });
+
+      if (response.ok) {
+        window.location.href = '/';
+      } else {
+        const errorData = await response.json();
+        setErrorMessage(errorData.error || 'Could not delete account. Please try again.');
+        setShowDeleteConfirm(false);
+      }
+    } catch (error) {
+      console.error('Error deleting account:', error);
+      setErrorMessage('An error occurred while deleting your account. Please try again.');
+      setShowDeleteConfirm(false);
+    } finally {
+      setIsDeletingAccount(false);
     }
   };
 
@@ -969,9 +994,118 @@ export default function Profile() {
                 </div>
               )}
             </div>
+
+            <div style={{
+              backgroundColor: isMobile ? 'transparent' : '#1a1a1a',
+              padding: '30px',
+              borderRadius: '10px',
+              border: '1px solid rgba(220, 53, 69, 0.4)'
+            }}>
+              <h3 style={{color: '#dc3545', marginBottom: '10px'}}>
+                <FontAwesomeIcon icon={faTriangleExclamation} /> Danger Zone
+              </h3>
+              <p style={{color: '#888', fontSize: '0.9rem', marginBottom: '15px'}}>
+                Deleting your account is permanent and cannot be undone. All your data, including your profile, bio, and iRacing connection, will be permanently removed.
+              </p>
+              <button
+                onClick={() => setShowDeleteConfirm(true)}
+                style={{
+                  backgroundColor: 'transparent',
+                  color: '#dc3545',
+                  border: '2px solid #dc3545',
+                  padding: '10px 20px',
+                  borderRadius: '5px',
+                  cursor: 'pointer',
+                  fontSize: '1rem',
+                  fontWeight: 'bold'
+                }}
+              >
+                <FontAwesomeIcon icon={faTrash} /> Delete Profile
+              </button>
+            </div>
           </div>
         </div>
       </main>
+
+      {showDeleteConfirm && (
+        <div
+          style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            backgroundColor: 'rgba(0, 0, 0, 0.7)',
+            zIndex: 2000,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            padding: '20px'
+          }}
+          onClick={() => !isDeletingAccount && setShowDeleteConfirm(false)}
+        >
+          <div
+            style={{
+              backgroundColor: '#1a1a1a',
+              border: '2px solid #dc3545',
+              borderRadius: '10px',
+              padding: '30px',
+              maxWidth: '420px',
+              width: '100%',
+              textAlign: 'center'
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div style={{fontSize: '2.5rem', color: '#dc3545', marginBottom: '15px'}}>
+              <FontAwesomeIcon icon={faTriangleExclamation} />
+            </div>
+            <h3 style={{color: '#fff', marginBottom: '10px'}}>Are you sure?</h3>
+            <p style={{color: '#ccc', fontSize: '0.95rem', marginBottom: '25px'}}>
+              This will permanently delete your account and all associated data. This action cannot be undone.
+            </p>
+            <div style={{display: 'flex', gap: '10px', justifyContent: 'center'}}>
+              <button
+                onClick={() => setShowDeleteConfirm(false)}
+                disabled={isDeletingAccount}
+                style={{
+                  backgroundColor: '#666',
+                  color: 'white',
+                  border: 'none',
+                  padding: '12px 28px',
+                  borderRadius: '5px',
+                  cursor: isDeletingAccount ? 'not-allowed' : 'pointer',
+                  fontSize: '1rem',
+                  fontWeight: 'bold',
+                  opacity: isDeletingAccount ? 0.6 : 1
+                }}
+              >
+                No
+              </button>
+              <button
+                onClick={handleDeleteAccount}
+                disabled={isDeletingAccount}
+                style={{
+                  backgroundColor: '#dc3545',
+                  color: 'white',
+                  border: 'none',
+                  padding: '12px 28px',
+                  borderRadius: '5px',
+                  cursor: isDeletingAccount ? 'not-allowed' : 'pointer',
+                  fontSize: '1rem',
+                  fontWeight: 'bold',
+                  opacity: isDeletingAccount ? 0.6 : 1
+                }}
+              >
+                {isDeletingAccount ? (
+                  <><FontAwesomeIcon icon={faSpinner} spin /> Deleting...</>
+                ) : (
+                  'Yes'
+                )}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Floating Save Button */}
       {hasChanges && (

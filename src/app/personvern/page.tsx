@@ -109,9 +109,11 @@ export default function PersonvernPage() {
           <div style={sectionStyle}>
             <h2 style={headingStyle}>7. How long we store your information</h2>
             <p style={textStyle}>
-              We store your information for as long as you have an active user account with us. If you
-              wish to delete your account and the information associated with it, you can contact us at
-              vessiaracing@gmail.com and we will delete it without undue delay.
+              We store your information for as long as you have an active user account with us. You can
+              delete your account and all associated information yourself at any time, using the
+              &quot;Delete Profile&quot; button on your{' '}
+              <Link href="/profile" style={{ color: '#3EA822' }}>profile page</Link>. This permanently
+              and immediately removes your data from our systems.
             </p>
           </div>
 
