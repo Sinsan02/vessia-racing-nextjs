@@ -81,7 +81,7 @@ export default function Profile() {
     const error = urlParams.get('error');
     
     if (success === 'iracing_connected') {
-      setSuccessMessage('Successfully connected to iRacing! Click "Synkroniser nå" to fetch your stats.');
+      setSuccessMessage('Successfully connected to iRacing! Click "Sync now" to fetch your stats.');
       // Clear URL params
       window.history.replaceState({}, '', '/profile');
     } else if (error) {
@@ -157,18 +157,18 @@ export default function Profile() {
         const data = await response.json();
         setUser(prev => prev ? { ...prev, privacy_accepted_at: data.privacy_accepted_at } : null);
       } else {
-        alert('Kunne ikke registrere godkjenning. Prøv igjen.');
+        alert('Could not register acceptance. Please try again.');
       }
     } catch (error) {
       console.error('Error accepting privacy policy:', error);
-      alert('Kunne ikke registrere godkjenning. Prøv igjen.');
+      alert('Could not register acceptance. Please try again.');
     } finally {
       setIsAcceptingPrivacy(false);
     }
   };
 
   const handleDisconnectIRacing = async () => {
-    if (!confirm('Er du sikker på at du vil koble fra iRacing? All synkronisert data vil bli fjernet.')) {
+    if (!confirm('Are you sure you want to disconnect iRacing? All synced data will be removed.')) {
       return;
     }
 
@@ -182,15 +182,15 @@ export default function Profile() {
       });
 
       if (response.ok) {
-        setSuccessMessage('iRacing-koblingen er fjernet');
+        setSuccessMessage('iRacing connection removed');
         // Refresh user data
         await fetchUserProfile();
       } else {
-        setErrorMessage('Kunne ikke fjerne iRacing-kobling. Prøv igjen.');
+        setErrorMessage('Could not remove iRacing connection. Please try again.');
       }
     } catch (error) {
       console.error('Error disconnecting iRacing:', error);
-      setErrorMessage('En feil oppstod. Prøv igjen.');
+      setErrorMessage('An error occurred. Please try again.');
     } finally {
       setIsDisconnecting(false);
     }
@@ -209,16 +209,16 @@ export default function Profile() {
       });
 
       if (response.ok) {
-        setSuccessMessage('iRacing stats synkronisert!');
+        setSuccessMessage('iRacing stats synced!');
         // Refresh user data to show new stats
         await fetchUserProfile();
       } else {
         const errorData = await response.json();
-        setErrorMessage(errorData.error || 'Kunne ikke hente iRacing stats. Prøv igjen.');
+        setErrorMessage(errorData.error || 'Could not fetch iRacing stats. Please try again.');
       }
     } catch (error) {
       console.error('Error syncing iRacing stats:', error);
-      setErrorMessage('En feil oppstod ved synkronisering. Prøv igjen.');
+      setErrorMessage('An error occurred while syncing. Please try again.');
     } finally {
       setIsSyncingStats(false);
     }
@@ -344,7 +344,7 @@ export default function Profile() {
         <div className="container" style={{maxWidth: '1200px', margin: '0 auto', padding: '0', boxSizing: 'border-box', width: '100%'}}>
           <div style={{textAlign: 'center', marginBottom: '30px'}}>
             <h1 style={{color: '#3EA822', fontSize: '2.5rem', marginBottom: '1rem'}}>
-              <FontAwesomeIcon icon={faUser} /> Min Profil
+              <FontAwesomeIcon icon={faUser} /> My Profile
             </h1>
             <p style={{color: '#ccc', fontSize: '1.1rem'}}>Manage your Vessia Racing profile</p>
 
@@ -363,12 +363,12 @@ export default function Profile() {
               }}>
                 <div>
                   <FontAwesomeIcon icon={faShieldHalved} style={{marginRight: '8px'}} />
-                  Vi har innført en personvernerklæring som forklarer hvordan vi lagrer og bruker
-                  personopplysningene dine (som navn og e-post). Les{' '}
+                  We have introduced a privacy policy that explains how we store and use
+                  your personal data (such as name and email). Read the{' '}
                   <Link href="/personvern" target="_blank" style={{color: '#ffc107', textDecoration: 'underline'}}>
-                    personvernerklæringen
+                    privacy policy
                   </Link>
-                  {' '}og godkjenn den for å fortsette å bruke kontoen din.
+                  {' '}and accept it to continue using your account.
                 </div>
                 <button
                   onClick={handleAcceptPrivacy}
@@ -386,9 +386,9 @@ export default function Profile() {
                   }}
                 >
                   {isAcceptingPrivacy ? (
-                    <><FontAwesomeIcon icon={faSpinner} spin /> Registrerer...</>
+                    <><FontAwesomeIcon icon={faSpinner} spin /> Registering...</>
                   ) : (
-                    <><FontAwesomeIcon icon={faCircleCheck} /> Jeg godtar personvernerklæringen</>
+                    <><FontAwesomeIcon icon={faCircleCheck} /> I accept the privacy policy</>
                   )}
                 </button>
               </div>
@@ -791,13 +791,13 @@ export default function Profile() {
                           onMouseLeave={(e) => !isSyncingStats && (e.currentTarget.style.backgroundColor = '#3EA822')}
                         >
                           {isSyncingStats ? (
-                            <><FontAwesomeIcon icon={faSpinner} spin /> Synkroniserer...</>
+                            <><FontAwesomeIcon icon={faSpinner} spin /> Syncing...</>
                           ) : (
-                            <><FontAwesomeIcon icon={faArrowsRotate} /> Synkroniser nå</>
+                            <><FontAwesomeIcon icon={faArrowsRotate} /> Sync now</>
                           )}
                         </button>
                         <p style={{color: '#888', fontSize: '0.85rem', margin: 0}}>
-                          <FontAwesomeIcon icon={faChartLine} /> Stats oppdateres automatisk hver natt kl 02:00
+                          <FontAwesomeIcon icon={faChartLine} /> Stats update automatically every night at 02:00
                         </p>
                       </div>
                       
@@ -861,7 +861,7 @@ export default function Profile() {
                                 </div>
                                 {user.iracing_data_updated_at && (
                                   <p style={{color: '#666', fontSize: '0.75rem', marginTop: '4px', textAlign: 'right'}}>
-                                    Last updated: {new Date(user.iracing_data_updated_at).toLocaleString('nb-NO')}
+                                    Last updated: {new Date(user.iracing_data_updated_at).toLocaleString('en-US')}
                                   </p>
                                 )}
                               </div>
@@ -870,7 +870,7 @@ export default function Profile() {
                         </div>
                       ) : (
                         <p style={{color: '#888', fontSize: '0.9rem', marginBottom: '12px'}}>
-<FontAwesomeIcon icon={faCircleInfo} /> Ingen stats ennå. Klikk &quot;Synkroniser nå&quot; for å hente dine stats.
+<FontAwesomeIcon icon={faCircleInfo} /> No stats yet. Click &quot;Sync now&quot; to fetch your stats.
                         </p>
                       )}
                       
@@ -895,9 +895,9 @@ export default function Profile() {
                           onMouseLeave={(e) => !isDisconnecting && (e.currentTarget.style.backgroundColor = '#d32f2f')}
                         >
                           {isDisconnecting ? (
-                            <><FontAwesomeIcon icon={faSpinner} spin /> Fjerner...</>
+                            <><FontAwesomeIcon icon={faSpinner} spin /> Removing...</>
                           ) : (
-                            <><FontAwesomeIcon icon={faPlug} /> Koble fra iRacing</>
+                            <><FontAwesomeIcon icon={faPlug} /> Disconnect iRacing</>
                           )}
                         </button>
                       </div>
@@ -940,7 +940,7 @@ export default function Profile() {
                     Member Since:
                   </label>
                   <p style={{color: '#fff', padding: '10px', backgroundColor: '#0a0a0a', borderRadius: '5px'}}>
-                    {user.createdAt ? new Date(user.createdAt).toLocaleDateString('nb-NO', { 
+                    {user.createdAt ? new Date(user.createdAt).toLocaleDateString('en-US', {
                       year: 'numeric', 
                       month: 'long', 
                       day: 'numeric' 

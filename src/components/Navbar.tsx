@@ -258,7 +258,7 @@ export default function Navbar() {
                           onMouseEnter={(e) => (e.target as any).style.backgroundColor = '#333'}
                           onMouseLeave={(e) => (e.target as any).style.backgroundColor = 'transparent'}
                         >
-                          <FontAwesomeIcon icon={faUser} style={{marginRight: '8px'}} /> Min Profil
+                          <FontAwesomeIcon icon={faUser} style={{marginRight: '8px'}} /> My Profile
                         </Link>
                         {user.role === 'admin' && (
                           <Link 

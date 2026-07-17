@@ -16,7 +16,7 @@ export async function POST(request: NextRequest) {
 
     if (!privacyAccepted) {
       return NextResponse.json(
-        { error: 'Du må godta personvernerklæringen for å opprette en bruker' },
+        { error: 'You must accept the privacy policy to create an account' },
         { status: 400 }
       );
     }

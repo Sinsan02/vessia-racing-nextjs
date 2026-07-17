@@ -41,13 +41,13 @@ export default function Register() {
 
     // Validate passwords match
     if (formData.password !== formData.confirmPassword) {
-      setPasswordError('Passordene er ikke like');
+      setPasswordError('Passwords do not match');
       setIsLoading(false);
       return;
     }
 
     if (!privacyAccepted) {
-      setError('Du må godta personvernerklæringen for å opprette en bruker');
+      setError('You must accept the privacy policy to create an account');
       setIsLoading(false);
       return;
     }
@@ -68,7 +68,7 @@ export default function Register() {
       });
 
       if (response.ok) {
-        setSuccessMessage('Registrering vellykket! Du kan nå logge inn.');
+        setSuccessMessage('Registration successful! You can now log in.');
         setFormData({
           name: '',
           email: '',
@@ -103,14 +103,14 @@ export default function Register() {
       if (name === 'confirmPassword') {
         // User is typing in confirm password field
         if (value && newFormData.password && value !== newFormData.password) {
-          setPasswordError('Passordene er ikke like');
+          setPasswordError('Passwords do not match');
         } else {
           setPasswordError('');
         }
       } else if (name === 'password') {
         // User is typing in password field
         if (newFormData.confirmPassword && value && newFormData.confirmPassword !== value) {
-          setPasswordError('Passordene er ikke like');
+          setPasswordError('Passwords do not match');
         } else {
           setPasswordError('');
         }
@@ -193,7 +193,7 @@ export default function Register() {
             />
           </div>
           <div className="form-group">
-            <label htmlFor="confirmPassword">Gjenta passord:</label>
+            <label htmlFor="confirmPassword">Confirm Password:</label>
             <input
               type="password"
               id="confirmPassword"
@@ -234,11 +234,11 @@ export default function Register() {
               style={{width: '18px', height: '18px', marginTop: '3px', flexShrink: 0}}
             />
             <label htmlFor="privacyAccepted" style={{color: '#ccc', fontSize: '0.9rem', lineHeight: '1.4'}}>
-              Jeg har lest og godtar{' '}
+              I have read and accept the{' '}
               <Link href="/personvern" target="_blank" style={{color: '#3EA822', textDecoration: 'underline'}}>
-                personvernerklæringen
+                privacy policy
               </Link>
-              . Vi lagrer navn og e-post kun for innlogging og kontoadministrasjon.
+              . We store your name and email solely for login and account management.
             </label>
           </div>
           <button

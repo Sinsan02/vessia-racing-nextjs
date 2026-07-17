@@ -1,8 +1,8 @@
 import Link from 'next/link';
 
 export const metadata = {
-  title: 'Personvernerklæring | Vessia Racing',
-  description: 'Personvernerklæring for Vessia Racing',
+  title: 'Privacy Policy | Vessia Racing',
+  description: 'Privacy policy for Vessia Racing',
 };
 
 const sectionStyle: React.CSSProperties = {
@@ -26,107 +26,111 @@ export default function PersonvernPage() {
     <div className="min-h-screen" style={{ backgroundColor: '#0a0a0a', paddingTop: '100px', paddingBottom: '60px' }}>
       <main style={{ padding: '0 20px', boxSizing: 'border-box' }}>
         <div style={{ maxWidth: '800px', margin: '0 auto' }}>
-          <h1 style={{ color: '#3EA822', fontSize: '2.2rem', marginBottom: '8px' }}>Personvernerklæring</h1>
-          <p style={{ color: '#888', fontSize: '0.9rem', marginBottom: '40px' }}>Sist oppdatert: 16. juli 2026</p>
+          <h1 style={{ color: '#3EA822', fontSize: '2.2rem', marginBottom: '8px' }}>Privacy Policy</h1>
+          <p style={{ color: '#888', fontSize: '0.9rem', marginBottom: '40px' }}>Last updated: July 16, 2026</p>
 
           <div style={sectionStyle}>
-            <h2 style={headingStyle}>1. Behandlingsansvarlig</h2>
+            <h2 style={headingStyle}>1. Data Controller</h2>
             <p style={textStyle}>
-              Vessia Racing er behandlingsansvarlig for personopplysningene som samles inn gjennom denne
-              nettsiden. Vessia Racing er et uformelt racing-lag/community uten eget organisasjonsnummer.
-              Har du spørsmål om personvern eller ønsker å benytte deg av dine rettigheter, kan du kontakte
-              oss på <a href="mailto:vessiaracing@gmail.com" style={{ color: '#3EA822' }}>vessiaracing@gmail.com</a>.
+              Vessia Racing is the data controller for the personal data collected through this
+              website. Vessia Racing is an informal racing team/community without its own registered
+              organization number. If you have questions about privacy or wish to exercise your
+              rights, you can contact us at{' '}
+              <a href="mailto:vessiaracing@gmail.com" style={{ color: '#3EA822' }}>vessiaracing@gmail.com</a>.
             </p>
           </div>
 
           <div style={sectionStyle}>
-            <h2 style={headingStyle}>2. Personvernombud</h2>
+            <h2 style={headingStyle}>2. Data Protection Officer</h2>
             <p style={textStyle}>
-              Vessia Racing er ikke pålagt å ha personvernombud, og har ikke utnevnt et slikt. Henvendelser
-              om personvern rettes direkte til kontakt-e-posten over.
+              Vessia Racing is not required to have a data protection officer and has not appointed
+              one. Privacy-related inquiries should be directed to the contact email above.
             </p>
           </div>
 
           <div style={sectionStyle}>
-            <h2 style={headingStyle}>3. Hvilke opplysninger vi samler inn</h2>
+            <h2 style={headingStyle}>3. What information we collect</h2>
             <p style={textStyle}>
-              Når du oppretter en bruker lagrer vi:
+              When you create an account, we store:
             </p>
             <ul style={{ ...textStyle, paddingLeft: '20px' }}>
-              <li>Navn</li>
-              <li>E-postadresse (brukes kun til innlogging og for å kontakte deg om kontoen din)</li>
-              <li>Passord (lagres aldri i klartekst — kun som en irreversibel, saltet hash)</li>
-              <li>Selvvalgt erfaringsnivå</li>
+              <li>Name</li>
+              <li>Email address (used only for login and to contact you about your account)</li>
+              <li>Password (never stored in plain text — only as an irreversible, salted hash)</li>
+              <li>Self-selected experience level</li>
             </ul>
-            <p style={textStyle}>I tillegg kan du, dersom du selv velger det, legge til:</p>
+            <p style={textStyle}>In addition, you may optionally add:</p>
             <ul style={{ ...textStyle, paddingLeft: '20px' }}>
-              <li>Profilbilde og bio</li>
-              <li>Kobling til din iRacing-konto (iRacing Customer ID og statistikk som iRating, safety rating og lisensklasse, hentet via iRacings offisielle API)</li>
+              <li>Profile picture and bio</li>
+              <li>A connection to your iRacing account (iRacing Customer ID and statistics such as iRating, safety rating, and license class, retrieved via iRacing&apos;s official API)</li>
             </ul>
           </div>
 
           <div style={sectionStyle}>
-            <h2 style={headingStyle}>4. Formål og rettslig grunnlag</h2>
+            <h2 style={headingStyle}>4. Purpose and legal basis</h2>
             <p style={textStyle}>
-              Navn, e-post og passord behandles for å kunne opprette og administrere brukerkontoen din og
-              gi deg tilgang til innlogging på nettsiden. Dette er nødvendig for å kunne levere tjenesten
-              til deg, jf. personvernforordningen (GDPR) artikkel 6 nr. 1 bokstav b (oppfyllelse av avtale).
+              Your name, email, and password are processed in order to create and manage your user
+              account and give you access to log in to the website. This is necessary to provide the
+              service to you, pursuant to the General Data Protection Regulation (GDPR) Article 6(1)(b)
+              (performance of a contract).
             </p>
             <p style={textStyle}>
-              Profilbilde, bio og iRacing-tilkobling er frivillige og behandles på grunnlag av ditt samtykke,
-              jf. GDPR artikkel 6 nr. 1 bokstav a. Du kan når som helst trekke tilbake samtykket ved å fjerne
-              disse opplysningene fra profilsiden din, uten at det påvirker lovligheten av behandlingen fram
-              til da.
+              Profile picture, bio, and the iRacing connection are optional and are processed on the
+              basis of your consent, pursuant to GDPR Article 6(1)(a). You may withdraw your consent at
+              any time by removing this information from your profile page, without affecting the
+              lawfulness of processing carried out before the withdrawal.
             </p>
           </div>
 
           <div style={sectionStyle}>
-            <h2 style={headingStyle}>5. Hvem vi deler opplysninger med</h2>
-            <p style={textStyle}>Vi bruker følgende databehandlere for å drifte nettsiden:</p>
+            <h2 style={headingStyle}>5. Who we share information with</h2>
+            <p style={textStyle}>We use the following data processors to operate the website:</p>
             <ul style={{ ...textStyle, paddingLeft: '20px' }}>
-              <li><strong>Supabase</strong> — database og lagring av brukerdata</li>
-              <li><strong>Vercel</strong> — hosting av nettsiden og lagring av opplastede bilder</li>
-              <li><strong>iRacing</strong> — kun dersom du selv velger å koble til iRacing-kontoen din, for å hente inn statistikken din</li>
+              <li><strong>Supabase</strong> — database and storage of user data</li>
+              <li><strong>Vercel</strong> — hosting of the website and storage of uploaded images</li>
+              <li><strong>iRacing</strong> — only if you choose to connect your iRacing account, in order to retrieve your statistics</li>
             </ul>
             <p style={textStyle}>
-              Vi selger aldri personopplysningene dine videre, og deler dem ikke med andre tredjeparter enn
-              de som er nevnt her.
+              We never sell your personal data, and we do not share it with any third parties other
+              than those mentioned here.
             </p>
           </div>
 
           <div style={sectionStyle}>
-            <h2 style={headingStyle}>6. Overføring til land utenfor EU/EØS</h2>
+            <h2 style={headingStyle}>6. Transfers to countries outside the EU/EEA</h2>
             <p style={textStyle}>
-              Våre databehandlere (Supabase og Vercel) kan behandle og lagre data på servere utenfor EU/EØS.
-              I slike tilfeller er overføringen sikret gjennom EU-kommisjonens standard personvernbestemmelser
-              (Standard Contractual Clauses) eller tilsvarende godkjente overføringsgrunnlag hos leverandøren.
+              Our data processors (Supabase and Vercel) may process and store data on servers located
+              outside the EU/EEA. In such cases, the transfer is safeguarded through the European
+              Commission&apos;s Standard Contractual Clauses or an equivalent approved transfer
+              mechanism used by the provider.
             </p>
           </div>
 
           <div style={sectionStyle}>
-            <h2 style={headingStyle}>7. Hvor lenge vi lagrer opplysningene</h2>
+            <h2 style={headingStyle}>7. How long we store your information</h2>
             <p style={textStyle}>
-              Vi lagrer opplysningene dine så lenge du har en aktiv brukerkonto hos oss. Dersom du ønsker å
-              slette kontoen din og opplysningene som er knyttet til den, kan du kontakte oss på
-              vessiaracing@gmail.com, så sletter vi dette uten unødig opphold.
+              We store your information for as long as you have an active user account with us. If you
+              wish to delete your account and the information associated with it, you can contact us at
+              vessiaracing@gmail.com and we will delete it without undue delay.
             </p>
           </div>
 
           <div style={sectionStyle}>
-            <h2 style={headingStyle}>8. Dine rettigheter</h2>
-            <p style={textStyle}>Du har, i henhold til GDPR artikkel 15–21, rett til å:</p>
+            <h2 style={headingStyle}>8. Your rights</h2>
+            <p style={textStyle}>Under GDPR Articles 15–21, you have the right to:</p>
             <ul style={{ ...textStyle, paddingLeft: '20px' }}>
-              <li>Få innsyn i hvilke opplysninger vi har lagret om deg</li>
-              <li>Få rettet feilaktige opplysninger</li>
-              <li>Få slettet opplysningene dine (&quot;retten til å bli glemt&quot;)</li>
-              <li>Kreve begrensning av behandlingen</li>
-              <li>Protestere mot behandlingen</li>
-              <li>Få utlevert opplysningene dine i et strukturert, maskinlesbart format (dataportabilitet)</li>
-              <li>Trekke tilbake et samtykke når som helst</li>
+              <li>Access the information we hold about you</li>
+              <li>Have inaccurate information corrected</li>
+              <li>Have your information deleted (&quot;the right to be forgotten&quot;)</li>
+              <li>Request restriction of processing</li>
+              <li>Object to processing</li>
+              <li>Receive your information in a structured, machine-readable format (data portability)</li>
+              <li>Withdraw consent at any time</li>
             </ul>
             <p style={textStyle}>
-              For å benytte deg av rettighetene dine, kontakt oss på vessiaracing@gmail.com. Du kan også klage
-              til Datatilsynet dersom du mener vi behandler personopplysningene dine i strid med regelverket:{' '}
+              To exercise your rights, contact us at vessiaracing@gmail.com. You may also file a
+              complaint with the Norwegian Data Protection Authority (Datatilsynet) if you believe we
+              are processing your personal data in violation of the regulations:{' '}
               <a href="https://www.datatilsynet.no/om-datatilsynet/kontakt-oss/klage-til-datatilsynet/" target="_blank" rel="noopener noreferrer" style={{ color: '#3EA822' }}>
                 datatilsynet.no
               </a>.
@@ -134,34 +138,34 @@ export default function PersonvernPage() {
           </div>
 
           <div style={sectionStyle}>
-            <h2 style={headingStyle}>9. Er det frivillig å oppgi opplysningene?</h2>
+            <h2 style={headingStyle}>9. Is providing this information mandatory?</h2>
             <p style={textStyle}>
-              Navn, e-post og passord er nødvendig for å opprette en brukerkonto — uten disse kan vi ikke
-              opprette eller drifte kontoen din. Profilbilde, bio og iRacing-tilkobling er helt frivillig, og
-              det får ingen konsekvenser for tilgangen til kontoen din om du lar være å legge dette til.
+              Name, email, and password are required to create a user account — without these, we
+              cannot create or manage your account. Profile picture, bio, and the iRacing connection are
+              entirely optional, and choosing not to add them has no impact on your account access.
             </p>
           </div>
 
           <div style={sectionStyle}>
-            <h2 style={headingStyle}>10. Automatiserte avgjørelser og profilering</h2>
+            <h2 style={headingStyle}>10. Automated decision-making and profiling</h2>
             <p style={textStyle}>
-              Vi bruker ikke automatiserte avgjørelser eller profilering som har rettsvirkning for deg eller
-              på tilsvarende måte påvirker deg i betydelig grad.
+              We do not use automated decision-making or profiling that produces legal effects
+              concerning you or similarly significantly affects you.
             </p>
           </div>
 
           <div style={sectionStyle}>
-            <h2 style={headingStyle}>11. Sikkerhet</h2>
+            <h2 style={headingStyle}>11. Security</h2>
             <p style={textStyle}>
-              Passordet ditt lagres kun som en saltet hash og aldri i klartekst. All trafikk til nettsiden er
-              kryptert (HTTPS), og tilgang til administrative deler av systemet er begrenset til
-              teamledelsen.
+              Your password is stored only as a salted hash and never in plain text. All traffic to the
+              website is encrypted (HTTPS), and access to administrative parts of the system is
+              restricted to team management.
             </p>
           </div>
 
           <div style={{ marginTop: '40px' }}>
             <Link href="/register" style={{ color: '#3EA822', textDecoration: 'underline' }}>
-              ← Tilbake til registrering
+              ← Back to registration
             </Link>
           </div>
         </div>

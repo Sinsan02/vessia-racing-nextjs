@@ -133,7 +133,7 @@ export default function Drivers() {
                   e.currentTarget.style.backgroundColor = isEditMode ? "#c00" : "#3EA822";
                 }}
               >
-                {isEditMode ? <><FontAwesomeIcon icon={faXmark} /> Lukk redigering</> : <><FontAwesomeIcon icon={faPencil} /> Endre rekkefølge</>}
+                {isEditMode ? <><FontAwesomeIcon icon={faXmark} /> Close editing</> : <><FontAwesomeIcon icon={faPencil} /> Reorder</>}
               </button>
             </div>
           )}
