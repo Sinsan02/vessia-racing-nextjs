@@ -8,7 +8,6 @@ import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 interface DriverProfile {
   id: number;
   full_name: string;
-  email: string;
   experience_level: string;
   bio?: string;
   profile_picture?: string;

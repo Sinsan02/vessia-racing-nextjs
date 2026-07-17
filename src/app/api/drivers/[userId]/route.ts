@@ -10,7 +10,7 @@ export async function GET(
 
     const { data: driver, error } = await supabaseAdmin
       .from('users')
-      .select('id, full_name, email, experience_level, bio, profile_picture, created_at, iracing_customer_id, iracing_data')
+      .select('id, full_name, experience_level, bio, profile_picture, created_at, iracing_customer_id, iracing_data')
       .eq('id', userId)
       .eq('is_driver', 1)
       .single();
