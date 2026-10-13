@@ -27,15 +27,18 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
       return NextResponse.json({ success: false, error: 'No actions to undo' }, { status: 400 });
     }
 
-    // Reverse the action
-    const { error: updateError } = await supabaseAdmin
+    // Reverse the action (guest drivers are identified by their driver_points row)
+    let reverseQuery = supabaseAdmin
       .from('driver_points')
       .update({
         points: lastAction.old_points,
         races_completed: lastAction.old_races
       })
-      .eq('driver_id', lastAction.driver_id)
       .eq('league_id', leagueId);
+    reverseQuery = lastAction.guest_entry_id
+      ? reverseQuery.eq('id', lastAction.guest_entry_id)
+      : reverseQuery.eq('driver_id', lastAction.driver_id);
+    const { error: updateError } = await reverseQuery;
 
     if (updateError) {
       console.error('Error reversing action:', updateError);

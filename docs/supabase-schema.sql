@@ -45,7 +45,8 @@ CREATE TABLE IF NOT EXISTS public.league_divisions (
 CREATE TABLE IF NOT EXISTS public.driver_points (
   id SERIAL PRIMARY KEY,
   league_id INTEGER NOT NULL,
-  driver_id INTEGER NOT NULL,
+  driver_id INTEGER,
+  guest_name TEXT,
   division_id INTEGER,
   points INTEGER DEFAULT 0,
   races_completed INTEGER DEFAULT 0,
@@ -54,13 +55,15 @@ CREATE TABLE IF NOT EXISTS public.driver_points (
   CONSTRAINT fk_driver_points_league FOREIGN KEY (league_id) REFERENCES public.leagues(id) ON DELETE CASCADE,
   CONSTRAINT fk_driver_points_division FOREIGN KEY (division_id) REFERENCES public.league_divisions(id) ON DELETE SET NULL,
   CONSTRAINT fk_driver_points_user FOREIGN KEY (driver_id) REFERENCES public.users(id) ON DELETE CASCADE,
-  UNIQUE(driver_id, league_id)
+  UNIQUE(driver_id, league_id),
+  CONSTRAINT chk_driver_points_driver_or_guest CHECK ((driver_id IS NOT NULL AND guest_name IS NULL) OR (driver_id IS NULL AND guest_name IS NOT NULL))
 );
 
 -- Create points_history table
 CREATE TABLE IF NOT EXISTS public.points_history (
   id SERIAL PRIMARY KEY,
-  driver_id INTEGER NOT NULL,
+  driver_id INTEGER,
+  guest_entry_id INTEGER,
   league_id INTEGER NOT NULL,
   points_change INTEGER DEFAULT 0,
   races_change INTEGER DEFAULT 0,
@@ -72,6 +75,7 @@ CREATE TABLE IF NOT EXISTS public.points_history (
   new_races INTEGER DEFAULT 0,
   action_type TEXT DEFAULT 'MANUAL',
   created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+  CONSTRAINT fk_points_history_guest_entry FOREIGN KEY (guest_entry_id) REFERENCES public.driver_points(id) ON DELETE CASCADE,
   CONSTRAINT fk_points_history_driver FOREIGN KEY (driver_id) REFERENCES public.users(id) ON DELETE CASCADE,
   CONSTRAINT fk_points_history_league FOREIGN KEY (league_id) REFERENCES public.leagues(id) ON DELETE CASCADE,
   CONSTRAINT fk_points_history_admin FOREIGN KEY (admin_id) REFERENCES public.users(id) ON DELETE SET NULL
@@ -100,6 +104,8 @@ CREATE INDEX IF NOT EXISTS idx_driver_points_division ON public.driver_points(di
 CREATE INDEX IF NOT EXISTS idx_league_divisions_league ON public.league_divisions(league_id);
 CREATE INDEX IF NOT EXISTS idx_points_history_driver ON public.points_history(driver_id);
 CREATE INDEX IF NOT EXISTS idx_points_history_league ON public.points_history(league_id);
+CREATE INDEX IF NOT EXISTS idx_points_history_guest_entry ON public.points_history(guest_entry_id);
+CREATE UNIQUE INDEX IF NOT EXISTS uq_driver_points_league_guest_name ON public.driver_points(league_id, lower(guest_name)) WHERE guest_name IS NOT NULL;
 CREATE INDEX IF NOT EXISTS idx_events_date ON public.events(event_date);
 CREATE INDEX IF NOT EXISTS idx_events_created_by ON public.events(created_by);
 

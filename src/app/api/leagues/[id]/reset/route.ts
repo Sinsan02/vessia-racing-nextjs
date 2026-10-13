@@ -16,7 +16,7 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
     // Record reset in history for all drivers
     const { data: drivers, error: driversError } = await supabaseAdmin
       .from('driver_points')
-      .select('driver_id, points, races_completed')
+      .select('id, driver_id, points, races_completed')
       .eq('league_id', leagueId)
       .or('points.gt.0,races_completed.gt.0');
 
@@ -26,6 +26,7 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
           .from('points_history')
           .insert({
             driver_id: driver.driver_id,
+            guest_entry_id: driver.driver_id ? null : driver.id,
             league_id: leagueId,
             points_change: -driver.points,
             races_change: -driver.races_completed,

@@ -16,7 +16,7 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
     // Get all drivers in the league
     const { data: drivers, error } = await supabaseAdmin
       .from('driver_points')
-      .select('driver_id, division_id')
+      .select('id, driver_id, guest_name, division_id, points, races_completed')
       .eq('league_id', leagueId);
 
     if (error) {
@@ -24,10 +24,22 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
       throw error;
     }
 
+    const registered = drivers?.filter((d: any) => d.driver_id) || [];
+    const guests = drivers?.filter((d: any) => !d.driver_id) || [];
+
     return NextResponse.json({
       success: true,
-      drivers: drivers?.map((d: any) => d.driver_id) || [],
-      assignments: drivers?.map((d: any) => ({ driver_id: d.driver_id, division_id: d.division_id ?? null })) || []
+      drivers: registered.map((d: any) => d.driver_id),
+      assignments: registered.map((d: any) => ({ driver_id: d.driver_id, division_id: d.division_id ?? null })),
+      guests: guests
+        .map((g: any) => ({
+          id: g.id,
+          name: g.guest_name,
+          division_id: g.division_id ?? null,
+          points: g.points,
+          races_completed: g.races_completed
+        }))
+        .sort((a, b) => a.name.localeCompare(b.name))
     });
   } catch (error: any) {
     console.error('Error fetching league drivers:', error);

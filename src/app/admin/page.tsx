@@ -47,14 +47,30 @@ interface League {
   divisions?: Division[];
 }
 
-interface PointsDriver {
+interface GuestDriver {
   id: number;
+  name: string;
+  division_id: number | null;
+  points: number;
+  races_completed: number;
+}
+
+interface PointsDriver {
+  id: number | null;
+  entry_id: number;
+  is_guest?: boolean;
   division_id?: number | null;
   full_name: string;
   points: number;
   races_completed: number;
   profile_picture?: string;
 }
+
+// Driver select values are a user id, or "guest-<entryId>" for guest drivers
+const driverPointsUrl = (leagueId: string, driverValue: string) =>
+  driverValue.startsWith('guest-')
+    ? `/api/leagues/${leagueId}/guests/${driverValue.slice('guest-'.length)}/points`
+    : `/api/leagues/${leagueId}/points/${driverValue}`;
 
 export default function Admin() {
   const [users, setUsers] = useState<User[]>([]);
@@ -65,6 +81,8 @@ export default function Admin() {
   const [driverDivisions, setDriverDivisions] = useState<Record<number, number | null>>({});
   const [newDivisionNames, setNewDivisionNames] = useState<Record<number, string>>({});
   const [divisionForNewDrivers, setDivisionForNewDrivers] = useState('');
+  const [leagueGuests, setLeagueGuests] = useState<GuestDriver[]>([]);
+  const [newGuestName, setNewGuestName] = useState('');
   const [achievements, setAchievements] = useState<any[]>([]);
   const [selectedLeagueForDrivers, setSelectedLeagueForDrivers] = useState('');
   const [loading, setLoading] = useState(true);
@@ -579,7 +597,7 @@ export default function Admin() {
     }
 
     try {
-      const response = await fetch(`/api/leagues/${selectedLeague}/points/${selectedDriver}`, {
+      const response = await fetch(driverPointsUrl(selectedLeague, selectedDriver), {
         method: 'POST',
         credentials: 'include',
         headers: {
@@ -621,7 +639,7 @@ export default function Admin() {
     }
 
     try {
-      const response = await fetch(`/api/leagues/${selectedLeague}/points/${selectedDriver}`, {
+      const response = await fetch(driverPointsUrl(selectedLeague, selectedDriver), {
         method: 'DELETE',
         credentials: 'include',
         headers: {
@@ -835,15 +853,18 @@ export default function Admin() {
           divisionMap[a.driver_id] = a.division_id;
         });
         setDriverDivisions(divisionMap);
+        setLeagueGuests(data.guests || []);
       } else {
         console.error('Failed to fetch league drivers');
         setLeagueDrivers([]);
         setDriverDivisions({});
+        setLeagueGuests([]);
       }
     } catch (error) {
       console.error('Error fetching league drivers:', error);
       setLeagueDrivers([]);
       setDriverDivisions({});
+      setLeagueGuests([]);
     }
   };
 
@@ -901,11 +922,108 @@ export default function Admin() {
   const handleLeagueDriversChange = (leagueId: string) => {
     setSelectedLeagueForDrivers(leagueId);
     setDivisionForNewDrivers('');
+    setNewGuestName('');
     if (leagueId) {
       fetchLeagueDrivers(leagueId);
     } else {
       setLeagueDrivers([]);
       setDriverDivisions({});
+      setLeagueGuests([]);
+    }
+  };
+
+  // Guest drivers: opponents without a user account, only a name
+  const refreshAfterGuestChange = () => {
+    fetchLeagueDrivers(selectedLeagueForDrivers);
+    if (selectedLeague === selectedLeagueForDrivers) {
+      fetchLeaguePoints(selectedLeague);
+    }
+  };
+
+  const addGuestDriver = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const name = newGuestName.trim();
+    if (!selectedLeagueForDrivers || !name) return;
+
+    try {
+      const response = await fetch(`/api/leagues/${selectedLeagueForDrivers}/guests`, {
+        method: 'POST',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          name,
+          divisionId: divisionForNewDrivers ? parseInt(divisionForNewDrivers) : null
+        })
+      });
+
+      const data = await response.json();
+      if (data.success) {
+        setNewGuestName('');
+        refreshAfterGuestChange();
+      } else {
+        alert('Error adding guest driver: ' + data.error);
+      }
+    } catch (error) {
+      console.error('Error adding guest driver:', error);
+      alert('Error adding guest driver. Please try again.');
+    }
+  };
+
+  const updateGuestDriver = async (guestId: number, changes: { name?: string; divisionId?: number | null }) => {
+    if (!selectedLeagueForDrivers) return;
+
+    try {
+      const response = await fetch(`/api/leagues/${selectedLeagueForDrivers}/guests/${guestId}`, {
+        method: 'PATCH',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(changes)
+      });
+
+      const data = await response.json();
+      if (data.success) {
+        refreshAfterGuestChange();
+      } else {
+        alert('Error updating guest driver: ' + data.error);
+      }
+    } catch (error) {
+      console.error('Error updating guest driver:', error);
+      alert('Error updating guest driver. Please try again.');
+    }
+  };
+
+  const renameGuestDriver = (guest: GuestDriver) => {
+    const name = prompt('New name for the driver:', guest.name);
+    if (!name || !name.trim() || name.trim() === guest.name) return;
+    updateGuestDriver(guest.id, { name: name.trim() });
+  };
+
+  const removeGuestDriver = async (guest: GuestDriver) => {
+    if (!selectedLeagueForDrivers) return;
+    if (!confirm(`Are you sure you want to remove "${guest.name}" from the league?\n\nTheir points and points history in this league will be deleted.`)) {
+      return;
+    }
+
+    try {
+      const response = await fetch(`/api/leagues/${selectedLeagueForDrivers}/guests/${guest.id}`, {
+        method: 'DELETE',
+        credentials: 'include'
+      });
+
+      const data = await response.json();
+      if (data.success) {
+        if (selectedDriver === `guest-${guest.id}`) setSelectedDriver('');
+        refreshAfterGuestChange();
+      } else {
+        alert('Error removing guest driver: ' + data.error);
+      }
+    } catch (error) {
+      console.error('Error removing guest driver:', error);
+      alert('Error removing guest driver. Please try again.');
     }
   };
 
@@ -1430,6 +1548,81 @@ export default function Admin() {
                         </p>
                       )}
                     </div>
+
+                    {/* Guest drivers (opponents without a user account) */}
+                    <h4 style={{color: '#17a2b8', margin: '30px 0 5px 0'}}>
+                      Guest Drivers - {leagues.find(l => l.id.toString() === selectedLeagueForDrivers)?.name}
+                    </h4>
+                    <p style={{color: '#888', fontSize: '0.9rem', margin: '0 0 15px 0'}}>
+                      Drivers we race against. Only a name, no user account. Points are assigned in the Points Management tab.
+                    </p>
+                    <form onSubmit={addGuestDriver} style={{display: 'flex', gap: '10px', flexWrap: 'wrap', marginBottom: '15px'}}>
+                      <input
+                        type="text"
+                        placeholder="Driver name..."
+                        value={newGuestName}
+                        onChange={(e) => setNewGuestName(e.target.value)}
+                        style={{flex: '1', minWidth: '180px', maxWidth: '300px', padding: '10px', border: '1px solid #555', backgroundColor: '#2a2a2a', color: '#fff', borderRadius: '5px'}}
+                      />
+                      <button
+                        type="submit"
+                        disabled={!newGuestName.trim()}
+                        style={{padding: '10px 16px', backgroundColor: newGuestName.trim() ? '#28a745' : '#555', color: '#fff', border: 'none', borderRadius: '5px', cursor: newGuestName.trim() ? 'pointer' : 'not-allowed', fontWeight: 'bold'}}
+                      >
+                        <FontAwesomeIcon icon={faPlus} /> Add Guest Driver
+                      </button>
+                    </form>
+                    <div style={{display: 'grid', gap: '10px'}}>
+                      {leagueGuests.length === 0 ? (
+                        <p style={{color: '#888', margin: '0'}}>No guest drivers in this league.</p>
+                      ) : (
+                        leagueGuests.map(guest => (
+                          <div key={guest.id} style={{
+                            backgroundColor: '#2a2a2a',
+                            borderRadius: '8px',
+                            padding: '15px',
+                            display: 'flex',
+                            justifyContent: 'space-between',
+                            alignItems: 'center',
+                            flexWrap: 'wrap',
+                            gap: '10px',
+                            borderLeft: '4px solid #17a2b8'
+                          }}>
+                            <div>
+                              <h5 style={{margin: '0', color: '#fff', fontSize: '1.1rem'}}>{guest.name}</h5>
+                              <small style={{color: '#888'}}>Guest · {guest.points} pts · {guest.races_completed} races</small>
+                            </div>
+                            <div style={{display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap', justifyContent: 'flex-end'}}>
+                              {getLeagueDivisions(selectedLeagueForDrivers).length > 0 && (
+                                <select
+                                  value={guest.division_id?.toString() || ''}
+                                  onChange={(e) => updateGuestDriver(guest.id, { divisionId: e.target.value ? parseInt(e.target.value) : null })}
+                                  aria-label={`Division for ${guest.name}`}
+                                  style={{padding: '8px', border: '1px solid #555', backgroundColor: '#1a1a1a', color: '#fff', borderRadius: '5px', fontSize: '0.9rem'}}
+                                >
+                                  <option value="">No division</option>
+                                  {getLeagueDivisions(selectedLeagueForDrivers).map(division => (
+                                    <option key={division.id} value={division.id}>{division.name}</option>
+                                  ))}
+                                </select>
+                              )}
+                              <button
+                                onClick={() => renameGuestDriver(guest)}
+                                style={{padding: '8px 12px', backgroundColor: '#6c757d', color: '#fff', border: 'none', borderRadius: '5px', cursor: 'pointer', fontSize: '0.9rem'}}
+                              >
+                                <FontAwesomeIcon icon={faPencil} /> Rename
+                              </button>
+                              <button
+                                onClick={() => removeGuestDriver(guest)}
+                                style={{padding: '8px 16px', backgroundColor: '#dc3545', color: '#fff', border: 'none', borderRadius: '5px', cursor: 'pointer', fontSize: '0.9rem', fontWeight: 'bold'}}
+                              >
+                                <FontAwesomeIcon icon={faXmark} /> Remove
+                              </button>
+                            </div>
+                          </div>
+                        ))
+                      )}
+                    </div>
                   </div>
                 )}
               </div>
@@ -1517,6 +1710,21 @@ export default function Admin() {
                               </option>
                             );
                           })}
+                          {leaguePoints.some(lp => lp.is_guest) && (
+                            <optgroup label="Guest drivers">
+                              {leaguePoints
+                                .filter(lp => lp.is_guest)
+                                .sort((a, b) => a.full_name.localeCompare(b.full_name))
+                                .map(guest => {
+                                  const divisionName = getLeagueDivisions(selectedLeague).find(d => d.id === guest.division_id)?.name;
+                                  return (
+                                    <option key={`guest-${guest.entry_id}`} value={`guest-${guest.entry_id}`}>
+                                      {guest.full_name}{divisionName ? ` (${divisionName})` : ''}
+                                    </option>
+                                  );
+                                })}
+                            </optgroup>
+                          )}
                         </select>
                       </div>
                       <div style={{flex: '0 0 80px', marginRight: '15px'}}>
@@ -1599,7 +1807,7 @@ export default function Admin() {
                         </thead>
                         <tbody>
                           {group.drivers.map((driver, index) => (
-                            <tr key={driver.id} style={{borderBottom: '1px solid #555'}}>
+                            <tr key={driver.entry_id} style={{borderBottom: '1px solid #555'}}>
                               <td style={{
                                 padding: '10px', 
                                 fontWeight: 'bold', 
@@ -1624,7 +1832,10 @@ export default function Admin() {
                                     {(driver.full_name || 'U').slice(0, 2).toUpperCase()}
                                   </div>
                                   <div>
-                                    <div style={{color: '#fff', fontWeight: 'bold'}}>{driver.full_name}</div>
+                                    <div style={{color: '#fff', fontWeight: 'bold'}}>
+                                      {driver.full_name}
+                                      {driver.is_guest && <span style={{marginLeft: '8px', color: '#888', fontSize: '0.8em', fontWeight: 'normal'}}>Guest</span>}
+                                    </div>
                                   </div>
                                 </div>
                               </td>

@@ -13,7 +13,8 @@ interface League {
 }
 
 interface DriverPoint {
-  id: number;
+  id: number | null;
+  entry_id: number;
   division_id?: number | null;
   full_name: string;
   profile_picture?: string;
@@ -239,7 +240,7 @@ export default function Results() {
                     <tbody>
                       {visiblePoints.map((driver, index) => (
                         <tr 
-                          key={driver.id}
+                          key={driver.entry_id}
                           style={{
                             borderBottom: index < visiblePoints.length - 1 ? '1px solid #333' : 'none',
                             backgroundColor: index % 2 === 0 ? '#1a1a1a' : '#222'
