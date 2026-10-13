@@ -3,15 +3,18 @@
 import { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrophy, faFlagCheckered, faMedal } from '@fortawesome/free-solid-svg-icons';
+import { groupByDivision } from '@/lib/divisions';
 
 interface League {
   id: number;
   name: string;
   description?: string;
+  divisions?: { id: number; name: string }[];
 }
 
 interface DriverPoint {
   id: number;
+  division_id?: number | null;
   full_name: string;
   profile_picture?: string;
   points: number;
@@ -32,6 +35,7 @@ export default function Results() {
   const [points, setPoints] = useState<DriverPoint[]>([]);
   const [loading, setLoading] = useState(true);
   const [pointsLoading, setPointsLoading] = useState(false);
+  const [selectedDivision, setSelectedDivision] = useState('');
   const [isMobile, setIsMobile] = useState(typeof window !== 'undefined' ? window.innerWidth <= 768 : false);
 
   useEffect(() => {
@@ -46,6 +50,7 @@ export default function Results() {
 
   useEffect(() => {
     if (selectedLeague) {
+      setSelectedDivision('');
       fetchPoints(selectedLeague);
     }
   }, [selectedLeague]);
@@ -91,6 +96,12 @@ export default function Results() {
       default: return '#3EA822'; // Green
     }
   };
+
+  const currentLeague = leagues.find(l => l.id === selectedLeague);
+  const divisionGroups = groupByDivision(points, currentLeague?.divisions || []);
+  const activeGroup = divisionGroups.find(g => g.key === selectedDivision) || divisionGroups[0];
+  const visiblePoints = activeGroup?.drivers || [];
+  const hasDivisions = divisionGroups.length > 1 || !!activeGroup?.name;
 
   return (
     <div className="min-h-screen" style={{
@@ -169,17 +180,43 @@ export default function Results() {
               overflowX: 'visible'
             }}>
               <h2 style={{color: '#3EA822', fontSize: isMobile ? '1.3rem' : '1.5rem', marginBottom: '20px', textAlign: 'center', padding: '0', width: '100%'}}>
-                Standings - {leagues.find(l => l.id === selectedLeague)?.name}
+                Standings - {currentLeague?.name}{hasDivisions && activeGroup?.name ? ` · ${activeGroup.name}` : ''}
               </h2>
-              
+
+              {hasDivisions && (
+                <div style={{display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '8px', marginBottom: '20px'}}>
+                  {divisionGroups.map(group => {
+                    const isActive = group.key === activeGroup?.key;
+                    return (
+                      <button
+                        key={group.key}
+                        onClick={() => setSelectedDivision(group.key)}
+                        style={{
+                          padding: isMobile ? '6px 12px' : '8px 16px',
+                          backgroundColor: isActive ? '#3EA822' : '#1a1a1a',
+                          color: '#fff',
+                          border: '2px solid #3EA822',
+                          borderRadius: '8px',
+                          cursor: 'pointer',
+                          fontSize: isMobile ? '0.85rem' : '1rem',
+                          fontWeight: isActive ? 'bold' : 'normal'
+                        }}
+                      >
+                        {group.name}
+                      </button>
+                    );
+                  })}
+                </div>
+              )}
+
               {pointsLoading ? (
                 <div style={{textAlign: 'center', color: '#888', padding: '40px'}}>
                   <div style={{fontSize: '2rem', marginBottom: '15px'}}><FontAwesomeIcon icon={faFlagCheckered} /></div>
                   <p>Loading standings...</p>
                 </div>
-              ) : points.length === 0 ? (
+              ) : visiblePoints.length === 0 ? (
                 <div style={{textAlign: 'center', color: '#888', padding: '40px'}}>
-                  <p>No results available for this league yet.</p>
+                  <p>{hasDivisions ? 'No results available for this division yet.' : 'No results available for this league yet.'}</p>
                 </div>
               ) : (
                 <div className="standings-table" style={{width: '100%'}}>
@@ -200,11 +237,11 @@ export default function Results() {
                       </tr>
                     </thead>
                     <tbody>
-                      {points.map((driver, index) => (
+                      {visiblePoints.map((driver, index) => (
                         <tr 
                           key={driver.id}
                           style={{
-                            borderBottom: index < points.length - 1 ? '1px solid #333' : 'none',
+                            borderBottom: index < visiblePoints.length - 1 ? '1px solid #333' : 'none',
                             backgroundColor: index % 2 === 0 ? '#1a1a1a' : '#222'
                           }}
                         >

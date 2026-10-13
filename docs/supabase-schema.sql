@@ -30,16 +30,29 @@ CREATE TABLE IF NOT EXISTS public.leagues (
   updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
 
+-- Create league_divisions table
+CREATE TABLE IF NOT EXISTS public.league_divisions (
+  id SERIAL PRIMARY KEY,
+  league_id INTEGER NOT NULL,
+  name TEXT NOT NULL,
+  sort_order INTEGER DEFAULT 0,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+  CONSTRAINT fk_league_divisions_league FOREIGN KEY (league_id) REFERENCES public.leagues(id) ON DELETE CASCADE,
+  UNIQUE(league_id, name)
+);
+
 -- Create driver_points table
 CREATE TABLE IF NOT EXISTS public.driver_points (
   id SERIAL PRIMARY KEY,
   league_id INTEGER NOT NULL,
   driver_id INTEGER NOT NULL,
+  division_id INTEGER,
   points INTEGER DEFAULT 0,
   races_completed INTEGER DEFAULT 0,
   race_position INTEGER,
   created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
   CONSTRAINT fk_driver_points_league FOREIGN KEY (league_id) REFERENCES public.leagues(id) ON DELETE CASCADE,
+  CONSTRAINT fk_driver_points_division FOREIGN KEY (division_id) REFERENCES public.league_divisions(id) ON DELETE SET NULL,
   CONSTRAINT fk_driver_points_user FOREIGN KEY (driver_id) REFERENCES public.users(id) ON DELETE CASCADE,
   UNIQUE(driver_id, league_id)
 );
@@ -83,6 +96,8 @@ CREATE INDEX IF NOT EXISTS idx_users_email ON public.users(email);
 CREATE INDEX IF NOT EXISTS idx_users_role ON public.users(role);
 CREATE INDEX IF NOT EXISTS idx_driver_points_league ON public.driver_points(league_id);
 CREATE INDEX IF NOT EXISTS idx_driver_points_driver ON public.driver_points(driver_id);
+CREATE INDEX IF NOT EXISTS idx_driver_points_division ON public.driver_points(division_id);
+CREATE INDEX IF NOT EXISTS idx_league_divisions_league ON public.league_divisions(league_id);
 CREATE INDEX IF NOT EXISTS idx_points_history_driver ON public.points_history(driver_id);
 CREATE INDEX IF NOT EXISTS idx_points_history_league ON public.points_history(league_id);
 CREATE INDEX IF NOT EXISTS idx_events_date ON public.events(event_date);
@@ -107,6 +122,7 @@ CREATE TRIGGER update_leagues_updated_at BEFORE UPDATE ON public.leagues
 -- Row Level Security (RLS) Policies
 ALTER TABLE public.users ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.leagues ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.league_divisions ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.driver_points ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.points_history ENABLE ROW LEVEL SECURITY;
 
@@ -120,6 +136,10 @@ CREATE POLICY "Users can update own profile" ON public.users
 
 -- Everyone can read leagues
 CREATE POLICY "Everyone can view leagues" ON public.leagues
+  FOR SELECT TO authenticated, anon USING (true);
+
+-- Everyone can read league divisions
+CREATE POLICY "Everyone can view league divisions" ON public.league_divisions
   FOR SELECT TO authenticated, anon USING (true);
 
 -- Everyone can read driver points
@@ -141,6 +161,9 @@ CREATE POLICY "Service role can do anything" ON public.users
 CREATE POLICY "Service role can do anything" ON public.leagues
   TO service_role USING (true) WITH CHECK (true);
   
+CREATE POLICY "Service role can do anything" ON public.league_divisions
+  TO service_role USING (true) WITH CHECK (true);
+
 CREATE POLICY "Service role can do anything" ON public.driver_points
   TO service_role USING (true) WITH CHECK (true);
   

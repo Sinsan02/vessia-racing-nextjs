@@ -15,8 +15,24 @@ export async function GET() {
       console.error('Supabase error fetching leagues:', error);
       throw error;
     }
-    
-    return NextResponse.json({ success: true, leagues });
+
+    // Attach divisions to each league (empty list if the league has none)
+    const { data: divisions, error: divisionsError } = await supabaseAdmin
+      .from('league_divisions')
+      .select('id, league_id, name, sort_order')
+      .order('sort_order')
+      .order('id');
+
+    if (divisionsError) {
+      console.error('Supabase error fetching league divisions:', divisionsError);
+    }
+
+    const leaguesWithDivisions = (leagues || []).map(league => ({
+      ...league,
+      divisions: (divisions || []).filter(d => d.league_id === league.id)
+    }));
+
+    return NextResponse.json({ success: true, leagues: leaguesWithDivisions });
   } catch (error) {
     console.error('Error fetching leagues:', error);
     return NextResponse.json({ success: false, error: 'Failed to fetch leagues' }, { status: 500 });

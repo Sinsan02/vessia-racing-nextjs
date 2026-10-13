@@ -10,6 +10,7 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
       .from('driver_points')
       .select(`
         driver_id,
+        division_id,
         points,
         races_completed,
         users!inner(
@@ -33,6 +34,7 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
     // Transform data to match expected format
     const transformedPoints = points?.map((p: any) => ({
       id: p.driver_id,
+      division_id: p.division_id ?? null,
       full_name: p.users.full_name,
       profile_picture: p.users.profile_picture,
       points: p.points,

@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { groupByDivision } from '@/lib/divisions';
 import { faGear, faUsers, faTrophy, faMedal, faFlagCheckered, faCrown, faCar, faUser, faTrash, faPlus, faList, faRotate, faCircleCheck, faXmark, faHouse, faPencil, faCircleInfo, faIdCard, faBolt, faHourglass, faCheck, faArrowRotateLeft } from '@fortawesome/free-solid-svg-icons';
 
 const ACHIEVEMENT_ICON_MAP: Record<string, any> = {
@@ -31,15 +32,24 @@ interface User {
   created_at: string;
 }
 
+interface Division {
+  id: number;
+  league_id: number;
+  name: string;
+  sort_order: number;
+}
+
 interface League {
   id: number;
   name: string;
   description: string;
   created_at: string;
+  divisions?: Division[];
 }
 
 interface PointsDriver {
   id: number;
+  division_id?: number | null;
   full_name: string;
   points: number;
   races_completed: number;
@@ -52,6 +62,9 @@ export default function Admin() {
   const [pointsDrivers, setPointsDrivers] = useState<PointsDriver[]>([]);
   const [leaguePoints, setLeaguePoints] = useState<PointsDriver[]>([]);
   const [leagueDrivers, setLeagueDrivers] = useState<number[]>([]);
+  const [driverDivisions, setDriverDivisions] = useState<Record<number, number | null>>({});
+  const [newDivisionNames, setNewDivisionNames] = useState<Record<number, string>>({});
+  const [divisionForNewDrivers, setDivisionForNewDrivers] = useState('');
   const [achievements, setAchievements] = useState<any[]>([]);
   const [selectedLeagueForDrivers, setSelectedLeagueForDrivers] = useState('');
   const [loading, setLoading] = useState(true);
@@ -241,6 +254,121 @@ export default function Admin() {
     } catch (error) {
       console.error('Error deleting league:', error);
       alert('Error deleting league. Please try again.');
+    }
+  };
+
+  // Division functions
+  const getLeagueDivisions = (leagueId: string | number) =>
+    leagues.find(l => l.id.toString() === leagueId.toString())?.divisions || [];
+
+  const createDivision = async (leagueId: number) => {
+    const name = (newDivisionNames[leagueId] || '').trim();
+    if (!name) return;
+
+    try {
+      const response = await fetch(`/api/leagues/${leagueId}/divisions`, {
+        method: 'POST',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ name })
+      });
+
+      const data = await response.json();
+      if (data.success) {
+        setNewDivisionNames(prev => ({ ...prev, [leagueId]: '' }));
+        fetchLeagues();
+      } else {
+        alert('Error creating division: ' + data.error);
+      }
+    } catch (error) {
+      console.error('Error creating division:', error);
+      alert('Error creating division. Please try again.');
+    }
+  };
+
+  const renameDivision = async (division: Division) => {
+    const name = prompt('New name for the division:', division.name);
+    if (!name || !name.trim() || name.trim() === division.name) return;
+
+    try {
+      const response = await fetch(`/api/leagues/${division.league_id}/divisions/${division.id}`, {
+        method: 'PATCH',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ name: name.trim() })
+      });
+
+      const data = await response.json();
+      if (data.success) {
+        fetchLeagues();
+      } else {
+        alert('Error renaming division: ' + data.error);
+      }
+    } catch (error) {
+      console.error('Error renaming division:', error);
+      alert('Error renaming division. Please try again.');
+    }
+  };
+
+  const deleteDivision = async (division: Division) => {
+    if (!confirm(`Are you sure you want to delete the division "${division.name}"?\n\nDrivers in this division stay in the league with their points, but will no longer belong to a division.`)) {
+      return;
+    }
+
+    try {
+      const response = await fetch(`/api/leagues/${division.league_id}/divisions/${division.id}`, {
+        method: 'DELETE',
+        credentials: 'include'
+      });
+
+      const data = await response.json();
+      if (data.success) {
+        fetchLeagues();
+        if (selectedLeagueForDrivers === division.league_id.toString()) {
+          fetchLeagueDrivers(selectedLeagueForDrivers);
+          if (divisionForNewDrivers === division.id.toString()) setDivisionForNewDrivers('');
+        }
+        if (selectedLeague === division.league_id.toString()) {
+          fetchLeaguePoints(selectedLeague);
+        }
+      } else {
+        alert('Error deleting division: ' + data.error);
+      }
+    } catch (error) {
+      console.error('Error deleting division:', error);
+      alert('Error deleting division. Please try again.');
+    }
+  };
+
+  const changeDriverDivision = async (driverId: number, divisionId: string) => {
+    if (!selectedLeagueForDrivers) return;
+
+    try {
+      const response = await fetch(`/api/leagues/${selectedLeagueForDrivers}/drivers/${driverId}`, {
+        method: 'PATCH',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ divisionId: divisionId ? parseInt(divisionId) : null })
+      });
+
+      const data = await response.json();
+      if (data.success) {
+        fetchLeagueDrivers(selectedLeagueForDrivers);
+        if (selectedLeague === selectedLeagueForDrivers) {
+          fetchLeaguePoints(selectedLeague);
+        }
+      } else {
+        alert('Error changing division: ' + data.error);
+      }
+    } catch (error) {
+      console.error('Error changing division:', error);
+      alert('Error changing division. Please try again.');
     }
   };
 
@@ -702,13 +830,20 @@ export default function Admin() {
       if (response.ok) {
         const data = await response.json();
         setLeagueDrivers(data.drivers || []);
+        const divisionMap: Record<number, number | null> = {};
+        (data.assignments || []).forEach((a: { driver_id: number; division_id: number | null }) => {
+          divisionMap[a.driver_id] = a.division_id;
+        });
+        setDriverDivisions(divisionMap);
       } else {
         console.error('Failed to fetch league drivers');
         setLeagueDrivers([]);
+        setDriverDivisions({});
       }
     } catch (error) {
       console.error('Error fetching league drivers:', error);
       setLeagueDrivers([]);
+      setDriverDivisions({});
     }
   };
 
@@ -722,7 +857,10 @@ export default function Admin() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ driverId })
+        body: JSON.stringify({
+          driverId,
+          divisionId: divisionForNewDrivers ? parseInt(divisionForNewDrivers) : null
+        })
       });
 
       const data = await response.json();
@@ -762,10 +900,12 @@ export default function Admin() {
 
   const handleLeagueDriversChange = (leagueId: string) => {
     setSelectedLeagueForDrivers(leagueId);
+    setDivisionForNewDrivers('');
     if (leagueId) {
       fetchLeagueDrivers(leagueId);
     } else {
       setLeagueDrivers([]);
+      setDriverDivisions({});
     }
   };
 
@@ -1100,6 +1240,55 @@ export default function Admin() {
                             </button>
                           </div>
                         </div>
+
+                        {/* Divisions */}
+                        <div style={{marginTop: '15px', paddingTop: '12px', borderTop: '1px solid #3a3a3a'}}>
+                          <div style={{color: '#ccc', fontSize: '0.9em', marginBottom: '8px'}}>Divisions</div>
+                          {(league.divisions || []).length === 0 ? (
+                            <p style={{margin: '0 0 10px 0', color: '#888', fontSize: '0.85em'}}>No divisions. All drivers share one standings table.</p>
+                          ) : (
+                            <div style={{display: 'flex', flexWrap: 'wrap', gap: '8px', marginBottom: '10px'}}>
+                              {(league.divisions || []).map(division => (
+                                <div key={division.id} style={{display: 'flex', alignItems: 'center', gap: '6px', backgroundColor: '#1a1a1a', border: '1px solid #555', borderRadius: '5px', padding: '4px 6px 4px 10px'}}>
+                                  <span style={{color: '#fff', fontSize: '0.9em'}}>{division.name}</span>
+                                  <button
+                                    onClick={() => renameDivision(division)}
+                                    title="Rename division"
+                                    style={{padding: '3px 7px', backgroundColor: '#6c757d', color: '#fff', border: 'none', borderRadius: '4px', cursor: 'pointer', fontSize: '0.75rem'}}
+                                  >
+                                    <FontAwesomeIcon icon={faPencil} />
+                                  </button>
+                                  <button
+                                    onClick={() => deleteDivision(division)}
+                                    title="Delete division"
+                                    style={{padding: '3px 7px', backgroundColor: '#dc3545', color: '#fff', border: 'none', borderRadius: '4px', cursor: 'pointer', fontSize: '0.75rem'}}
+                                  >
+                                    <FontAwesomeIcon icon={faTrash} />
+                                  </button>
+                                </div>
+                              ))}
+                            </div>
+                          )}
+                          <form
+                            onSubmit={(e) => { e.preventDefault(); createDivision(league.id); }}
+                            style={{display: 'flex', gap: '8px', flexWrap: 'wrap'}}
+                          >
+                            <input
+                              type="text"
+                              placeholder="New division name..."
+                              value={newDivisionNames[league.id] || ''}
+                              onChange={(e) => setNewDivisionNames(prev => ({ ...prev, [league.id]: e.target.value }))}
+                              style={{flex: '1', minWidth: '150px', maxWidth: '250px', padding: '6px 10px', border: '1px solid #555', backgroundColor: '#1a1a1a', color: '#fff', borderRadius: '5px'}}
+                            />
+                            <button
+                              type="submit"
+                              disabled={!(newDivisionNames[league.id] || '').trim()}
+                              style={{padding: '6px 12px', backgroundColor: (newDivisionNames[league.id] || '').trim() ? '#28a745' : '#555', color: '#fff', border: 'none', borderRadius: '5px', cursor: (newDivisionNames[league.id] || '').trim() ? 'pointer' : 'not-allowed', fontSize: '0.85rem'}}
+                            >
+                              <FontAwesomeIcon icon={faPlus} /> Add Division
+                            </button>
+                          </form>
+                        </div>
                       </div>
                     ))
                   )}
@@ -1130,6 +1319,22 @@ export default function Admin() {
 
                 {selectedLeagueForDrivers && (
                   <div>
+                    {getLeagueDivisions(selectedLeagueForDrivers).length > 0 && (
+                      <div style={{marginBottom: '20px'}}>
+                        <label htmlFor="divisionForNewDrivers" style={{display: 'block', marginBottom: '5px', color: '#ccc'}}>Add new drivers to division</label>
+                        <select
+                          id="divisionForNewDrivers"
+                          value={divisionForNewDrivers}
+                          onChange={(e) => setDivisionForNewDrivers(e.target.value)}
+                          style={{width: '100%', maxWidth: '300px', padding: '10px', border: '1px solid #555', backgroundColor: '#2a2a2a', color: '#fff', borderRadius: '5px'}}
+                        >
+                          <option value="">No division</option>
+                          {getLeagueDivisions(selectedLeagueForDrivers).map(division => (
+                            <option key={division.id} value={division.id}>{division.name}</option>
+                          ))}
+                        </select>
+                      </div>
+                    )}
                     <h4 style={{color: '#17a2b8', marginBottom: '15px'}}>
                       All Drivers - {leagues.find(l => l.id.toString() === selectedLeagueForDrivers)?.name}
                     </h4>
@@ -1168,7 +1373,20 @@ export default function Admin() {
                                 </small>
                               </div>
                             </div>
-                            <div>
+                            <div style={{display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap', justifyContent: 'flex-end'}}>
+                              {isInLeague && getLeagueDivisions(selectedLeagueForDrivers).length > 0 && (
+                                <select
+                                  value={driverDivisions[driver.id]?.toString() || ''}
+                                  onChange={(e) => changeDriverDivision(driver.id, e.target.value)}
+                                  aria-label={`Division for ${driver.name}`}
+                                  style={{padding: '8px', border: '1px solid #555', backgroundColor: '#1a1a1a', color: '#fff', borderRadius: '5px', fontSize: '0.9rem'}}
+                                >
+                                  <option value="">No division</option>
+                                  {getLeagueDivisions(selectedLeagueForDrivers).map(division => (
+                                    <option key={division.id} value={division.id}>{division.name}</option>
+                                  ))}
+                                </select>
+                              )}
                               {isInLeague ? (
                                 <button
                                   onClick={() => removeDriverFromLeague(driver.id)}
@@ -1291,10 +1509,11 @@ export default function Admin() {
                         >
                           <option value="">Select a driver...</option>
                           {users.filter(user => user.is_driver === 1).map(driver => {
-                            const hasPoints = leaguePoints.some(lp => lp.id === driver.id);
+                            const leagueEntry = leaguePoints.find(lp => lp.id === driver.id);
+                            const divisionName = getLeagueDivisions(selectedLeague).find(d => d.id === leagueEntry?.division_id)?.name;
                             return (
                               <option key={driver.id} value={driver.id}>
-                                {driver.name} {hasPoints ? '✔' : ''}
+                                {driver.name}{divisionName ? ` (${divisionName})` : ''} {leagueEntry ? '✔' : ''}
                               </option>
                             );
                           })}
@@ -1360,6 +1579,14 @@ export default function Admin() {
                     {pointsDrivers.length === 0 ? (
                       <p style={{color: '#888', textAlign: 'center'}}>No drivers found in this league.</p>
                     ) : (
+                      groupByDivision(pointsDrivers, getLeagueDivisions(selectedLeague)).map(group => (
+                      <div key={group.key} style={{marginBottom: '25px'}}>
+                      {group.name && (
+                        <h4 style={{color: '#17a2b8', margin: '0 0 10px 0'}}>{group.name}</h4>
+                      )}
+                      {group.drivers.length === 0 ? (
+                        <p style={{color: '#888', margin: '0'}}>No drivers in this division yet.</p>
+                      ) : (
                       <table style={{width: '100%', borderCollapse: 'collapse'}}>
                         <thead>
                           <tr style={{borderBottom: '2px solid #3EA822'}}>
@@ -1371,7 +1598,7 @@ export default function Admin() {
                           </tr>
                         </thead>
                         <tbody>
-                          {pointsDrivers.map((driver, index) => (
+                          {group.drivers.map((driver, index) => (
                             <tr key={driver.id} style={{borderBottom: '1px solid #555'}}>
                               <td style={{
                                 padding: '10px', 
@@ -1414,6 +1641,9 @@ export default function Admin() {
                           ))}
                         </tbody>
                       </table>
+                      )}
+                      </div>
+                      ))
                     )}
                   </div>
                 </>

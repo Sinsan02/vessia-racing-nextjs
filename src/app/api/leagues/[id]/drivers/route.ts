@@ -16,7 +16,7 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
     // Get all drivers in the league
     const { data: drivers, error } = await supabaseAdmin
       .from('driver_points')
-      .select('driver_id')
+      .select('driver_id, division_id')
       .eq('league_id', leagueId);
 
     if (error) {
@@ -26,7 +26,8 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
 
     return NextResponse.json({
       success: true,
-      drivers: drivers?.map((d: any) => d.driver_id) || []
+      drivers: drivers?.map((d: any) => d.driver_id) || [],
+      assignments: drivers?.map((d: any) => ({ driver_id: d.driver_id, division_id: d.division_id ?? null })) || []
     });
   } catch (error: any) {
     console.error('Error fetching league drivers:', error);
@@ -37,7 +38,7 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
   }
 }
 
-// Add driver to league
+// Add driver to league (optionally directly into a division)
 export async function POST(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     const adminCheck = await requireAdmin(request);
@@ -47,7 +48,21 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
     
     const resolvedParams = await params;
     const leagueId = parseInt(resolvedParams.id);
-    const { driverId } = await request.json();
+    const { driverId, divisionId } = await request.json();
+    const divId = divisionId ? parseInt(divisionId) : null;
+
+    if (divId) {
+      const { data: division } = await supabaseAdmin
+        .from('league_divisions')
+        .select('id')
+        .eq('id', divId)
+        .eq('league_id', leagueId)
+        .maybeSingle();
+
+      if (!division) {
+        return NextResponse.json({ success: false, error: 'Division does not belong to this league' }, { status: 400 });
+      }
+    }
 
     // Check if driver is already in the league
     const { data: existingDriver } = await supabaseAdmin
@@ -70,6 +85,7 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
       .insert({
         league_id: leagueId,
         driver_id: driverId,
+        division_id: divId,
         points: 0,
         races_completed: 0
       });
