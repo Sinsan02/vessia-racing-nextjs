@@ -15,6 +15,7 @@ interface League {
 interface DriverPoint {
   id: number | null;
   entry_id: number;
+  is_guest?: boolean;
   division_id?: number | null;
   full_name: string;
   profile_picture?: string;
@@ -243,7 +244,9 @@ export default function Results() {
                           key={driver.entry_id}
                           style={{
                             borderBottom: index < visiblePoints.length - 1 ? '1px solid #333' : 'none',
-                            backgroundColor: index % 2 === 0 ? '#1a1a1a' : '#222'
+                            backgroundColor: !driver.is_guest
+                              ? (index % 2 === 0 ? 'rgba(62, 168, 34, 0.22)' : 'rgba(62, 168, 34, 0.30)')
+                              : (index % 2 === 0 ? '#1a1a1a' : '#222')
                           }}
                         >
                           <td style={{padding: isMobile ? '8px 4px' : '15px'}}>
@@ -260,6 +263,26 @@ export default function Results() {
                           </td>
                           <td style={{padding: isMobile ? '8px 6px' : '15px'}}>
                             <div style={{display: 'flex', alignItems: 'center', gap: isMobile ? '6px' : '12px'}}>
+                              {/* Fixed-width slot keeps names aligned for guest rows without a label */}
+                              <div style={{width: isMobile ? '42px' : '100px', flexShrink: 0}}>
+                                {!driver.is_guest && (
+                                  <span style={{
+                                    display: 'inline-block',
+                                    backgroundColor: '#3EA822',
+                                    color: '#fff',
+                                    borderRadius: '4px',
+                                    padding: isMobile ? '2px 3px' : '3px 6px',
+                                    fontSize: isMobile ? '0.55rem' : '0.7rem',
+                                    fontWeight: 'bold',
+                                    textTransform: 'uppercase',
+                                    letterSpacing: '0.5px',
+                                    lineHeight: '1.2',
+                                    textAlign: 'center'
+                                  }}>
+                                    Vessia Driver
+                                  </span>
+                                )}
+                              </div>
                               {driver.profile_picture && driver.profile_picture.trim() !== '' ? (
                                 <img
                                   src={driver.profile_picture}
